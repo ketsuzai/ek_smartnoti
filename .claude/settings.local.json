@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l C:/Users/2AP2020-004/Desktop/myrp/.brain/*.md C:/Users/2AP2020-004/Desktop/myrp/CLAUDE.md)",
+      "Bash(wc -c C:/Users/2AP2020-004/Desktop/myrp/.brain/*.md C:/Users/2AP2020-004/Desktop/myrp/CLAUDE.md)"
+    ]
+  }
+}

@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초대 관리 V1 vs V2 비교 — 키드키즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent:       #0EA5E9;
+  --accent-light: #E0F2FE;
+  --accent-dark:  #0284C7;
+  --bg-base:      #F0F7FF;
+  --bg-surface:   #FFFFFF;
+  --text-primary: #0C2D48;
+  --text-secondary:#4B7FA3;
+  --text-muted:   #94B8D0;
+  --border-light: #DBEAFE;
+  --border-medium:#BAD9F7;
+  --green:#10B981;--green-bg:#D1FAE5;--green-text:#065F46;
+  --blue:#3B82F6; --blue-bg:#DBEAFE; --blue-text:#1E40AF;
+  --amber:#F59E0B;--amber-bg:#FEF3C7;--amber-text:#92400E;
+  --red:#EF4444;  --red-bg:#FEE2E2;  --red-text:#991B1B;
+  --purple:#8B5CF6;--purple-bg:#EDE9FE;--purple-text:#5B21B6;
+  --gray-bg:#F3F4F6;--gray-text:#6B7280;
+  --shadow-sm:0 1px 3px rgba(12,45,72,.06);
+  --shadow-md:0 4px 12px rgba(12,45,72,.09);
+  --shadow-lg:0 8px 28px rgba(12,45,72,.14);
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--text-primary);min-height:100vh;}
+
+/* ━━━ VERSION TOGGLE BAR ━━━ */
+.ver-bar{
+  position:sticky;top:0;z-index:200;
+  background:#0C2D48;
+  padding:0 24px;
+  display:flex;align-items:center;gap:12px;height:56px;
+  box-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+.ver-bar-title{font-size:13px;font-weight:700;color:#B8D9F0;margin-right:8px;}
+.ver-btn{
+  padding:6px 18px;border-radius:var(--r-md);font-size:13px;font-weight:700;
+  font-family:'Pretendard',sans-serif;cursor:pointer;border:2px solid transparent;transition:.18s;
+}
+.ver-btn.v1{background:rgba(255,255,255,.08);color:#94B8D0;border-color:transparent;}
+.ver-btn.v1.active{background:rgba(239,68,68,.2);color:#FCA5A5;border-color:rgba(239,68,68,.4);}
+.ver-btn.v2{background:rgba(255,255,255,.08);color:#94B8D0;border-color:transparent;}
+.ver-btn.v2.active{background:rgba(14,165,233,.2);color:#7DD3FC;border-color:rgba(14,165,233,.4);}
+.ver-diff-badge{
+  margin-left:auto;display:flex;align-items:center;gap:6px;
+  font-size:11px;color:#94B8D0;
+}
+.diff-chip{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.diff-chip.removed{background:rgba(239,68,68,.15);color:#FCA5A5;}
+.diff-chip.added{background:rgba(14,165,233,.15);color:#7DD3FC;}
+.diff-chip.changed{background:rgba(245,158,11,.15);color:#FDE68A;}
+
+/* ━━━ VERSION PANELS ━━━ */
+.ver-panel{display:none;padding:24px;}
+.ver-panel.show{display:block;}
+.ver-label{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  margin-bottom:16px;
+}
+.ver-label.v1{background:var(--red-bg);color:var(--red-text);}
+.ver-label.v2{background:var(--accent-light);color:var(--accent-dark);}
+
+/* ━━━ KPI ━━━ */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.kpi-card{background:var(--bg-surface);border-radius:var(--r-xl);padding:16px 18px;
+  border:1px solid var(--border-light);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;}
+.kpi-icon{width:42px;height:42px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.kpi-val{font-size:24px;font-weight:800;line-height:1;}
+.kpi-lbl{font-size:11px;font-weight:600;color:var(--text-secondary);margin-top:3px;}
+
+/* ━━━ TABS ━━━ */
+.tab-bar{display:flex;gap:4px;background:var(--bg-surface);border-radius:var(--r-xl);padding:5px;
+  border:1px solid var(--border-light);box-shadow:var(--shadow-sm);margin-bottom:16px;width:fit-content;}
+.tab-btn{padding:7px 18px;border-radius:var(--r-lg);font-size:13px;font-weight:600;
+  font-family:'Pretendard',sans-serif;cursor:pointer;border:none;background:transparent;
+  color:var(--text-secondary);transition:.18s;}
+.tab-btn.active{background:var(--accent);color:#fff;}
+.tab-content{display:none;}
+.tab-content.show{display:block;}
+
+/* ━━━ ACTION BAR ━━━ */
+.action-bar{background:var(--bg-surface);border-radius:var(--r-xl);padding:12px 16px;
+  border:1px solid var(--border-light);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.fsel-wrap{position:relative;}
+.fsel-wrap::after{content:'▾';position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  font-size:10px;color:var(--text-muted);pointer-events:none;}
+.fsel{height:32px;padding:0 26px 0 10px;border:1.5px solid var(--border-light);
+  border-radius:var(--r-md);font-size:12px;font-family:'Pretendard',sans-serif;
+  color:var(--text-primary);background:var(--bg-surface);appearance:none;cursor:pointer;outline:none;}
+.fsel:focus{border-color:var(--accent);}
+.search-wrap{display:flex;border:1.5px solid var(--border-light);border-radius:var(--r-md);
+  overflow:hidden;background:var(--bg-surface);}
+.search-inp{height:32px;padding:0 10px;border:none;outline:none;font-size:13px;
+  font-family:'Pretendard',sans-serif;width:180px;}
+.search-btn{height:32px;padding:0 10px;background:var(--accent-light);border:none;
+  border-left:1.5px solid var(--border-light);cursor:pointer;font-size:12px;color:var(--accent-dark);}
+.ml-auto{margin-left:auto;}
+
+/* ━━━ BUTTONS ━━━ */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r-md);
+  font-size:12px;font-weight:700;font-family:'Pretendard',sans-serif;cursor:pointer;border:none;transition:.18s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent-dark);}
+.btn-outline{background:var(--bg-surface);color:var(--text-secondary);border:1.5px solid var(--border-medium);}
+.btn-outline:hover{background:var(--bg-base);border-color:var(--accent);color:var(--accent);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:var(--r-sm);}
+.btn-sm{padding:5px 10px;font-size:11px;}
+
+/* ━━━ BADGE ━━━ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.badge-blue{background:var(--blue-bg);color:var(--blue-text);}
+.badge-amber{background:var(--amber-bg);color:var(--amber-text);}
+.badge-green{background:var(--green-bg);color:var(--green-text);}
+.badge-red{background:var(--red-bg);color:var(--red-text);}
+.badge-gray{background:var(--gray-bg);color:var(--gray-text);}
+.badge-purple{background:var(--purple-bg);color:var(--purple-text);}
+
+/* ━━━ V1: CLASS CARDS ━━━ */
+.class-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.cls-card{background:var(--bg-surface);border-radius:var(--r-xl);border:1.5px solid var(--border-light);
+  box-shadow:var(--shadow-sm);overflow:hidden;}
+.cls-card-header{padding:14px 16px 10px;border-bottom:1px solid var(--border-light);
+  display:flex;align-items:center;justify-content:space-between;}
+.cls-card-name{font-size:15px;font-weight:800;}
+.cls-card-body{padding:12px 16px;}
+.cls-progress-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-bottom:6px;}
+.progress-bar{height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.progress-fill{height:100%;border-radius:3px;}
+.cls-link-row{display:flex;align-items:center;gap:8px;background:var(--bg-base);
+  border-radius:var(--r-md);padding:7px 10px;border:1px solid var(--border-light);}
+.cls-link-text{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;flex:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cls-card-footer{padding:8px 16px 12px;display:flex;align-items:center;justify-content:space-between;}
+.toggle-switch{position:relative;width:36px;height:20px;cursor:pointer;}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;background:#D1D5DB;border-radius:10px;transition:.25s;}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;
+  background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.toggle-switch input:checked + .toggle-track{background:var(--green);}
+.toggle-switch input:checked ~ .toggle-thumb{left:18px;}
+
+/* ━━━ V2: TABLE ━━━ */
+.inv-table-wrap{background:var(--bg-surface);border-radius:var(--r-xl);
+  border:1px solid var(--border-light);box-shadow:var(--shadow-sm);overflow:hidden;}
+.inv-table{width:100%;border-collapse:collapse;font-size:13px;}
+.inv-table thead tr{background:var(--bg-base);}
+.inv-table th{padding:10px 12px;text-align:left;font-size:10px;font-weight:800;
+  color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1.5px solid var(--border-light);}
+.inv-table td{padding:11px 12px;border-bottom:1px solid var(--border-light);vertical-align:middle;}
+.inv-table tbody tr:last-child td{border-bottom:none;}
+.inv-table tbody tr:hover{background:var(--bg-base);}
+.child-cell{display:flex;flex-direction:column;gap:2px;}
+.child-name{font-size:13px;font-weight:700;color:var(--text-primary);}
+.child-class{font-size:11px;color:var(--text-muted);}
+.phone-cell{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text-secondary);}
+.action-cell{display:flex;align-items:center;gap:5px;}
+.dday{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+/* ━━━ BULK ACTION BAR ━━━ */
+.bulk-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:var(--accent-light);border-radius:var(--r-lg);border:1.5px solid var(--border-medium);
+  margin-bottom:10px;font-size:12px;font-weight:600;color:var(--accent-dark);}
+.bulk-bar .selected-count{font-weight:800;}
+
+/* ━━━ MODAL ━━━ */
+.modal-overlay{position:fixed;inset:0;background:rgba(12,45,72,.4);z-index:500;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--bg-surface);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);
+  width:480px;max-width:95vw;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;
+  transform:scale(.96);transition:.2s;}
+.modal-overlay.open .modal-box{transform:scale(1);}
+.modal-header{padding:18px 22px 14px;border-bottom:1px solid var(--border-light);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.modal-title{font-size:15px;font-weight:800;}
+.modal-close{width:28px;height:28px;border-radius:var(--r-sm);background:var(--bg-base);
+  border:1.5px solid var(--border-light);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:14px;color:var(--text-secondary);}
+.modal-body{padding:18px 22px;overflow-y:auto;flex:1;}
+.modal-footer{padding:12px 22px;border-top:1px solid var(--border-light);
+  display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;}
+.form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;}
+.form-input{border:1.5px solid var(--border-light);border-radius:var(--r-md);height:38px;
+  padding:0 12px;font-size:13px;font-family:'Pretendard',sans-serif;
+  color:var(--text-primary);background:var(--bg-surface);outline:none;transition:.18s;width:100%;}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,.1);}
+.form-input:disabled{background:#F3F4F6;color:var(--text-muted);cursor:not-allowed;}
+.form-select{border:1.5px solid var(--border-light);border-radius:var(--r-md);height:38px;
+  padding:0 12px;font-size:13px;font-family:'Pretendard',sans-serif;
+  color:var(--text-primary);background:var(--bg-surface);outline:none;width:100%;appearance:none;cursor:pointer;}
+.form-select:disabled{background:#F3F4F6;color:var(--text-muted);cursor:not-allowed;}
+.form-hint{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+/* ━━━ PHONE INPUT LIST ━━━ */
+.phone-list{display:flex;flex-direction:column;gap:7px;}
+.phone-row{display:flex;align-items:center;gap:8px;}
+.phone-row .form-input{flex:1;}
+.phone-remove{width:28px;height:28px;border-radius:var(--r-sm);background:var(--red-bg);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--red-text);flex-shrink:0;transition:.15s;}
+.phone-remove:hover{background:var(--red);color:#fff;}
+.add-phone-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;
+  border:1.5px dashed var(--border-medium);border-radius:var(--r-md);
+  background:transparent;cursor:pointer;font-size:12px;font-weight:600;
+  color:var(--accent);font-family:'Pretendard',sans-serif;transition:.18s;width:100%;justify-content:center;}
+.add-phone-btn:hover{background:var(--accent-light);border-color:var(--accent);}
+
+/* ━━━ INFO BOX ━━━ */
+.info-box{background:var(--accent-light);border:1px solid var(--border-medium);
+  border-radius:var(--r-md);padding:10px 12px;font-size:12px;color:var(--accent-dark);
+  display:flex;gap:8px;align-items:flex-start;margin-bottom:14px;}
+.warn-box{background:var(--amber-bg);border:1px solid #FDE68A;
+  border-radius:var(--r-md);padding:10px 12px;font-size:12px;color:var(--amber-text);
+  display:flex;gap:8px;align-items:flex-start;margin-bottom:14px;}
+
+/* ━━━ V2 TEACHER — CHIP ━━━ */
+.chip-group{display:flex;flex-wrap:wrap;gap:7px;padding:8px 0;}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);
+  transition:.15s;font-family:'Pretendard',sans-serif;}
+.chip.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ━━━ DIFF HIGHLIGHT ━━━ */
+.diff-new{position:relative;}
+.diff-new::before{
+  content:'NEW';position:absolute;top:-8px;right:-8px;
+  background:var(--accent);color:#fff;font-size:9px;font-weight:800;
+  padding:1px 5px;border-radius:4px;letter-spacing:.5px;
+}
+.diff-changed{position:relative;}
+.diff-changed::before{
+  content:'변경';position:absolute;top:-8px;right:-8px;
+  background:var(--amber);color:#fff;font-size:9px;font-weight:800;
+  padding:1px 5px;border-radius:4px;letter-spacing:.5px;
+}
+
+/* ━━━ SECTION HEADER ━━━ */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-title{font-size:13px;font-weight:800;color:var(--text-primary);}
+.section-meta{font-size:12px;color:var(--text-muted);}
+</style>
+</head>
+<body>
+
+<!-- VERSION TOGGLE BAR -->
+<div class="ver-bar">
+  <span class="ver-bar-title">초대 관리</span>
+  <button class="ver-btn v1 active" id="btnV1" onclick="switchVer('v1')">V1 — 반 단위 (현재)</button>
+  <button class="ver-btn v2" id="btnV2" onclick="switchVer('v2')">V2 — 원아 단위 (신규 스펙)</button>
+  <div class="ver-diff-badge">
+    <span class="diff-chip removed">반→원아 단위</span>
+    <span class="diff-chip changed">상태값 5종</span>
+    <span class="diff-chip added">일괄 승인/만료</span>
+    <span class="diff-chip added">교직원 복수반 선택</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     V1 패널
+════════════════════════════════════════ -->
+<div class="ver-panel show" id="panelV1">
+  <div class="ver-label v1">🔴 V1 — 반(班) 단위 초대 (현재 구현)</div>
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:#E0F2FE">📨</div>
+      <div><div class="kpi-val" style="color:var(--accent)">24</div><div class="kpi-lbl">전체 초대 발송</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--green-bg)">✅</div>
+      <div><div class="kpi-val" style="color:var(--green)">18</div><div class="kpi-lbl">가입 완료</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--amber-bg)">⏳</div>
+      <div><div class="kpi-val" style="color:var(--amber)">4</div><div class="kpi-lbl">대기 중</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:var(--red-bg)">❌</div>
+      <div><div class="kpi-val" style="color:var(--red)">2</div><div class="kpi-lbl">만료됨</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('v1','t1')">📩 학부모 초대</button>
+    <button class="tab-btn" onclick="switchTab('v1','t2')">👨‍🏫 교직원 초대</button>
+    <button class="tab-btn" onclick="switchTab('v1','t3')">📋 초대 이력</button>
+  </div>
+
+  <!-- TAB1: 학부모 (반 단위 카드) -->
+  <div class="tab-content show" id="v1-t1">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 반</option><option>햇님반</option><option>달님반</option></select></div>
+      <div class="search-wrap"><input class="search-inp" placeholder="반 이름 검색"><button class="search-btn">🔍</button></div>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm">＋ 새 초대 링크 생성</button>
+      </div>
+    </div>
+    <div class="class-card-grid">
+      <!-- 햇님반 -->
+      <div class="cls-card">
+        <div class="cls-card-header">
+          <div>
+            <div class="cls-card-name">햇님반</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">만 5세 · 담임: 이지현</div>
+          </div>
+          <span class="badge badge-green"><span class="badge-dot"></span>활성</span>
+        </div>
+        <div class="cls-card-body">
+          <div class="cls-progress-row"><span>가입 학부모</span><span style="font-weight:700">18 / 20명</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:90%;background:var(--green)"></div></div>
+          <div class="cls-link-row">
+            <span class="cls-link-text">https://kidkids.app/inv/abc123...</span>
+            <button class="btn btn-outline btn-xs">복사</button>
+          </div>
+        </div>
+        <div class="cls-card-footer">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-outline btn-xs">중지</button>
+            <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red-text);border:1.5px solid var(--red-bg)">삭제</button>
+          </div>
+        </div>
+      </div>
+      <!-- 달님반 -->
+      <div class="cls-card">
+        <div class="cls-card-header">
+          <div>
+            <div class="cls-card-name">달님반</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">만 4세 · 담임: 박수진</div>
+          </div>
+          <span class="badge badge-amber"><span class="badge-dot"></span>중지됨</span>
+        </div>
+        <div class="cls-card-body">
+          <div class="cls-progress-row"><span>가입 학부모</span><span style="font-weight:700">12 / 18명</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:67%;background:var(--amber)"></div></div>
+          <div class="cls-link-row">
+            <span class="cls-link-text">https://kidkids.app/inv/def456...</span>
+            <button class="btn btn-outline btn-xs">복사</button>
+          </div>
+        </div>
+        <div class="cls-card-footer">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-outline btn-xs">재개</button>
+            <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red-text);border:1.5px solid var(--red-bg)">삭제</button>
+          </div>
+        </div>
+      </div>
+      <!-- 별빛반 -->
+      <div class="cls-card">
+        <div class="cls-card-header">
+          <div>
+            <div class="cls-card-name">별빛반</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">만 3세 · 담임: 최민준</div>
+          </div>
+          <span class="badge badge-gray"><span class="badge-dot"></span>미설정</span>
+        </div>
+        <div class="cls-card-body">
+          <div class="cls-progress-row"><span>가입 학부모</span><span style="font-weight:700">0 / 15명</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--border-light)"></div></div>
+          <div style="padding:8px;text-align:center;font-size:12px;color:var(--text-muted);
+            background:var(--bg-base);border-radius:var(--r-md);border:1.5px dashed var(--border-medium)">
+            초대 링크 미생성
+          </div>
+        </div>
+        <div class="cls-card-footer">
+          <span style="font-size:11px;color:var(--text-muted)">링크 없음</span>
+          <button class="btn btn-primary btn-xs">링크 생성</button>
+        </div>
+      </div>
+      <!-- 새싹반 -->
+      <div class="cls-card">
+        <div class="cls-card-header">
+          <div>
+            <div class="cls-card-name">새싹반</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">만 2세 · 담임: 김예진</div>
+          </div>
+          <span class="badge badge-green"><span class="badge-dot"></span>활성</span>
+        </div>
+        <div class="cls-card-body">
+          <div class="cls-progress-row"><span>가입 학부모</span><span style="font-weight:700">8 / 12명</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:67%;background:var(--green)"></div></div>
+          <div class="cls-link-row">
+            <span class="cls-link-text">https://kidkids.app/inv/ghi789...</span>
+            <button class="btn btn-outline btn-xs">복사</button>
+          </div>
+        </div>
+        <div class="cls-card-footer">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-outline btn-xs">중지</button>
+            <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red-text);border:1.5px solid var(--red-bg)">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB2: 교직원 (v1) -->
+  <div class="tab-content" id="v1-t2">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 상태</option><option>대기중</option><option>사용완료</option><option>만료</option></select></div>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm">＋ 교직원 초대 발송</button>
+      </div>
+    </div>
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead><tr>
+          <th>상태</th><th>반</th><th>역할</th><th>발송자</th><th>D-Day</th><th>가입자</th><th>관리</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-amber"><span class="badge-dot"></span>대기중</span></td><td>햇님반</td><td>담임교사</td><td>이지현</td><td class="dday" style="color:var(--amber)">D-3</td><td style="color:var(--text-muted)">—</td><td><button class="btn btn-outline btn-xs">재발송</button></td></tr>
+          <tr><td><span class="badge badge-green"><span class="badge-dot"></span>사용완료</span></td><td>달님반</td><td>보조교사</td><td>박수진</td><td class="dday" style="color:var(--green)">D-12</td><td>김나연</td><td><button class="btn btn-outline btn-xs">만료처리</button></td></tr>
+          <tr><td><span class="badge badge-red"><span class="badge-dot"></span>만료</span></td><td>별빛반</td><td>담임교사</td><td>최민준</td><td class="dday" style="color:var(--red)">D+5</td><td style="color:var(--text-muted)">—</td><td><button class="btn btn-primary btn-xs">재발송</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB3: 이력 (v1) -->
+  <div class="tab-content" id="v1-t3">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 상태</option></select></div>
+      <div class="fsel-wrap"><select class="fsel"><option>전체 유형</option><option>학부모</option><option>교직원</option></select></div>
+      <div class="search-wrap"><input class="search-inp" placeholder="이름, 기관명 검색"><button class="search-btn">🔍</button></div>
+    </div>
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead><tr><th>상태</th><th>유형</th><th>반</th><th>이름</th><th>채널</th><th>발송일</th><th>가입일</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">활성</span></td><td>학부모</td><td>햇님반</td><td>김미영</td><td>카카오</td><td>2026-03-01</td><td>2026-03-02</td></tr>
+          <tr><td><span class="badge badge-amber">대기</span></td><td>교직원</td><td>달님반</td><td>—</td><td>문자</td><td>2026-03-10</td><td>—</td></tr>
+          <tr><td><span class="badge badge-red">만료</span></td><td>학부모</td><td>별빛반</td><td>—</td><td>링크복사</td><td>2026-02-20</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     V2 패널
+════════════════════════════════════════ -->
+<div class="ver-panel" id="panelV2">
+  <div class="ver-label v2">🔵 V2 — 원아(個人) 단위 초대 (신규 스펙)</div>
+
+  <!-- KPI v2 — 상태 모델 반영 -->
+  <div class="kpi-row">
+    <div class="kpi-card diff-changed">
+      <div class="kpi-icon" style="background:#E0F2FE">📨</div>
+      <div><div class="kpi-val" style="color:var(--accent)">32</div><div class="kpi-lbl">전체 초대</div></div>
+    </div>
+    <div class="kpi-card diff-changed">
+      <div class="kpi-icon" style="background:var(--blue-bg)">🕐</div>
+      <div><div class="kpi-val" style="color:var(--blue)">12</div><div class="kpi-lbl">초대중</div></div>
+    </div>
+    <div class="kpi-card diff-new">
+      <div class="kpi-icon" style="background:var(--amber-bg)">📋</div>
+      <div><div class="kpi-val" style="color:var(--amber)">5</div><div class="kpi-lbl">승인요청</div></div>
+    </div>
+    <div class="kpi-card diff-changed">
+      <div class="kpi-icon" style="background:var(--green-bg)">✅</div>
+      <div><div class="kpi-val" style="color:var(--green)">15</div><div class="kpi-lbl">승인완료</div></div>
+    </div>
+  </div>
+
+  <!-- TABS v2 -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('v2','t1')">📩 학부모 초대</button>
+    <button class="tab-btn" onclick="switchTab('v2','t2')">👨‍🏫 교직원 초대</button>
+    <button class="tab-btn" onclick="switchTab('v2','t3')">📋 초대 이력</button>
+  </div>
+
+  <!-- TAB1: 학부모 (원아 단위 테이블) -->
+  <div class="tab-content show" id="v2-t1">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 반</option><option>햇님반</option><option>달님반</option><option>별빛반</option></select></div>
+      <div class="fsel-wrap"><select class="fsel"><option>전체 상태</option><option>초대중</option><option>승인요청</option><option>승인완료</option><option>거절됨</option><option>만료됨</option></select></div>
+      <div class="search-wrap"><input class="search-inp" placeholder="원아명, 전화번호 검색"><button class="search-btn">🔍</button></div>
+      <div class="ml-auto" style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="toggleBulk()">☑ 일괄 선택</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('createModal').classList.add('open')">＋ 초대 링크 생성</button>
+      </div>
+    </div>
+
+    <!-- 일괄 액션 바 (선택 시 표시) -->
+    <div class="bulk-bar" id="bulkBar" style="display:none">
+      <span>☑ <span class="selected-count">3</span>건 선택됨</span>
+      <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red-text);border:1.5px solid var(--red-bg)">일괄 만료</button>
+      <button class="btn btn-success btn-sm">일괄 승인</button>
+      <button class="btn btn-outline btn-sm" onclick="toggleBulk()">선택 해제</button>
+      <span style="font-size:11px;color:var(--accent-dark);margin-left:4px">※ 거절은 개별 처리만 가능</span>
+    </div>
+
+    <div class="inv-table-wrap diff-changed">
+      <table class="inv-table">
+        <thead><tr>
+          <th style="width:36px"><input type="checkbox" id="chkAll" onchange="toggleAllChk(this)"></th>
+          <th>원아</th>
+          <th>전화번호</th>
+          <th>상태</th>
+          <th>만료일</th>
+          <th>발송일</th>
+          <th>액션</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">김민준</span><span class="child-class">햇님반 · 만 5세</span></div></td>
+            <td class="phone-cell">010-1234-5678</td>
+            <td><span class="badge badge-blue"><span class="badge-dot"></span>초대중</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-31</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-24</td>
+            <td class="action-cell"><button class="btn btn-outline btn-xs">재발송</button></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">이서연</span><span class="child-class">햇님반 · 만 5세</span></div></td>
+            <td class="phone-cell">010-2345-6789</td>
+            <td><span class="badge badge-amber"><span class="badge-dot"></span>승인요청</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-28</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-21</td>
+            <td class="action-cell">
+              <button class="btn btn-success btn-xs">승인</button>
+              <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red-text)">거절</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">박지호</span><span class="child-class">달님반 · 만 4세</span></div></td>
+            <td class="phone-cell">010-3456-7890</td>
+            <td><span class="badge badge-green"><span class="badge-dot"></span>승인완료</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-29</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-22</td>
+            <td class="action-cell"><span style="font-size:11px;color:var(--text-muted)">—</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">최유리</span><span class="child-class">달님반 · 만 4세</span></div></td>
+            <td class="phone-cell" style="color:var(--text-muted)">—</td>
+            <td><span class="badge badge-blue"><span class="badge-dot"></span>초대중</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-31</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-24</td>
+            <td class="action-cell">
+              <button class="btn btn-outline btn-xs">링크복사</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">정도윤</span><span class="child-class">별빛반 · 만 3세</span></div></td>
+            <td class="phone-cell">010-5678-9012</td>
+            <td><span class="badge badge-red"><span class="badge-dot"></span>만료됨</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--red)">2026-03-17</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-10</td>
+            <td class="action-cell"><button class="btn btn-primary btn-xs">재초대</button></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell"><span class="child-name">한지민</span><span class="child-class">새싹반 · 만 2세</span></div></td>
+            <td class="phone-cell">010-6789-0123</td>
+            <td><span class="badge badge-gray"><span class="badge-dot"></span>거절됨</span></td>
+            <td style="font-size:12px;color:var(--text-muted)">—</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-15</td>
+            <td class="action-cell"><button class="btn btn-outline btn-xs">재초대</button></td>
+          </tr>
+          <!-- 번호 일괄 초대 (원아 미지정) -->
+          <tr style="background:#FFFBEB">
+            <td><input type="checkbox" class="row-chk"></td>
+            <td><div class="child-cell">
+              <span class="child-name" style="color:var(--text-muted)">미지정</span>
+              <span class="badge badge-amber" style="font-size:10px;margin-top:2px;width:fit-content">번호 초대</span>
+            </div></td>
+            <td class="phone-cell">010-9999-1111</td>
+            <td><span class="badge badge-amber"><span class="badge-dot"></span>승인요청</span></td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-31</td>
+            <td style="font-size:12px;color:var(--text-muted)">2026-03-24</td>
+            <td class="action-cell">
+              <button class="btn btn-success btn-xs">승인</button>
+              <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red-text)">거절</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB2: 교직원 (v2 — Chip 반선택) -->
+  <div class="tab-content" id="v2-t2">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 상태</option><option>초대중</option><option>승인요청</option><option>승인완료</option><option>만료</option></select></div>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('teacherModal').classList.add('open')">＋ 교직원 초대 발송</button>
+      </div>
+    </div>
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead><tr>
+          <th>상태</th><th>반</th><th>역할</th><th>좌석</th><th>만료일</th><th>발송자</th><th>가입자</th><th>관리</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-blue"><span class="badge-dot"></span>초대중</span></td>
+            <td>햇님반</td><td>담임교사</td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">0 / 1</td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-31</td>
+            <td style="font-size:12px">이지현</td>
+            <td style="color:var(--text-muted);font-size:12px">—</td>
+            <td><button class="btn btn-outline btn-xs">재발송</button></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green"><span class="badge-dot"></span>승인완료</span></td>
+            <td>달님반</td><td>보조교사</td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">1 / 1</td>
+            <td style="font-size:12px;font-family:'JetBrains Mono',monospace">2026-03-28</td>
+            <td style="font-size:12px">박수진</td>
+            <td style="font-size:12px">김나연</td>
+            <td><span style="font-size:11px;color:var(--text-muted)">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB3: 이력 (v2) -->
+  <div class="tab-content" id="v2-t3">
+    <div class="action-bar">
+      <div class="fsel-wrap"><select class="fsel"><option>전체 상태</option></select></div>
+      <div class="fsel-wrap"><select class="fsel"><option>전체 유형</option><option>학부모</option><option>교직원</option></select></div>
+      <div class="fsel-wrap"><select class="fsel"><option>전체 반</option></select></div>
+      <div class="search-wrap"><input class="search-inp" placeholder="원아명, 전화번호"><button class="search-btn">🔍</button></div>
+    </div>
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead><tr><th>상태</th><th>유형</th><th>원아</th><th>전화번호</th><th>발송일</th><th>만료일</th><th>승인일</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">승인완료</span></td><td>학부모</td><td>박지호 · 달님반</td><td class="phone-cell">010-3456-7890</td><td style="font-size:12px">2026-03-22</td><td style="font-size:12px">2026-03-29</td><td style="font-size:12px">2026-03-23</td></tr>
+          <tr><td><span class="badge badge-amber">승인요청</span></td><td>학부모</td><td>이서연 · 햇님반</td><td class="phone-cell">010-2345-6789</td><td style="font-size:12px">2026-03-21</td><td style="font-size:12px">2026-03-28</td><td style="font-size:12px;color:var(--text-muted)">—</td></tr>
+          <tr><td><span class="badge badge-red">만료됨</span></td><td>학부모</td><td>정도윤 · 별빛반</td><td class="phone-cell">010-5678-9012</td><td style="font-size:12px">2026-03-10</td><td style="font-size:12px;color:var(--red)">2026-03-17</td><td style="font-size:12px;color:var(--text-muted)">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     MODALS
+════════════════════════════════════════ -->
+
+<!-- V2 학부모 초대 생성 모달 -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">📩 학부모 초대 링크 생성</span>
+      <button class="modal-close" onclick="document.getElementById('createModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">
+        ℹ️ 전화번호를 여러 개 추가하면 원아 선택이 비활성화되고, 번호별로 각각 초대장이 생성됩니다.
+      </div>
+
+      <!-- 원아 선택 -->
+      <div class="form-field">
+        <label class="form-label">원아 선택</label>
+        <select class="form-select" id="childSelect">
+          <option value="">— 원아 선택 (선택사항)</option>
+          <option>김민준 · 햇님반</option>
+          <option>이서연 · 햇님반</option>
+          <option>박지호 · 달님반</option>
+          <option>최유리 · 달님반</option>
+          <option>정도윤 · 별빛반</option>
+        </select>
+        <span class="form-hint" id="childHint">선택 시 해당 원아에게 초대장이 발행됩니다</span>
+      </div>
+
+      <!-- 전화번호 입력 -->
+      <div class="form-field">
+        <label class="form-label">전화번호 <span style="color:var(--text-muted);font-size:10px">(선택사항)</span></label>
+        <div class="phone-list" id="phoneList">
+          <div class="phone-row">
+            <input class="form-input" id="phone0" placeholder="010-0000-0000" oninput="onPhoneInput()">
+          </div>
+        </div>
+        <button class="add-phone-btn" id="addPhoneBtn" onclick="addPhoneRow()">＋ 번호 추가</button>
+        <span class="form-hint" id="phoneHint">번호 미입력 시 링크 복사만 가능합니다</span>
+      </div>
+
+      <!-- 만료일 (표시 전용) -->
+      <div class="form-field">
+        <label class="form-label">만료일</label>
+        <input class="form-input" value="2026-03-31 (생성일 +7일 자동)" disabled>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('createModal').classList.remove('open')">취소</button>
+      <button class="btn btn-outline" id="btnCopyLink">🔗 링크 복사</button>
+      <button class="btn btn-primary" id="btnSendSms">📱 SMS 발송</button>
+    </div>
+  </div>
+</div>
+
+<!-- V2 교직원 초대 모달 -->
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">👨‍🏫 교직원 초대 발송</span>
+      <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- 대상 반 (Chip 복수 선택) -->
+      <div class="form-field diff-new" style="position:relative">
+        <label class="form-label">대상 반 <span style="color:var(--red)">*</span></label>
+        <div class="chip-group">
+          <div class="chip selected" onclick="this.classList.toggle('selected')">햇님반</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">달님반</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">별빛반</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">새싹반</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">꽃잎반</div>
+        </div>
+        <span class="form-hint">복수 선택 시 반별로 각각 초대장 생성</span>
+      </div>
+
+      <!-- 역할 -->
+      <div class="form-field">
+        <label class="form-label">역할 <span style="color:var(--red)">*</span></label>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" id="roleMain" onclick="setRole('main')">담임교사</button>
+          <button class="btn btn-outline btn-sm" id="roleAssist" onclick="setRole('assist')">보조교사</button>
+        </div>
+      </div>
+
+      <!-- 만료일 -->
+      <div class="form-field diff-new" style="position:relative">
+        <label class="form-label">만료일 <span style="color:var(--red)">*</span></label>
+        <input class="form-input" type="date" value="2026-03-31">
+        <span class="form-hint">기본값: 생성일 +7일</span>
+      </div>
+
+      <!-- 최대 좌석 수 -->
+      <div class="form-field diff-new" style="position:relative">
+        <label class="form-label">최대 좌석 수</label>
+        <input class="form-input" type="number" value="1" min="1" max="10" style="width:120px">
+        <span class="form-hint">반별 기준 · 해당 인원 수만큼 가입 가능</span>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('teacherModal').classList.remove('open')">취소</button>
+      <button class="btn btn-primary">초대 발송</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ━━━ VERSION SWITCH ━━━ */
+function switchVer(ver) {
+  document.getElementById('panelV1').classList.toggle('show', ver === 'v1');
+  document.getElementById('panelV2').classList.toggle('show', ver === 'v2');
+  document.getElementById('btnV1').classList.toggle('active', ver === 'v1');
+  document.getElementById('btnV2').classList.toggle('active', ver === 'v2');
+}
+
+/* ━━━ TAB SWITCH ━━━ */
+function switchTab(ver, tab) {
+  const panel = document.getElementById('panel' + ver.toUpperCase());
+  const btns = panel.querySelectorAll('.tab-btn');
+  const contents = panel.querySelectorAll('.tab-content');
+  const tabs = ['t1','t2','t3'];
+  btns.forEach((b, i) => b.classList.toggle('active', tabs[i] === tab));
+  contents.forEach(c => c.classList.remove('show'));
+  const target = document.getElementById(ver + '-' + tab);
+  if (target) target.classList.add('show');
+}
+
+/* ━━━ BULK SELECT ━━━ */
+let bulkMode = false;
+function toggleBulk() {
+  bulkMode = !bulkMode;
+  document.getElementById('bulkBar').style.display = bulkMode ? 'flex' : 'none';
+}
+function toggleAllChk(el) {
+  document.querySelectorAll('.row-chk').forEach(c => c.checked = el.checked);
+}
+
+/* ━━━ PHONE ROWS ━━━ */
+let phoneCount = 1;
+function addPhoneRow() {
+  phoneCount++;
+  const list = document.getElementById('phoneList');
+  const row = document.createElement('div');
+  row.className = 'phone-row';
+  row.innerHTML = `<input class="form-input" id="phone${phoneCount}" placeholder="010-0000-0000" oninput="onPhoneInput()">
+    <button class="phone-remove" onclick="removePhoneRow(this)">✕</button>`;
+  list.appendChild(row);
+  onPhoneInput();
+}
+function removePhoneRow(btn) {
+  btn.parentElement.remove();
+  onPhoneInput();
+}
+function onPhoneInput() {
+  const rows = document.querySelectorAll('.phone-row');
+  const isMulti = rows.length > 1;
+  const childSel = document.getElementById('childSelect');
+  const hint = document.getElementById('childHint');
+  const smsBtn = document.getElementById('btnSendSms');
+  const copyBtn = document.getElementById('btnCopyLink');
+
+  if (isMulti) {
+    childSel.disabled = true;
+    childSel.value = '';
+    hint.textContent = '⚠ 전화번호 복수 입력 시 원아 선택 비활성 — 번호별 개별 초대장 생성';
+    hint.style.color = 'var(--amber)';
+    smsBtn.textContent = `📱 일괄 SMS 발송 (${rows.length}건)`;
+    copyBtn.style.display = 'none';
+  } else {
+    childSel.disabled = false;
+    hint.textContent = '선택 시 해당 원아에게 초대장이 발행됩니다';
+    hint.style.color = '';
+    smsBtn.textContent = '📱 SMS 발송';
+    copyBtn.style.display = '';
+  }
+
+  // SMS 버튼 활성화: 번호 있을 때만
+  const hasPhone = [...document.querySelectorAll('#phoneList input')].some(i => i.value.trim());
+  smsBtn.disabled = !hasPhone;
+  smsBtn.style.opacity = hasPhone ? '1' : '.4';
+}
+
+/* ━━━ ROLE TOGGLE ━━━ */
+function setRole(r) {
+  document.getElementById('roleMain').className   = 'btn btn-sm ' + (r === 'main'   ? 'btn-primary' : 'btn-outline');
+  document.getElementById('roleAssist').className = 'btn btn-sm ' + (r === 'assist' ? 'btn-primary' : 'btn-outline');
+}
+
+/* ━━━ ESC CLOSE ━━━ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+  }
+});
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
