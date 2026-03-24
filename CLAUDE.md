@@ -68,8 +68,8 @@
 
 | 파일 | 설명 | 상태 |
 |------|------|------|
-| `src/pages/oper/operation-dashboard.html` | 운영관리 대시보드 (기관·교사 공용) | 🔄 교사 뷰 구현 완료 |
-| `src/pages/oper/operation-org-selector.html` | 기관 선택 팝업 | 🔲 미시작 |
+| `src/pages/oper/operation-dashboard.html` | 운영관리 대시보드 (기관·교사 공용) | ✅ 완료 |
+| `src/pages/oper/operation-org-selector.html` | 기관 선택 팝업 | ✅ 완료 |
 | `src/pages/oper/operation-notice-board.html` | 알림장 | ✅ 완료 |
 | `src/pages/oper/operation-invitation.html` | 초대 관리 | ✅ 완료 |
 | `src/pages/oper/operation-org-info.html` | 기관정보 관리 | ✅ 완료 |

@@ -37,13 +37,13 @@
 │           ├── 📄 operation-org-info.html      ← 기관정보 관리 [✅ 완료]
 │           ├── 📄 operation-class.html         ← 반 관리 [✅ 완료]
 │           ├── 📄 operation-child.html         ← 원아관리 [✅ 완료]
-│           ├── 📄 operation-dashboard.html     ← 운영관리 대시보드 [🔲 미시작]
-│           ├── 📄 operation-org-selector.html  ← 기관 선택 팝업 [🔲 미시작]
-│           ├── 📄 operation-announcement.html  ← 공지사항 [🔲 미시작]
-│           ├── 📄 operation-album.html         ← 앨범 [🔲 미시작]
+│           ├── 📄 operation-dashboard.html     ← 운영관리 대시보드 [✅ 완료]
+│           ├── 📄 operation-org-selector.html  ← 기관 선택 팝업 [✅ 완료]
+│           ├── 📄 operation-announcement.html  ← 공지사항 [✅ 완료]
+│           ├── 📄 operation-album.html         ← 앨범 [✅ 완료]
 │           ├── 📄 operation-schedule.html      ← 일정 관리 [🔲 미시작]
 │           ├── 📄 operation-consulting.html    ← 상담 관리 [🔲 미시작]
-│           └── 📄 operation-medicine.html      ← 투약의뢰서 관리 [🔲 미시작]
+│           └── 📄 operation-medicine.html      ← 투약의뢰서 관리 [✅ 완료]
 └── 📁 .brain/                                  ← 프로젝트 브레인 (지식베이스)
     ├── 📄 00-PROJECT-OVERVIEW.md               ← 프로젝트 개요
     ├── 📄 01-MEMBER-MANAGEMENT.md              ← 회원 관리 기능정의
@@ -83,18 +83,18 @@
 
 | 경로 | 설명 | 상태 |
 |------|------|------|
+| `/src/pages/oper/operation-dashboard.html` | 운영관리 대시보드 (기관·교사 공용) | ✅ 완료 |
+| `/src/pages/oper/operation-org-selector.html` | 기관 선택 팝업 | ✅ 완료 |
 | `/src/pages/oper/operation-notice-board.html` | 알림장 | ✅ 완료 |
 | `/src/pages/oper/operation-invitation.html` | 초대 관리 | ✅ 완료 |
 | `/src/pages/oper/operation-org-info.html` | 기관정보 관리 | ✅ 완료 |
 | `/src/pages/oper/operation-class.html` | 반 관리 | ✅ 완료 |
 | `/src/pages/oper/operation-child.html` | 원아관리 | ✅ 완료 |
-| `/src/pages/oper/operation-dashboard.html` | 운영관리 대시보드 (기관·교사 공용) | 🔲 미시작 |
-| `/src/pages/oper/operation-org-selector.html` | 기관 선택 팝업 | 🔲 미시작 |
-| `/src/pages/oper/operation-announcement.html` | 공지사항 | 🔲 미시작 |
-| `/src/pages/oper/operation-album.html` | 앨범 | 🔲 미시작 |
+| `/src/pages/oper/operation-announcement.html` | 공지사항 | ✅ 완료 |
+| `/src/pages/oper/operation-album.html` | 앨범 | ✅ 완료 |
+| `/src/pages/oper/operation-medicine.html` | 투약의뢰서 관리 | ✅ 완료 |
 | `/src/pages/oper/operation-schedule.html` | 일정 관리 | 🔲 미시작 |
 | `/src/pages/oper/operation-consulting.html` | 상담 관리 | 🔲 미시작 |
-| `/src/pages/oper/operation-medicine.html` | 투약의뢰서 관리 | 🔲 미시작 |
 
 ---
 
@@ -154,15 +154,38 @@
 - 원아 목록 테이블 → 우측 드로어 (상세·보호자·수정)
 - 원아 등록·상태변경 모달 / 보호자 연결 관리
 
+### 13. 운영관리 대시보드 (`operation-dashboard.html`)
+- 기관관리자·교사 공용 대시보드 (역할별 뷰 분기)
+- KPI 카드 / 출석현황 / 알림장 발송 현황
+- 교사 뷰: 담당반 출석현황, 빠른 작성 pre-fill 연동
+
+### 14. 기관 선택 팝업 (`operation-org-selector.html`)
+- 통합관리자 운영관리 진입 시 기관 선택 팝업
+- 기관 목록 검색·선택 → `operationContext` sessionStorage 설정
+
+### 15. 공지사항 (`operation-announcement.html`)
+- KPI 4개 / 반·상태·기간 필터바 + 검색
+- 공지 목록 테이블 (고정핀, 배지, 조회수)
+- 공지 작성·수정·삭제 모달 / 일괄 삭제
+
+### 16. 앨범 (`operation-album.html`)
+- KPI 4개 / 반·기간 필터바 + 검색
+- 그리드·리스트 뷰 토글 / 앨범 카드 (커버, 사진 수, 통계)
+- 앨범 만들기·편집·삭제 모달
+
+### 17. 투약의뢰서 관리 (`operation-medicine.html`)
+- KPI 4개 / 날짜·반·상태 필터바 + 검색
+- 투약의뢰서 목록 테이블 (약명, 투약 시간, 상태)
+- 상세 드로어 (처리·거절·보호자 정보) / 엑셀 내보내기
+
 ---
 
 ## 🚧 미구현 / 준비중 기능
 
 | 기능 | 상태 | 설명 |
 |------|------|------|
-| 운영관리 나머지 화면 | 🔲 미시작 | 공지사항·앨범·일정·상담·투약의뢰서 |
-| 운영관리 대시보드 | 🔲 미시작 | 기관·교사 공용 대시보드 |
-| 기관 선택 팝업 | 🔲 미시작 | 통합관리자 운영관리 진입 시 |
+| 일정 관리 | 🔲 미시작 | `operation-schedule.html` |
+| 상담 관리 | 🔲 미시작 | `operation-consulting.html` |
 | 통계관리 | 🔒 준비중 | 사이드바에 "준비중" 표시 |
 | 서버 연동 | ❌ 미구현 | 현재 모든 데이터는 프론트엔드 하드코딩 |
 | 실제 인증 | ❌ 미구현 | 클라이언트 사이드 테스트 계정만 |

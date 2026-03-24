@@ -78,8 +78,14 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
 /* 알림장 카드 내 원아 chips */
 .nc-children{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
-.nc-child-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:8px;font-size:11px;font-weight:600;background:var(--accent-light);color:var(--accent-dark);}
+.nc-child-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px 2px 4px;border-radius:8px;font-size:11px;font-weight:600;background:var(--accent-light);color:var(--accent-dark);border:1px solid transparent;transition:.15s;}
 .nc-child-chip-av{width:13px;height:13px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#fff;flex-shrink:0;}
+.nc-chip-cnt{display:inline-flex;align-items:center;justify-content:center;background:var(--amber);color:#fff;font-size:9px;font-weight:800;padding:0 4px;border-radius:6px;min-width:14px;height:14px;margin-left:1px;line-height:1;}
+.nc-chip-cnt.read{background:var(--text-muted);}
+.nc-chip-unread{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-left:1px;animation:blink .9s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+.panel-tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:0 4px;border-radius:8px;min-width:14px;height:14px;margin-left:3px;line-height:1;vertical-align:middle;}
+.panel-tab-badge.read{background:var(--text-muted);}
 .nc-comment-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;background:var(--amber-bg);color:var(--amber-text);}
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .topbar-date{font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
@@ -864,6 +870,14 @@ function initClassFilter() {
   }
 }
 
+// ━━━ 읽음 상태 런타임 맵 (key: `noticeId-childId`) ━━━
+const readState = {};
+MOCK_SENT.forEach(n => n.children.forEach(c => {
+  readState[`${n.id}-${c.id}`] = c.isRead;
+}));
+const isChildRead   = (nid, cid) => readState[`${nid}-${cid}`] ?? true;
+const markChildRead = (nid, cid) => { readState[`${nid}-${cid}`] = true; };
+
 // ━━━ 상태 ━━━
 let currentTab = 'sent';
 
@@ -998,11 +1012,15 @@ function renderSentList(area) {
       // 원아 chips — 읽음/미읽음 구분, 최대 5개
       const childChips = n.children.length > 0
         ? n.children.slice(0,5).map(c => {
-            const isRead = c.isRead;
+            const isRead = isChildRead(n.id, c.id);
             const chipStyle = isRead
               ? 'border-color:#A7F3D0;background:#F0FDF4;'
               : 'border-color:#FED7AA;background:#FFF7ED;';
-            return `<span class="nc-child-chip" style="${chipStyle}"><span class="nc-child-chip-av" style="background:${c.color}">${c.name[0]}</span>${c.name}</span>`;
+            const parentCnt = c.comments.filter(cm => cm.type === 'parent').length;
+            const unread = parentCnt > 0 && !isRead;
+            const cntBadge = parentCnt > 0 ? `<span class="nc-chip-cnt${unread ? '' : ' read'}">${parentCnt}</span>` : '';
+            const unreadDot = unread ? `<span class="nc-chip-unread"></span>` : '';
+            return `<span class="nc-child-chip" style="${chipStyle}"><span class="nc-child-chip-av" style="background:${c.color}">${c.name[0]}</span>${c.name}${cntBadge}${unreadDot}</span>`;
           }).join('') + (n.children.length > 5 ? `<span class="nc-child-chip" style="background:#F3F4F6;color:#6B7280;border:none">+${n.children.length-5}</span>` : '')
         : `<span style="font-size:11px;color:var(--text-muted)">원아 ${n.childCount}명</span>`;
 
@@ -1133,10 +1151,12 @@ function openSentDetail(id) {
   // 원아 탭
   const tabs = document.getElementById('sdpChildTabs');
   tabs.innerHTML = `<div class="panel-tab active" onclick="switchChildTab(this,0)">📋 공통</div>` +
-    notice.children.map((c,i) => `
-      <div class="panel-tab" onclick="switchChildTab(this,${i+1})">
-        ${c.name} ${!c.isRead && c.commentCount > 0 ? '<span style="color:var(--red)">●</span>' : ''}
-      </div>`).join('');
+    notice.children.map((c,i) => {
+      const parentCnt = c.comments.filter(cm => cm.type === 'parent').length;
+      const unread = parentCnt > 0 && !isChildRead(notice.id, c.id);
+      const badge = parentCnt > 0 ? `<span class="panel-tab-badge${unread ? '' : ' read'}">${parentCnt}</span>` : '';
+      return `<div class="panel-tab" onclick="switchChildTab(this,${i+1})">${c.name}${badge}</div>`;
+    }).join('');
 
   renderSentDetailCommon(notice);
   showPanel('sentDetailPanel');
@@ -1148,8 +1168,15 @@ function switchChildTab(el, idx) {
   const noticeId = document.querySelector('#sentDetailPanel .panel-title span').textContent;
   const notice = MOCK_SENT.find(n => (n.date + ' ' + n.class) === noticeId);
   if (!notice) return;
-  if (idx === 0) renderSentDetailCommon(notice);
-  else renderSentDetailChild(notice, notice.children[idx - 1]);
+  if (idx === 0) {
+    renderSentDetailCommon(notice);
+  } else {
+    const child = notice.children[idx - 1];
+    markChildRead(notice.id, child.id);
+    const badge = el.querySelector('.panel-tab-badge');
+    if (badge) badge.classList.add('read');
+    renderSentDetailChild(notice, child);
+  }
 }
 
 function renderSentDetailCommon(notice) {
