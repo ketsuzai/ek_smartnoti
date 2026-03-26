@@ -58,6 +58,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 
 /* ━━━━━━━━━━ 반 필터 셀렉터 ━━━━━━━━━━ */
 .class-filter-wrap {
+  width: fit-content;
   display: flex; align-items: center; gap: 8px;
   background: var(--bg-base); border: 1.5px solid var(--border-light);
   border-radius: var(--radius-md); padding: 5px 12px; transition: 0.18s;
@@ -565,16 +566,18 @@ const CHILDREN_CLS001 = [
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 세션 & 역할 판별
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const userRole  = sessionStorage.getItem('userRole')  || 'org_admin';
-const userName  = sessionStorage.getItem('userName')  || '관리자';
-const opCtx     = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const userRole      = sessionStorage.getItem('userRole')  || 'org_admin';
+const userName      = sessionStorage.getItem('userName')  || '관리자';
+const opCtx         = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const effectiveRole = (opCtx && opCtx.contextRole) ? opCtx.contextRole : userRole;
 
 // 실제 표시 역할 결정
-// - super + opCtx → 운영관리 모드 (기관관리자처럼 동작)
-// - org_admin     → 기관관리자
-// - teacher       → 교사관리자
+// - super + opCtx(contextRole:'teacher')  → 교사관리자 뷰
+// - super + opCtx(contextRole:'org_admin') → 기관관리자 뷰
+// - org_admin → 기관관리자
+// - teacher   → 교사관리자
 const isSuper   = userRole === 'super';
-const isTeacher = userRole === 'teacher';
+const isTeacher = effectiveRole === 'teacher';
 const isOrgMode = isSuper && opCtx; // 통합관리자 운영관리 컨텍스트
 
 const orgName   = opCtx ? opCtx.orgName : '해맑은 어린이집';

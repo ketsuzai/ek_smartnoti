@@ -635,7 +635,9 @@ let selectedClassChips  = new Set();
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('topDate').textContent = new Date().toISOString().slice(0,10);
   const storedRole = sessionStorage.getItem('userRole') || 'org_admin';
-  applyRole(storedRole);
+  const _invOpCtx = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+  const effectiveRole = (_invOpCtx && _invOpCtx.contextRole) ? _invOpCtx.contextRole : storedRole;
+  applyRole(effectiveRole);
   populateClassFilter();
   renderAll();
   document.addEventListener('keydown', e => {

@@ -477,13 +477,15 @@ const MOCK_CHILDREN = {
    STATE & ROLE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const userRole = sessionStorage.getItem('userRole') || 'org_admin';
+const _opCtx = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const effectiveRole = (_opCtx && _opCtx.contextRole) ? _opCtx.contextRole : userRole;
 const assignedClasses = JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"},{"id":"CLS002","name":"달님반"}]');
 
-const canCreate = userRole !== 'teacher';
-const canDeleteClass = userRole !== 'teacher';
+const canCreate = effectiveRole !== 'teacher';
+const canDeleteClass = effectiveRole !== 'teacher';
 
 function canEditClass(clsId) {
-  if (userRole !== 'teacher') return true;
+  if (effectiveRole !== 'teacher') return true;
   return assignedClasses.some(c => c.id === clsId);
 }
 
@@ -620,7 +622,7 @@ function renderClassCard(c) {
     ? `<span class="cc-status-badge badge-green"><span class="badge-dot"></span>운영중</span>`
     : `<span class="cc-status-badge badge-gray"><span class="badge-dot"></span>비운영</span>`;
 
-  const assigned = userRole === 'teacher' && isAssigned(c.id);
+  const assigned = effectiveRole === 'teacher' && isAssigned(c.id);
   const editBtn = canEditClass(c.id)
     ? `<button class="btn btn-outline btn-xs" onclick="event.stopPropagation();openEditModal('${c.id}')">수정</button>`
     : '';

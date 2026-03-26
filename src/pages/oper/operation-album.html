@@ -451,7 +451,9 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 // 0. 역할 컨텍스트
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const AL_USER_ROLE  = sessionStorage.getItem('userRole') || 'org_admin';
-const AL_IS_TEACHER = AL_USER_ROLE === 'teacher';
+const AL_OP_CTX     = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const AL_EFFECTIVE  = (AL_OP_CTX && AL_OP_CTX.contextRole) ? AL_OP_CTX.contextRole : AL_USER_ROLE;
+const AL_IS_TEACHER = AL_EFFECTIVE === 'teacher';
 const AL_ASSIGNED   = AL_IS_TEACHER
   ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"}]')
   : null;

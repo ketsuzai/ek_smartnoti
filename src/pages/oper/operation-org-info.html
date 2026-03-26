@@ -232,7 +232,9 @@ const ORG_MOCK = {
 
 // ━━━ STATE ━━━
 const userRole = sessionStorage.getItem('userRole') || 'org_admin';
-const canEdit  = (userRole === 'super' || userRole === 'org_admin');
+const _oiOpCtx = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const effectiveRole = (_oiOpCtx && _oiOpCtx.contextRole) ? _oiOpCtx.contextRole : userRole;
+const canEdit  = (effectiveRole === 'super' || effectiveRole === 'org_admin');
 let editMode   = false;
 let editData   = Object.assign({}, ORG_MOCK);
 

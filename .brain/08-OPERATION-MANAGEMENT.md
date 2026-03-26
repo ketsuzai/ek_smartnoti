@@ -1,6 +1,6 @@
 # 🧠 프로젝트 브레인: 운영관리 기능정의
 
-> **최종 업데이트**: 2026-03-24
+> **최종 업데이트**: 2026-03-26
 > **작업 범위**: 통합관리자 전용 — 운영관리 메뉴
 > **연관 브레인**: `07-ROLE-PERMISSION.md`
 
@@ -9,12 +9,13 @@
 ## ⚡ QUICK REF
 > 운영관리 공통 패턴. 각 서브메뉴 상세는 개별 브레인 참조.
 
-- **진입**: 통합관리자 → 기관 선택 팝업 → operationContext 세션 저장 → 서브메뉴
-- **컨텍스트 세션**: `sessionStorage.setItem('operationContext', JSON.stringify({orgId, orgName, orgType}))`
+- **진입**: 통합관리자 → 기관 선택 팝업 → 역할 선택(기관관리자/교사관리자) → operationContext 세션 저장 → 서브메뉴
+- **컨텍스트 세션**: `sessionStorage.setItem('operationContext', JSON.stringify({orgId, orgName, orgType, contextRole, allClassAccess}))`
 - **상단바**: `🏫 OO어린이집 · 운영관리 모드  [기관 변경]  [컨텍스트 종료]`
 - **사이드바 테마**: `#0C2D48` (딥네이비), 액센트 `#0EA5E9`
 - **서브메뉴 완료**: 알림장 ✅ / 초대관리 ✅ / 기관정보 ✅ / 반관리 ✅ / 원아관리 ✅
-- **서브메뉴 미완**: 일정관리 / 상담관리 / 기관선택팝업
+- **서브메뉴 미완**: 일정관리 / 상담관리
+- **기관선택팝업**: ✅ 개선 완료 (페이지네이션, 검색 버튼, 기관관리자/교사관리자 이중 진입)
 - **대시보드**: 교사 뷰 원아 출석현황 모달 구현 완료 (2026-03-24) → `14-OPERATION-DASHBOARD.md` 참조
 
 ---
@@ -62,26 +63,54 @@
 | 전화번호 | `phone` | |
 | 이용 상태 | `status` | 이용중 / 이용종료 표시 |
 
-### 2.4 검색 기능 (SearchableSelector 패턴)
-- 실시간 필터링 (keyup 이벤트)
-- 검색 대상: **기관명**, **원장이름**
+### 2.4 검색 기능
+- **정적 검색**: 검색 버튼 클릭 또는 Enter 키로 실행 (실시간 필터링 아님)
+- 검색 대상: **기관명**, **원장이름**, **주소**
+- 필터 칩: 전체 / 어린이집 / 유치원 / 이용중 / 이용종료
 - 검색 결과 없을 시 "검색 결과가 없습니다" 표시
 
-### 2.5 선택 및 확인
+### 2.5 페이지네이션
+- **6개/페이지** (2행 × 3열) 기관 카드 표시
+- 하단에 ◀ 이전 | 1 2 3 ... | 다음 ▶ 페이지 네비게이션
+- 검색/필터 변경 시 1페이지로 자동 리셋
+
+### 2.6 선택 및 확인 (이중 진입)
 - 카드 클릭 → 선택 상태 강조 (border, 체크 아이콘)
-- **확인 버튼**: `sessionStorage`에 선택 기관 정보 저장 후 운영관리 메인으로 이동
+- **🏫 기관관리자로 접속**: `contextRole: 'org_admin'` 설정, 기관관리자 뷰로 진입
+- **📚 교사관리자로 접속**: `contextRole: 'teacher'` + `allClassAccess: true` 설정, 교사 뷰로 진입 (모든 반 접근 가능)
 - **취소 버튼**: 팝업 닫기 (이전 화면 유지)
 
-### 2.6 저장 데이터 구조 (sessionStorage)
+### 2.7 저장 데이터 구조 (sessionStorage)
 ```javascript
+// 기관관리자로 접속 예시
 sessionStorage.setItem('operationContext', JSON.stringify({
-  orgId: 'ORG001',
-  orgName: '해맑은 어린이집',
-  orgType: '어린이집',
-  director: '김원장',
-  enteredAt: '2026-03-18T10:00:00'
+  orgId:          'ORG001',
+  orgName:        '해맑은 어린이집',
+  orgType:        '어린이집',
+  director:       '김원장',
+  phone:          '02-1234-5678',      // 기관 전화번호
+  address:        '서울 마포구 신수동 123', // 기관 주소
+  enteredAt:      '2026-03-26T10:00:00',
+  contextRole:    'org_admin',          // 'org_admin' | 'teacher'
+  allClassAccess: false                 // teacher 진입 시 true (전체 반 접근)
 }));
+
+// 교사관리자로 접속 시 추가 세팅:
+// contextRole: 'teacher', allClassAccess: true
+sessionStorage.setItem('assignedClasses', JSON.stringify([
+  { id: 'CLS001', name: '햇님반', age: '만0세', studentCount: 18 },
+  { id: 'CLS002', name: '달님반', age: '만1세', studentCount: 16 }
+]));
 ```
+
+### 2.8 다운스트림 역할 해석 (effectiveRole 패턴)
+모든 운영관리 페이지에서 `operationContext.contextRole`을 우선 참조하여 역할 판별:
+```javascript
+const opCtx = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const effectiveRole = (opCtx && opCtx.contextRole) ? opCtx.contextRole : userRole;
+const isTeacher = effectiveRole === 'teacher';
+```
+`userRole`은 항상 `'super'` 유지, `contextRole`로 뷰 결정.
 
 ---
 
@@ -99,7 +128,7 @@ sessionStorage.setItem('operationContext', JSON.stringify({
 - 운영관리 컨텍스트 진입 시 사이드바 구조 변경 (운영관리 서브메뉴로 전환)
 - **구현**: `src/pages/oper/operation-sidebar.js` 공통 컴포넌트가 담당
   - 각 `operation-*.html` 페이지에서 `<script src="operation-sidebar.js" defer></script>` + `<aside id="appSidebar"></aside>` 선언만으로 사이드바 자동 렌더링
-  - `sessionStorage.userRole` 기반으로 배지·포털 라벨·컨텍스트 배너 자동 전환
+  - `effectiveRole` (= `operationContext.contextRole` 우선, fallback `userRole`) 기반으로 배지·포털 라벨·컨텍스트 배너 자동 전환
   - 통합관리자 + `operationContext` 존재 시: `superContextBanner` 표시 (기관 변경 / 컨텍스트 종료 버튼)
   - 활성 메뉴는 현재 파일명 자동 감지 — per-page 코드 불필요
 
@@ -131,8 +160,8 @@ sessionStorage.setItem('operationContext', JSON.stringify({
 | 7 | 투약의뢰서 관리 | `operation-medicine.html` | 투약의뢰서 조회·관리 |
 | 8 | 초대 관리 | `operation-invitation.html` | 학부모/교직원 초대 링크 관리, 이력 조회 |
 
-> 📌 **통합관리자(운영관리 컨텍스트), 기관관리자, 교사관리자 모두 동일한 페이지 사용**  
-> 권한 차이는 `sessionStorage.userRole` + `sessionStorage.operationContext`로 분기
+> 📌 **통합관리자(운영관리 컨텍스트), 기관관리자, 교사관리자 모두 동일한 페이지 사용**
+> 권한 차이는 `effectiveRole` (= `operationContext.contextRole` || `userRole`) + `sessionStorage.operationContext`로 분기
 
 ---
 
@@ -190,7 +219,7 @@ if (userRole === 'super' && opContext) {
 | 순서 | 작업 | 파일 | 상태 |
 |------|------|------|------|
 | 1 | 로그인 페이지 3계정 테스트 버튼 추가 | `index.html` | ✅ 수정 허용 확인 완료 |
-| 2 | 기관 선택 팝업 구현 | `src/pages/operation-org-selector.html` | 🔲 미시작 |
+| 2 | 기관 선택 팝업 구현 | `src/pages/oper/operation-org-selector.html` | ✅ 완료 + 개선 (2026-03-26, 페이지네이션·검색버튼·이중진입) |
 | 3 | 운영관리 레이아웃 공통 구성 | `src/pages/operation-layout.html` | 🔲 미시작 |
 | 4 | 각 운영관리 서브 페이지 구현 | 위 4번 항목 참조 | 🔄 진행 중 |
 | — | ↳ 알림장 | `operation-notice-board.html` | ✅ 완료 (2026-03-23) |

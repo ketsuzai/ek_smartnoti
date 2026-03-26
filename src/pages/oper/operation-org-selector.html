@@ -189,6 +189,45 @@ body {
 .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
 .empty-state-text { font-size: 14px; }
 
+/* ━━━━━━━━━━ 검색 버튼 ━━━━━━━━━━ */
+.btn-search {
+  height: 44px; padding: 0 18px; border-radius: var(--radius-md);
+  background: var(--accent); color: #fff; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: 'Pretendard', sans-serif; transition: 0.2s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.btn-search:hover { background: #5371ff; }
+
+/* ━━━━━━━━━━ 페이지네이션 ━━━━━━━━━━ */
+.pagination {
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; padding: 18px 0 4px; flex-wrap: wrap;
+}
+.page-btn {
+  min-width: 34px; height: 34px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-light); background: var(--bg-surface);
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; font-family: 'Pretendard', sans-serif; transition: 0.18s;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.page-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ━━━━━━━━━━ 교사 진입 버튼 ━━━━━━━━━━ */
+.btn-confirm.btn-teacher {
+  background: #14B8A6;
+  box-shadow: 0 4px 12px rgba(20,184,166,0.3);
+}
+.btn-confirm.btn-teacher:hover { background: #0D9488; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(20,184,166,0.35); }
+.btn-confirm.btn-teacher:disabled { background: var(--border-medium); box-shadow: none; cursor: not-allowed; transform: none; }
+
+@media (max-width: 700px) {
+  .footer-btns { flex-wrap: wrap; }
+  .footer-btns .btn { flex: 1; min-width: 120px; }
+}
+
 /* ━━━━━━━━━━ 하단 바 ━━━━━━━━━━ */
 .popup-footer {
   padding: 16px 28px;
@@ -249,8 +288,9 @@ body {
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" id="searchInput"
           placeholder="기관명 또는 원장 이름으로 검색..."
-          oninput="filterOrgs()">
+          onkeydown="if(event.key==='Enter') executeSearch()">
       </div>
+      <button class="btn-search" onclick="executeSearch()">검색</button>
     </div>
 
     <!-- 필터 칩 -->
@@ -276,6 +316,7 @@ body {
       <div class="empty-state-icon">🔍</div>
       <div class="empty-state-text">검색 결과가 없습니다.</div>
     </div>
+    <div class="pagination" id="paginationArea"></div>
   </div>
 
   <!-- 하단 푸터 -->
@@ -285,8 +326,11 @@ body {
     </div>
     <div class="footer-btns">
       <button class="btn btn-cancel" onclick="closePopup()">취소</button>
-      <button class="btn btn-confirm" id="confirmBtn" disabled onclick="confirmSelection()">
-        🏫 기관 권한으로 접속
+      <button class="btn btn-confirm btn-org" id="confirmOrgBtn" disabled onclick="confirmAsRole('org_admin')">
+        🏫 기관관리자로 접속
+      </button>
+      <button class="btn btn-confirm btn-teacher" id="confirmTeacherBtn" disabled onclick="confirmAsRole('teacher')">
+        📚 교사관리자로 접속
       </button>
     </div>
   </div>
@@ -318,9 +362,11 @@ const ORGS = [
   { id:'ORG012', name:'아이사랑 유치원',   type:'유치원',  director:'배성준', phone:'031-234-5679', address:'경기 고양시 덕양구 행신동 963', status:'이용중',  membership:'정회원', cls:6, teacher:11, kid:118 },
 ];
 
-let selectedOrg  = null;
+let selectedOrg   = null;
 let currentFilter = 'all';
 let currentSearch = '';
+let currentPage   = 1;
+const PAGE_SIZE   = 6;
 
 // ── 렌더링 ──
 function renderCards() {
@@ -341,14 +387,21 @@ function renderCards() {
     return matchFilter && matchSearch;
   });
 
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+
   document.getElementById('resultCount').textContent = filtered.length;
 
   if (filtered.length === 0) {
-    grid.innerHTML = ''; empty.style.display = 'block'; return;
+    grid.innerHTML = ''; empty.style.display = 'block';
+    document.getElementById('paginationArea').innerHTML = '';
+    return;
   }
   empty.style.display = 'none';
 
-  grid.innerHTML = filtered.map(o => {
+  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  grid.innerHTML = pageItems.map(o => {
     const isSelected = selectedOrg && selectedOrg.id === o.id;
     const isKinder   = o.type === '유치원';
     const statusBg   = o.status === '이용중' ? 'var(--green-bg)' : 'var(--red-bg)';
@@ -397,6 +450,27 @@ function renderCards() {
       </div>
     `;
   }).join('');
+
+  // 페이지네이션 렌더링
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const area = document.getElementById('paginationArea');
+  if (totalPages <= 1) { area.innerHTML = ''; return; }
+  let html = '';
+  html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>◀</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+  }
+  html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>▶</button>`;
+  area.innerHTML = html;
+}
+
+function goToPage(n) {
+  currentPage = n;
+  renderCards();
+  document.querySelector('.cards-area').scrollTop = 0;
 }
 
 // ── 기관 선택 ──
@@ -407,8 +481,9 @@ function selectOrg(id) {
 }
 
 function updateFooter() {
-  const preview = document.getElementById('selectedPreview');
-  const btn     = document.getElementById('confirmBtn');
+  const preview    = document.getElementById('selectedPreview');
+  const orgBtn     = document.getElementById('confirmOrgBtn');
+  const teacherBtn = document.getElementById('confirmTeacherBtn');
   if (selectedOrg) {
     preview.innerHTML = `
       <div class="selected-info">
@@ -419,41 +494,70 @@ function updateFooter() {
         </div>
       </div>
     `;
-    btn.disabled = false;
+    orgBtn.disabled = false;
+    teacherBtn.disabled = false;
   } else {
     preview.innerHTML = '<span class="selected-preview-empty">선택된 기관이 없습니다.</span>';
-    btn.disabled = true;
+    orgBtn.disabled = true;
+    teacherBtn.disabled = true;
   }
 }
 
-// ── 검색 ──
-function filterOrgs() {
+// ── 검색 (버튼/Enter) ──
+function executeSearch() {
   currentSearch = document.getElementById('searchInput').value;
+  currentPage = 1;
   renderCards();
 }
 
 // ── 필터 칩 ──
 function setFilter(val, el) {
   currentFilter = val;
+  currentPage = 1;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   renderCards();
 }
 
-// ── 확인 ──
-function confirmSelection() {
+// ── 기관의 모든 반 목록 생성 (모킹) ──
+function getAllClassesForOrg(org) {
+  const names  = ['햇님반','달님반','별빛반','구름반','무지개반','새싹반','꽃잎반','하늘반','바다반'];
+  const ages   = ['만0세','만1세','만2세','만3세','만4세','만5세'];
+  const counts = [18, 16, 20, 15, 22, 14, 19, 17, 21];
+  const result = [];
+  for (let i = 0; i < (org.cls || 3); i++) {
+    result.push({
+      id: 'CLS' + String(i + 1).padStart(3, '0'),
+      name: names[i] || (i + 1) + '반',
+      age: ages[i % ages.length],
+      studentCount: counts[i % counts.length]
+    });
+  }
+  return result;
+}
+
+// ── 확인 (역할 선택) ──
+function confirmAsRole(contextRole) {
   if (!selectedOrg) return;
-  // sessionStorage에 기관 컨텍스트 저장
-  sessionStorage.setItem('operationContext', JSON.stringify({
-    orgId:     selectedOrg.id,
-    orgName:   selectedOrg.name,
-    orgType:   selectedOrg.type,
-    director:  selectedOrg.director,
-    phone:     selectedOrg.phone,
-    address:   selectedOrg.address,
-    enteredAt: new Date().toISOString()
-  }));
-  // 기관관리자 대시보드로 이동
+  const context = {
+    orgId:          selectedOrg.id,
+    orgName:        selectedOrg.name,
+    orgType:        selectedOrg.type,
+    director:       selectedOrg.director,
+    phone:          selectedOrg.phone,
+    address:        selectedOrg.address,
+    enteredAt:      new Date().toISOString(),
+    contextRole:    contextRole,
+    allClassAccess: contextRole === 'teacher'
+  };
+  sessionStorage.setItem('operationContext', JSON.stringify(context));
+
+  if (contextRole === 'teacher') {
+    sessionStorage.setItem('assignedClasses', JSON.stringify(getAllClassesForOrg(selectedOrg)));
+  } else {
+    sessionStorage.removeItem('assignedClasses');
+  }
+  // userRole은 'super' 유지
   window.location.href = './operation-dashboard.html';
 }
 
@@ -470,6 +574,11 @@ function closePopup() {
 // ── ESC 키 닫기 ──
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closePopup();
+});
+
+// ── 배경(overlay) 클릭 닫기 ──
+document.body.addEventListener('click', e => {
+  if (e.target === document.body) closePopup();
 });
 
 // ── 초기 렌더링 ──

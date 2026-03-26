@@ -488,7 +488,9 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 <script>
 /* ━━━━━━━━━━━━━━━━ ROLE CONTEXT ━━━━━━━━━━━━━━━━ */
 const AN_USER_ROLE   = sessionStorage.getItem('userRole') || 'org_admin';
-const AN_IS_TEACHER  = AN_USER_ROLE === 'teacher';
+const AN_OP_CTX      = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const AN_EFFECTIVE   = (AN_OP_CTX && AN_OP_CTX.contextRole) ? AN_OP_CTX.contextRole : AN_USER_ROLE;
+const AN_IS_TEACHER  = AN_EFFECTIVE === 'teacher';
 const AN_ASSIGNED    = AN_IS_TEACHER
   ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"}]')
   : null;

@@ -839,7 +839,8 @@ const TODAY_CHILDREN = [
 // ━━━ 역할/반 컨텍스트 ━━━
 const NB_USER_ROLE     = sessionStorage.getItem('userRole') || 'org_admin';
 const NB_OP_CONTEXT    = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
-const NB_ASSIGNED      = NB_USER_ROLE === 'teacher'
+const NB_EFFECTIVE     = (NB_OP_CONTEXT && NB_OP_CONTEXT.contextRole) ? NB_OP_CONTEXT.contextRole : NB_USER_ROLE;
+const NB_ASSIGNED      = NB_EFFECTIVE === 'teacher'
   ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"}]')
   : null;
 const NB_ALL_CLASSES   = [
@@ -865,7 +866,7 @@ function initClassFilter() {
     if (!isAssigned) { opt.disabled = true; opt.textContent += ' — 비담당'; }
     sel.appendChild(opt);
   });
-  if (NB_USER_ROLE === 'teacher' && NB_ASSIGNED && NB_ASSIGNED.length > 0) {
+  if (NB_EFFECTIVE === 'teacher' && NB_ASSIGNED && NB_ASSIGNED.length > 0) {
     sel.value = NB_ASSIGNED[0].id;
   }
 }

@@ -161,7 +161,10 @@
 
 ### 14. 기관 선택 팝업 (`operation-org-selector.html`)
 - 통합관리자 운영관리 진입 시 기관 선택 팝업
-- 기관 목록 검색·선택 → `operationContext` sessionStorage 설정
+- 6개/페이지 페이지네이션 + 정적 검색 (검색 버튼/Enter)
+- 필터 칩 (전체/어린이집/유치원/이용중/이용종료)
+- **이중 진입**: 🏫 기관관리자로 접속 / 📚 교사관리자로 접속
+- `operationContext.contextRole`로 다운스트림 뷰 결정 (effectiveRole 패턴)
 
 ### 15. 공지사항 (`operation-announcement.html`)
 - KPI 4개 / 반·상태·기간 필터바 + 검색

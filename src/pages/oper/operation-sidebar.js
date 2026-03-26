@@ -93,12 +93,13 @@
 
   // ─── 초기화 ─────────────────────────────────────────────────
   function init() {
-    const userRole  = sessionStorage.getItem('userRole')  || 'org_admin';
-    const userName  = sessionStorage.getItem('userName')  || '관리자';
-    const opContext = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
-    const orgName   = opContext?.orgName ?? sessionStorage.getItem('orgName') ?? '해맑은 어린이집';
-    const isTeacher = userRole === 'teacher';
-    const isSuper   = userRole === 'super';
+    const userRole      = sessionStorage.getItem('userRole')  || 'org_admin';
+    const userName      = sessionStorage.getItem('userName')  || '관리자';
+    const opContext     = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+    const effectiveRole = (opContext && opContext.contextRole) ? opContext.contextRole : userRole;
+    const orgName       = opContext?.orgName ?? sessionStorage.getItem('orgName') ?? '해맑은 어린이집';
+    const isTeacher     = effectiveRole === 'teacher';
+    const isSuper       = userRole === 'super';
 
     document.getElementById('sideOrgName').textContent = orgName;
     document.getElementById('sideUserName').textContent = userName;
@@ -111,6 +112,8 @@
       document.getElementById('sideUserAvatar').style.background = 'linear-gradient(135deg,#14B8A6,#2DD4BF)';
       document.getElementById('sideUserRole').textContent = '교사관리자';
       document.getElementById('sidePortalLabel').textContent = '교사 포털';
+      // super가 교사 컨텍스트로 진입한 경우 컨텍스트 배너 유지
+      if (isSuper && opContext) document.getElementById('superContextBanner').classList.add('show');
     } else if (isSuper) {
       badge.textContent = '🔑 통합관리자';
       badge.className = 'role-badge super';
@@ -129,11 +132,11 @@
     const bcOrg = document.getElementById('breadcrumbOrg');
     if (bcOrg) bcOrg.textContent = orgName;
 
-    renderNav(userRole);
+    renderNav(effectiveRole);
   }
 
-  function renderNav(userRole) {
-    const isTeacher   = userRole === 'teacher';
+  function renderNav(role) {
+    const isTeacher   = role === 'teacher';
     const inviteBadge = isTeacher ? '1' : '2';
     const noticeBadge = isTeacher ? '3' : '5';
     const filename    = location.pathname.split('/').pop();
@@ -141,8 +144,12 @@
     const NAV = [
       { section: '메인' },
       { icon:'🏠', label:'대시보드',                             href:'operation-dashboard.html'  },
-      { section: '원아 · 콘텐츠' },
+      { icon:'👥', label:'반 관리',                              href:'operation-class.html'       },
       { icon:'🧒', label:'원아 관리',                            href:'operation-child.html'       },
+      { section: '초대 관리' },
+      { icon:'📨', label:'초대장 관리',                          href:'operation-invitation.html',
+                   badge: inviteBadge, badgeClass:'sky'                                            },
+      { section: '콘텐츠' },
       { icon:'📋', label:'알림장',                               href:'operation-notice-board.html',
                    badge: noticeBadge                                                               },
       { icon:'📢', label:'공지사항',                             href:'operation-announcement.html'},
@@ -153,10 +160,6 @@
       { section: '기관 관리' },
       { icon:'🏢', label: isTeacher ? '기관정보 조회' : '기관정보 관리',
                    href: 'operation-org-info.html'                                                 },
-      { icon:'👥', label:'반 관리',                              href:'operation-class.html'       },
-      { section: '초대 관리' },
-      { icon:'📨', label:'초대장 관리',                          href:'operation-invitation.html',
-                   badge: inviteBadge, badgeClass:'sky'                                            },
       { section: '통계' },
       { icon:'📊', label:'통계',                                 href:'operation-dashboard.html'   },
     ];
@@ -185,11 +188,15 @@
   // ─── 전역 함수 노출 ─────────────────────────────────────────
   window.changeOrg = function () {
     sessionStorage.removeItem('operationContext');
+    sessionStorage.removeItem('assignedClasses');
+    sessionStorage.removeItem('currentClass');
     location.href = 'operation-org-selector.html';
   };
 
   window.exitContext = function () {
     sessionStorage.removeItem('operationContext');
+    sessionStorage.removeItem('assignedClasses');
+    sessionStorage.removeItem('currentClass');
     location.href = '../dashboard.html';
   };
 

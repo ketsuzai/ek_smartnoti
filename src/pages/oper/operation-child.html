@@ -690,13 +690,14 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 // ═══════════════════════════════════════════════
 // 세션 & 역할 초기화
 // ═══════════════════════════════════════════════
-const userRole    = sessionStorage.getItem('userRole')    || 'org_admin';
-const opContext   = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
-const currentOrgId = opContext?.orgId ?? sessionStorage.getItem('orgId') ?? 'ORG001';
+const userRole       = sessionStorage.getItem('userRole')    || 'org_admin';
+const opContext      = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
+const effectiveRole  = (opContext && opContext.contextRole) ? opContext.contextRole : userRole;
+const currentOrgId   = opContext?.orgId ?? sessionStorage.getItem('orgId') ?? 'ORG001';
 const currentOrgName = opContext?.orgName ?? sessionStorage.getItem('orgName') ?? '해맑은 어린이집';
 
 // 담당 반 (교사용)
-const assignedClasses = userRole === 'teacher'
+const assignedClasses = effectiveRole === 'teacher'
   ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"}]')
   : null;
 
@@ -894,7 +895,7 @@ function initClassFilter() {
     opt.value = cls.id;
     opt.textContent = cls.name + ' (' + cls.age + ')';
 
-    if (userRole === 'teacher') {
+    if (effectiveRole === 'teacher') {
       const isAssigned = assignedClasses.some(a => a.id === cls.id);
       if (!isAssigned) {
         opt.disabled = true;
@@ -906,7 +907,7 @@ function initClassFilter() {
   });
 
   // 교사: 첫 번째 담당 반 자동 선택
-  if (userRole === 'teacher' && assignedClasses.length > 0) {
+  if (effectiveRole === 'teacher' && assignedClasses.length > 0) {
     sel.value = assignedClasses[0].id;
   }
 }
@@ -921,7 +922,7 @@ function initRegisterClassOptions() {
   ALL_CLASSES.forEach(cls => {
     const opt = document.createElement('option');
     opt.value = cls.id; opt.textContent = cls.name;
-    if (userRole === 'teacher') {
+    if (effectiveRole === 'teacher') {
       if (!assignedClasses.some(a => a.id === cls.id)) {
         opt.disabled = true;
       }
@@ -969,7 +970,7 @@ function applyFilters() {
   let data = [...MOCK_CHILDREN];
 
   // 교사: 담당 반 데이터만
-  if (userRole === 'teacher') {
+  if (effectiveRole === 'teacher') {
     const ids = assignedClasses.map(a => a.id);
     data = data.filter(c => ids.includes(c.class_id));
   }
@@ -1008,7 +1009,7 @@ function resetFilters() {
   selectedParentFilter = null;
 
   // 교사 반 필터: 첫 담당 반으로 리셋
-  if (userRole === 'teacher' && assignedClasses.length > 0) {
+  if (effectiveRole === 'teacher' && assignedClasses.length > 0) {
     document.getElementById('classFilterSelect').value = assignedClasses[0].id;
   } else {
     document.getElementById('classFilterSelect').value = '';
@@ -1340,7 +1341,7 @@ function renderPanelContent(tab) {
 function renderPanelFooter() {
   const c = currentChild;
   const f = document.getElementById('panelFooter');
-  if (userRole === 'teacher') {
+  if (effectiveRole === 'teacher') {
     f.innerHTML = `
       <button class="btn btn-outline" onclick="showToast('정보 수정 기능은 준비 중입니다.')">✏️ 수정</button>
       <button class="btn btn-primary" onclick="openStatusModal('${c.id}')">상태 변경</button>
