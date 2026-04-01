@@ -283,10 +283,11 @@ body {
 }
 .btn-back:hover { background: var(--bg-base); color: var(--text-primary); }
 .teacher-step-org { font-size: 13px; color: var(--text-muted); }
-.teacher-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.teacher-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .teacher-card {
   border: 2px solid var(--border-light); border-radius: var(--radius-md);
-  padding: 16px; cursor: pointer; transition: 0.18s; background: var(--bg-surface);
+  padding: 10px 14px; cursor: pointer; transition: 0.18s; background: var(--bg-surface);
+  display: flex; align-items: center; gap: 12px;
 }
 .teacher-card:hover { border-color: var(--accent); }
 .teacher-card.selected {
@@ -294,19 +295,21 @@ body {
   box-shadow: 0 0 0 3px rgba(67,97,238,0.15);
 }
 .teacher-avatar {
-  width: 42px; height: 42px; border-radius: 50%;
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 10px;
+  font-size: 15px; font-weight: 800; color: #fff;
 }
-.teacher-name { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.teacher-info { flex: 1; min-width: 0; }
+.teacher-name { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.teacher-meta { display: flex; align-items: center; gap: 6px; }
 .teacher-role-badge {
-  display: inline-block; font-size: 11px; font-weight: 700;
-  padding: 2px 8px; border-radius: 20px; margin-bottom: 6px;
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 20px; flex-shrink: 0;
 }
 .badge-main { background: #DBEAFE; color: #1E40AF; }
 .badge-sub  { background: #D1FAE5; color: #065F46; }
 .badge-etc  { background: #F3F4F6; color: #6B7280; }
-.teacher-class { font-size: 12px; color: var(--text-secondary); }
+.teacher-class { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .footer-step1 { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .footer-step2 { display: none; align-items: center; justify-content: space-between; width: 100%; }
 .teacher-preview-wrap { display: flex; align-items: center; gap: 10px; }
@@ -706,9 +709,13 @@ function renderTeacherGrid() {
     return `
       <div class="teacher-card ${isSelected ? 'selected' : ''}" onclick="selectTeacher('${t.id}')">
         <div class="teacher-avatar" style="background:${t.color}">${t.name.charAt(0)}</div>
-        <div class="teacher-name">${t.name}</div>
-        <span class="teacher-role-badge ${badgeClass}">${t.role}</span>
-        <div class="teacher-class">📚 ${classLabel}</div>
+        <div class="teacher-info">
+          <div class="teacher-name">${t.name}</div>
+          <div class="teacher-meta">
+            <span class="teacher-role-badge ${badgeClass}">${t.role}</span>
+            <span class="teacher-class">📚 ${classLabel}</span>
+          </div>
+        </div>
       </div>`;
   }).join('');
 }
