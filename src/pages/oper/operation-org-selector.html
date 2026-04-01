@@ -22,6 +22,7 @@
   --amber:  #F59E0B; --amber-bg:  #FEF3C7; --amber-text:  #92400E;
   --red:    #EF4444; --red-bg:    #FEE2E2; --red-text:    #991B1B;
   --blue:   #3B82F6; --blue-bg:   #DBEAFE; --blue-text:   #1E40AF;
+  --purple:    #8B5CF6; --purple-bg:  #EDE9FE; --purple-text:  #6D28D9;
   --shadow-md:  0 4px 16px rgba(0,0,0,0.10);
   --shadow-lg:  0 8px 32px rgba(0,0,0,0.13);
   --shadow-xl:  0 20px 60px rgba(0,0,0,0.18);
@@ -264,6 +265,58 @@ body {
 }
 .btn-confirm:hover { background: #5371ff; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(67,97,238,0.35); }
 .btn-confirm:disabled { background: var(--border-medium); box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* ━━━━━━━━━━ Step 2 교사 선택 ━━━━━━━━━━ */
+.teacher-area {
+  flex: 1; overflow-y: auto; padding: 0 28px 8px; display: none;
+}
+.teacher-step-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 0 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 16px;
+}
+.btn-back {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm); padding: 6px 12px;
+  font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: 0.18s;
+  font-family: 'Pretendard', sans-serif;
+}
+.btn-back:hover { background: var(--bg-base); color: var(--text-primary); }
+.teacher-step-org { font-size: 13px; color: var(--text-muted); }
+.teacher-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.teacher-card {
+  border: 2px solid var(--border-light); border-radius: var(--radius-md);
+  padding: 16px; cursor: pointer; transition: 0.18s; background: var(--bg-surface);
+}
+.teacher-card:hover { border-color: var(--accent); }
+.teacher-card.selected {
+  border-color: var(--accent); background: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(67,97,238,0.15);
+}
+.teacher-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 10px;
+}
+.teacher-name { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.teacher-role-badge {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px; margin-bottom: 6px;
+}
+.badge-main { background: #DBEAFE; color: #1E40AF; }
+.badge-sub  { background: #D1FAE5; color: #065F46; }
+.badge-etc  { background: #F3F4F6; color: #6B7280; }
+.teacher-class { font-size: 12px; color: var(--text-secondary); }
+.footer-step1 { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.footer-step2 { display: none; align-items: center; justify-content: space-between; width: 100%; }
+.teacher-preview-wrap { display: flex; align-items: center; gap: 10px; }
+.teacher-preview-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.teacher-preview-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.teacher-preview-role { font-size: 12px; color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -304,7 +357,7 @@ body {
   </div>
 
   <!-- 결과 카운트 -->
-  <div class="result-bar">
+  <div class="result-bar" id="resultBar">
     <span class="result-count">총 <strong id="resultCount">12</strong>개 기관</span>
     <span style="font-size:12px;color:var(--text-muted)">카드를 클릭해 선택하세요</span>
   </div>
@@ -319,19 +372,43 @@ body {
     <div class="pagination" id="paginationArea"></div>
   </div>
 
+  <!-- Step 2: 교사 선택 패널 -->
+  <div class="teacher-area" id="teacherArea">
+    <div class="teacher-step-header">
+      <button class="btn-back" onclick="showOrgStep()">← 기관 선택으로</button>
+      <span class="teacher-step-org" id="teacherStepOrg"></span>
+    </div>
+    <div class="teacher-grid" id="teacherGrid"></div>
+  </div>
+
   <!-- 하단 푸터 -->
   <div class="popup-footer">
-    <div class="selected-preview" id="selectedPreview">
-      <span class="selected-preview-empty">선택된 기관이 없습니다.</span>
+    <!-- Step 1 푸터 -->
+    <div class="footer-step1" id="footerStep1">
+      <div class="selected-preview" id="selectedPreview">
+        <span class="selected-preview-empty">선택된 기관이 없습니다.</span>
+      </div>
+      <div class="footer-btns">
+        <button class="btn btn-cancel" onclick="closePopup()">취소</button>
+        <button class="btn btn-confirm btn-org" id="confirmOrgBtn" disabled onclick="confirmAsRole('org_admin')">
+          🏫 기관관리자로 접속
+        </button>
+        <button class="btn btn-confirm btn-teacher" id="confirmTeacherBtn" disabled onclick="showTeacherStep()">
+          📚 교사 선택 후 접속
+        </button>
+      </div>
     </div>
-    <div class="footer-btns">
-      <button class="btn btn-cancel" onclick="closePopup()">취소</button>
-      <button class="btn btn-confirm btn-org" id="confirmOrgBtn" disabled onclick="confirmAsRole('org_admin')">
-        🏫 기관관리자로 접속
-      </button>
-      <button class="btn btn-confirm btn-teacher" id="confirmTeacherBtn" disabled onclick="confirmAsRole('teacher')">
-        📚 교사관리자로 접속
-      </button>
+    <!-- Step 2 푸터 -->
+    <div class="footer-step2" id="footerStep2">
+      <div class="selected-preview" id="teacherPreview">
+        <span class="selected-preview-empty">교사를 선택하세요.</span>
+      </div>
+      <div class="footer-btns">
+        <button class="btn btn-cancel" onclick="showOrgStep()">← 뒤로</button>
+        <button class="btn btn-confirm btn-teacher" id="confirmTeacherFinalBtn" disabled onclick="confirmTeacher()">
+          교사를 선택하세요
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -363,6 +440,7 @@ const ORGS = [
 ];
 
 let selectedOrg   = null;
+let selectedTeacher = null;
 let currentFilter = 'all';
 let currentSearch = '';
 let currentPage   = 1;
@@ -476,6 +554,7 @@ function goToPage(n) {
 // ── 기관 선택 ──
 function selectOrg(id) {
   selectedOrg = ORGS.find(o => o.id === id);
+  selectedTeacher = null;
   renderCards();
   updateFooter();
 }
@@ -536,6 +615,27 @@ function getAllClassesForOrg(org) {
   return result;
 }
 
+// ── 기관 소속 교사 목록 생성 (모킹) ──
+function getTeachersForOrg(org) {
+  const classes = getAllClassesForOrg(org);
+  const names  = ['이하늘','박민지','최서연','강지수','정다온','김보라','오민준','서지아','한채린','임하늘','조현아','배성준','정소연','최현우','이민준','윤성호'];
+  const colors = ['#4361EE','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#14B8A6','#EC4899','#6366F1','#84CC16','#F97316','#06B6D4'];
+  const count  = Math.min(org.teacher, names.length);
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    const isMain = i < org.cls;
+    const isSub  = !isMain && i < org.cls * 2;
+    result.push({
+      id:             `T${String(i + 1).padStart(3, '0')}`,
+      name:           names[i],
+      role:           isMain ? '담임' : isSub ? '보조' : '기타',
+      color:          colors[i % colors.length],
+      assignedClasses: isMain ? [classes[i]] : (isSub && classes[i - org.cls] ? [classes[i - org.cls]] : [])
+    });
+  }
+  return result;
+}
+
 // ── 확인 (역할 선택) ──
 function confirmAsRole(contextRole) {
   if (!selectedOrg) return;
@@ -548,16 +648,123 @@ function confirmAsRole(contextRole) {
     address:        selectedOrg.address,
     enteredAt:      new Date().toISOString(),
     contextRole:    contextRole,
-    allClassAccess: contextRole === 'teacher'
+    allClassAccess: false
   };
   sessionStorage.setItem('operationContext', JSON.stringify(context));
 
-  if (contextRole === 'teacher') {
-    sessionStorage.setItem('assignedClasses', JSON.stringify(getAllClassesForOrg(selectedOrg)));
-  } else {
-    sessionStorage.removeItem('assignedClasses');
-  }
+  sessionStorage.removeItem('assignedClasses');
   // userRole은 'super' 유지
+  window.location.href = './operation-dashboard.html';
+}
+
+// ── Step 2: 교사 선택 화면으로 전환 ──
+function showTeacherStep() {
+  if (!selectedOrg) return;
+  document.querySelector('.popup-icon').textContent     = '👩‍🏫';
+  document.querySelector('.popup-title').textContent    = '교사 선택';
+  document.querySelector('.popup-subtitle').textContent = `${selectedOrg.name} 소속 교사를 선택하세요.`;
+  document.querySelector('.search-bar').style.display  = 'none';
+  document.querySelector('.filter-row').style.display  = 'none';
+  document.getElementById('resultBar').style.display   = 'none';
+  document.querySelector('.cards-area').style.display  = 'none';
+  document.getElementById('teacherArea').style.display = 'block';
+  document.getElementById('teacherStepOrg').textContent = `— ${selectedOrg.name}`;
+  document.getElementById('footerStep1').style.display = 'none';
+  document.getElementById('footerStep2').style.display = 'flex';
+  selectedTeacher = null;
+  renderTeacherGrid();
+  updateTeacherFooter();
+}
+
+// ── Step 1: 기관 선택 화면으로 복귀 ──
+function showOrgStep() {
+  document.querySelector('.popup-icon').textContent     = '🏫';
+  document.querySelector('.popup-title').textContent    = '운영관리 — 기관 선택';
+  document.querySelector('.popup-subtitle').textContent = '접속할 기관을 선택한 후 확인 버튼을 눌러주세요.';
+  document.querySelector('.search-bar').style.display  = '';
+  document.querySelector('.filter-row').style.display  = '';
+  document.getElementById('resultBar').style.display   = '';
+  document.querySelector('.cards-area').style.display  = '';
+  document.getElementById('teacherArea').style.display = 'none';
+  document.getElementById('footerStep1').style.display = 'flex';
+  document.getElementById('footerStep2').style.display = 'none';
+  selectedTeacher = null;
+}
+
+// ── 교사 카드 그리드 렌더링 ──
+function renderTeacherGrid() {
+  window._currentOrgTeachers = getTeachersForOrg(selectedOrg);
+  const grid = document.getElementById('teacherGrid');
+  if (window._currentOrgTeachers.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--text-muted);font-size:14px;">등록된 교사가 없습니다.</div>';
+    return;
+  }
+  grid.innerHTML = window._currentOrgTeachers.map(t => {
+    const badgeClass = t.role === '담임' ? 'badge-main' : t.role === '보조' ? 'badge-sub' : 'badge-etc';
+    const classLabel = t.assignedClasses.length > 0 ? t.assignedClasses.map(c => c.name).join(', ') : '담당 반 없음';
+    const isSelected = selectedTeacher && selectedTeacher.id === t.id;
+    return `
+      <div class="teacher-card ${isSelected ? 'selected' : ''}" onclick="selectTeacher('${t.id}')">
+        <div class="teacher-avatar" style="background:${t.color}">${t.name.charAt(0)}</div>
+        <div class="teacher-name">${t.name}</div>
+        <span class="teacher-role-badge ${badgeClass}">${t.role}</span>
+        <div class="teacher-class">📚 ${classLabel}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── 교사 카드 선택 ──
+function selectTeacher(id) {
+  selectedTeacher = (window._currentOrgTeachers || []).find(t => t.id === id) || null;
+  renderTeacherGrid();
+  updateTeacherFooter();
+}
+
+// ── 교사 선택 후 푸터 프리뷰 업데이트 ──
+function updateTeacherFooter() {
+  const preview = document.getElementById('teacherPreview');
+  const btn     = document.getElementById('confirmTeacherFinalBtn');
+  if (selectedTeacher) {
+    const classLabel = selectedTeacher.assignedClasses.length > 0
+      ? selectedTeacher.assignedClasses.map(c => c.name).join(', ')
+      : '담당 반 없음';
+    preview.innerHTML = `
+      <div class="teacher-preview-wrap">
+        <div class="teacher-preview-avatar" style="background:${selectedTeacher.color}">${selectedTeacher.name.charAt(0)}</div>
+        <div>
+          <div class="teacher-preview-name">${selectedTeacher.name}</div>
+          <div class="teacher-preview-role">${selectedTeacher.role} · ${classLabel}</div>
+        </div>
+      </div>`;
+    btn.disabled    = false;
+    btn.textContent = `${selectedTeacher.name} 교사 권한으로 접속`;
+  } else {
+    preview.innerHTML = '<span class="selected-preview-empty">교사를 선택하세요.</span>';
+    btn.disabled    = true;
+    btn.textContent = '교사를 선택하세요';
+  }
+}
+
+// ── 교사 선택 확인 ──
+function confirmTeacher() {
+  if (!selectedOrg || !selectedTeacher) return;
+  const classLabel = selectedTeacher.assignedClasses.map(c => c.name).join(', ');
+  const context = {
+    orgId:             selectedOrg.id,
+    orgName:           selectedOrg.name,
+    orgType:           selectedOrg.type,
+    director:          selectedOrg.director,
+    phone:             selectedOrg.phone,
+    address:           selectedOrg.address,
+    enteredAt:         new Date().toISOString(),
+    contextRole:       'teacher',
+    allClassAccess:    false,
+    proxyTeacherName:  selectedTeacher.name,
+    proxyTeacherRole:  selectedTeacher.role,
+    proxyTeacherClass: classLabel
+  };
+  sessionStorage.setItem('operationContext', JSON.stringify(context));
+  sessionStorage.setItem('assignedClasses', JSON.stringify(selectedTeacher.assignedClasses));
   window.location.href = './operation-dashboard.html';
 }
 

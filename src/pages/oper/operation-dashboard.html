@@ -391,6 +391,17 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
 .toast { background: #1A1D2E; color: #fff; padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; box-shadow: var(--shadow-lg); animation: toastIn 0.25s ease; }
 @keyframes toastIn { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0)} }
+
+/* ━━━ 통합관리자 프록시 배너 ━━━ */
+.proxy-banner {
+  display: none; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: linear-gradient(135deg, #1E3A5F, #0C2D48);
+  color: #B8D9F0; border-radius: var(--radius-md);
+  padding: 10px 16px; margin-bottom: 16px; font-size: 13px;
+}
+.proxy-banner strong { color: #fff; }
+.proxy-banner-sep { opacity: 0.35; margin: 0 4px; }
+.proxy-banner-teacher { display: flex; align-items: center; gap: 6px; }
 </style>
 </head>
 <body>
@@ -425,6 +436,14 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
         <div class="page-sub"  id="pageSub">오늘 기관 현황을 한눈에 확인하세요.</div>
       </div>
       <div class="date-chip">📅 <span id="headerDate"></span></div>
+    </div>
+
+    <!-- 통합관리자 프록시 접속 배너 -->
+    <div class="proxy-banner" id="proxyBanner">
+      <span>🏫</span>
+      <span id="proxyOrgLabel"></span>
+      <span class="proxy-banner-sep" id="proxyTeacherSep">|</span>
+      <span class="proxy-banner-teacher" id="proxyTeacherLabel"></span>
     </div>
 
     <!-- 반 선택바 -->
@@ -882,6 +901,24 @@ const assignedClasses = assignedRaw
   renderTodo();
   renderActivity();
   renderNotices();
+  // 통합관리자 프록시 배너 렌더링
+  if (isOrgMode) {
+    const banner = document.getElementById('proxyBanner');
+    banner.style.display = 'flex';
+    document.getElementById('proxyOrgLabel').innerHTML =
+      `<strong>${opCtx.orgName}</strong> 권한으로 접속 중`;
+    if (opCtx.proxyTeacherName) {
+      const role = opCtx.proxyTeacherRole || '';
+      const meta = opCtx.proxyTeacherClass
+        ? `(${role} · ${opCtx.proxyTeacherClass})`
+        : role ? `(${role})` : '';
+      document.getElementById('proxyTeacherLabel').innerHTML =
+        `👩‍🏫 교사: <strong>${opCtx.proxyTeacherName}</strong>&nbsp;<span style="opacity:0.65">${meta}</span>`;
+    } else {
+      document.getElementById('proxyTeacherSep').style.display = 'none';
+      document.getElementById('proxyTeacherLabel').style.display = 'none';
+    }
+  }
   initCharts();
 })();
 
@@ -950,7 +987,8 @@ function onClassChange(sel) {
     const cls = ALL_CLASSES.find(c => c.id === val);
     if (cls) updateTeacherHero(cls);
     document.getElementById('classHero').classList.add('show');
-    updateNoticeStats(cls ? cls.notice : 14, cls ? cls.students - cls.notice : 4);
+    const teacherCh = CHILDREN_DATA[val] || [];
+    updateNoticeStats(teacherCh.filter(c => c.noticeWritten).length, teacherCh.filter(c => !c.noticeWritten).length);
   } else {
     document.getElementById('classHero').classList.remove('show');
     if (val === 'all') {
@@ -980,7 +1018,7 @@ function updateNoticeStats(written, missing) {
   const total = written + missing;
   document.getElementById('noticeWritten').textContent = written;
   document.getElementById('noticeMissing').textContent = missing;
-  document.getElementById('noticeRate').textContent    = Math.round(written/total*100) + '%';
+  document.getElementById('noticeRate').textContent    = total > 0 ? Math.round(written/total*100) + '%' : '0%';
   if (window._noticeChart) {
     window._noticeChart.data.datasets[0].data = [written, missing];
     window._noticeChart.update();
@@ -1004,7 +1042,7 @@ function renderKPI() {
   } else {
     grid.innerHTML = `
       <div class="kpi-card"><div class="kpi-ico sky">👥</div><div class="kpi-info"><div class="kpi-label">전체 원아 수</div><div class="kpi-value">${ALL_CLASSES.reduce((s,c)=>s+(CHILDREN_DATA[c.id]||[]).length,0)}</div><div class="kpi-sub">총 ${ALL_CLASSES.length}개반</div></div></div>
-      <div class="kpi-card"><div class="kpi-ico green">👩‍🏫</div><div class="kpi-info"><div class="kpi-label">교사 수</div><div class="kpi-value">12</div><div class="kpi-sub">담임 8 · 보조 4</div></div></div>
+      <div class="kpi-card"><div class="kpi-ico green">👩‍🏫</div><div class="kpi-info"><div class="kpi-label">교사 수</div><div class="kpi-value">15</div><div class="kpi-sub">담임 8 · 보조 4 · 기타 3</div></div></div>
       <div class="kpi-card"><div class="kpi-ico amber">📋</div><div class="kpi-info"><div class="kpi-label">오늘 알림장</div><div class="kpi-value">56</div><div class="kpi-sub">전체 84건 중</div></div></div>
       <div class="kpi-card"><div class="kpi-ico purple">📊</div><div class="kpi-info"><div class="kpi-label">학부모 접속률</div><div class="kpi-value">71<span style="font-size:14px;font-weight:500">%</span></div><div class="kpi-sub">▲ 3% 전일 대비</div></div></div>
     `;
