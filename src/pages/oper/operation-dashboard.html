@@ -392,6 +392,48 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .toast { background: #1A1D2E; color: #fff; padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; box-shadow: var(--shadow-lg); animation: toastIn 0.25s ease; }
 @keyframes toastIn { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0)} }
 
+/* ━━━ 읽음 통계 ━━━ */
+.read-list { display: flex; flex-direction: column; gap: 11px; }
+.read-item { display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
+.read-item:hover .read-title { color: var(--accent-dark); }
+.read-meta { display: flex; align-items: center; gap: 6px; }
+.read-type-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; flex-shrink: 0; }
+.read-title { font-size: 12.5px; font-weight: 600; color: var(--text-primary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.read-arrow { font-size: 10px; color: var(--text-muted); flex-shrink: 0; }
+.read-bottom { display: flex; align-items: center; gap: 8px; }
+.read-date { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+.read-ratio { font-size: 11px; font-weight: 800; margin-left: auto; flex-shrink: 0; }
+.read-bar-track { flex: 1; height: 4px; background: var(--border-light); border-radius: 2px; overflow: hidden; }
+.read-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+/* ━━━ 투약 대기 큐 ━━━ */
+.med-queue-list { display: flex; flex-direction: column; gap: 8px; }
+.med-queue-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-md); background: var(--bg-base); border: 1px solid var(--border-light); transition: 0.18s; }
+.med-queue-item.done { opacity: 0.45; pointer-events: none; }
+.med-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--amber-bg); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: var(--amber-text); flex-shrink: 0; }
+.med-info { flex: 1; min-width: 0; }
+.med-name { font-size: 12.5px; font-weight: 700; color: var(--text-primary); }
+.med-desc { font-size: 11px; color: var(--text-secondary); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.med-complete-btn { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm); border: 1.5px solid var(--amber); background: #fff; color: var(--amber-text); cursor: pointer; flex-shrink: 0; transition: 0.18s; white-space: nowrap; }
+.med-complete-btn:hover { background: var(--amber-bg); }
+.med-done-badge { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm); background: var(--green-bg); color: var(--green-text); flex-shrink: 0; }
+
+/* ━━━ 다가오는 일정 ━━━ */
+.sched-list { display: flex; flex-direction: column; }
+.sched-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: 0.18s; }
+.sched-item:last-child { border-bottom: none; }
+.sched-item:hover .sched-title { color: var(--accent-dark); }
+.sched-dday { font-size: 11px; font-weight: 800; padding: 3px 7px; border-radius: 8px; flex-shrink: 0; min-width: 42px; text-align: center; }
+.sched-info { flex: 1; min-width: 0; }
+.sched-title { font-size: 12.5px; font-weight: 600; color: var(--text-primary); transition: color 0.15s; }
+.sched-date { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+.sched-type-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; flex-shrink: 0; }
+
+/* ━━━ 빈 상태 ━━━ */
+.empty-state { padding: 22px 0; text-align: center; }
+.empty-state-ico { font-size: 22px; margin-bottom: 5px; }
+.empty-state-txt { font-size: 12px; color: var(--text-muted); }
+
 </style>
 </head>
 <body>
@@ -481,9 +523,15 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
         </div>
       </div>
 
-      <!-- 오늘 처리 큐 -->
+      <!-- 처리 큐 -->
       <div class="card">
-        <div class="card-header"><span class="card-title">✅ 오늘 처리 큐</span></div>
+        <div class="card-header">
+          <span class="card-title">✅ 처리 큐</span>
+          <div class="chart-tabs" id="todoPeriodTabs">
+            <span class="chart-tab active" data-period="today">오늘</span>
+            <span class="chart-tab" data-period="week">금주</span>
+          </div>
+        </div>
         <div class="card-body" id="todoBody">
           <!-- JS 렌더 -->
         </div>
@@ -514,6 +562,38 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- 금주 업로드 / 투약 대기 / 다가오는 일정 -->
+    <div class="grid-3col" style="grid-template-columns:1fr 1fr 1fr">
+
+      <!-- 금주 업로드(읽음 통계) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📊 금주 업로드</span>
+          <span class="card-action" onclick="location.href='operation-announcement.html'">전체 보기</span>
+        </div>
+        <div class="card-body" id="readStatsBody"><!-- JS 렌더 --></div>
+      </div>
+
+      <!-- 투약 대기 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💊 투약 대기 <span id="medQueueCount" style="font-size:11px;color:var(--amber-text);font-weight:700;margin-left:2px"></span></span>
+          <span class="card-action" onclick="location.href='operation-medicine.html'">전체 보기</span>
+        </div>
+        <div class="card-body" id="medQueueBody"><!-- JS 렌더 --></div>
+      </div>
+
+      <!-- 다가오는 일정 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📅 다가오는 일정</span>
+          <span class="card-action" onclick="showToast('일정 관리 기능 준비 중입니다.')">전체 보기</span>
+        </div>
+        <div class="card-body" id="schedBody"><!-- JS 렌더 --></div>
+      </div>
+
     </div>
 
     <!-- 최근 활동 + 공지사항 나란히 -->
@@ -851,6 +931,7 @@ const effectiveRole = (opCtx && opCtx.contextRole) ? opCtx.contextRole : userRol
 // - teacher   → 교사관리자
 const isSuper   = userRole === 'super';
 const isTeacher = effectiveRole === 'teacher';
+let todoPeriod  = 'today'; // 'today' | 'week'
 const isOrgMode = isSuper && opCtx; // 통합관리자 운영관리 컨텍스트
 
 const orgName   = opCtx ? opCtx.orgName : '해맑은 어린이집';
@@ -860,6 +941,27 @@ const assignedRaw  = sessionStorage.getItem('assignedClasses');
 const assignedClasses = assignedRaw
   ? JSON.parse(assignedRaw)
   : (isTeacher ? TEACHER_ASSIGNED : null); // null = 전체 접근
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 정적 데이터 — 새 카드용
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const READ_UPLOAD_DATA = [
+  { type:'공지사항', title:'현장학습 준비를 안내',   date:'2026-03-31', read:29, total:30 },
+  { type:'앨범',     title:'가을 운동회',            date:'2026-03-29', read:21, total:30 },
+  { type:'공지사항', title:'학부모 상담 일정안내',   date:'2026-03-28', read:30, total:30 },
+];
+const MED_QUEUE_DATA = [
+  { id:'MQ001', name:'김민준', className:'햇님반', brief:'종합감기약 점심 후' },
+  { id:'MQ002', name:'이하윤', className:'달님반', brief:'알레르기약 하원 전' },
+  { id:'MQ003', name:'박지호', className:'햇님반', brief:'소화제 오전 간식 후' },
+];
+const completedMeds = new Set(JSON.parse(sessionStorage.getItem('dash_completedMeds') || '[]'));
+const UPCOMING_SCHED = [
+  { title:'봄 소풍',         date:'2026-04-05', dday:'D-3',  type:'행사', typeBg:'#FEF3C7', typeTc:'#92400E' },
+  { title:'학부모 상담 주간', date:'2026-04-08', dday:'D-6',  type:'상담', typeBg:'#EDE9FE', typeTc:'#5B21B6' },
+  { title:'신체검사',        date:'2026-04-15', dday:'D-13', type:'검진', typeBg:'#D1FAE5', typeTc:'#065F46' },
+  { title:'어린이날 행사',   date:'2026-05-05', dday:'D-33', type:'행사', typeBg:'#FEF3C7', typeTc:'#92400E' },
+];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 초기화
@@ -881,6 +983,13 @@ const assignedClasses = assignedRaw
   renderKPI();
   renderMainCard();
   renderTodo();
+  document.getElementById('todoPeriodTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.chart-tab');
+    if (tab) renderTodo(tab.dataset.period);
+  });
+  renderReadStats();
+  renderMedQueue();
+  renderSchedulePreview();
   renderActivity();
   renderNotices();
   initCharts();
@@ -1071,7 +1180,7 @@ function renderMainCard() {
     // 7개 이상: mainCardBody 자체에 스크롤 적용 (card의 overflow:hidden 우회)
     const mainCardBody = document.getElementById('mainCardBody');
     if (displayClasses.length > 6) {
-      mainCardBody.style.cssText = 'padding:14px 22px 14px 18px;overflow-y:auto;max-height:440px;';
+      mainCardBody.style.cssText = 'padding:14px 22px 14px 18px;overflow-y:auto;max-height:290px;';
     } else {
       mainCardBody.style.cssText = '';
     }
@@ -1116,21 +1225,43 @@ function renderMainCard() {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 할 일 렌더링
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderTodo() {
-  const items = isTeacher ? [
-    { dot:'var(--red)',    text:'미작성 알림장',    cnt:'4건',  bg:'var(--red-bg)',    tc:'var(--red-text)',    action:() => location.href='operation-notice-board.html' },
-    { dot:'var(--amber)',  text:'투약의뢰서 요청',  cnt:'3건',  bg:'var(--amber-bg)',  tc:'var(--amber-text)',  action:() => location.href='operation-medicine.html' },
-    { dot:'var(--blue)',   text:'미답변 상담',      cnt:'2건',  bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => showToast('상담 관리 기능 준비 중입니다.') },
-    { dot:'#14B8A6',       text:'오늘 일정',        cnt:'2건',  bg:'#CCFBF1',         tc:'#0D9488',            action:() => showToast('일정 관리 기능 준비 중입니다.') },
-    { dot:'var(--purple)', text:'학부모 초대 대기', cnt:'1건',  bg:'var(--purple-bg)', tc:'var(--purple-text)', action:() => location.href='operation-invitation.html' },
-  ] : [
-    { dot:'var(--red)',    text:'미작성 알림장',    cnt:'28건', bg:'var(--red-bg)',    tc:'var(--red-text)',    action:() => location.href='operation-notice-board.html' },
-    { dot:'var(--amber)',  text:'가입 승인 대기',   cnt:'3건',  bg:'var(--amber-bg)',  tc:'var(--amber-text)',  action:() => location.href='../member-approval.html' },
-    { dot:'#14B8A6',       text:'오늘 일정',        cnt:'3건',  bg:'#CCFBF1',         tc:'#0D9488',            action:() => showToast('일정 관리 기능 준비 중입니다.') },
-    { dot:'var(--blue)',   text:'답변 대기 상담',   cnt:'2건',  bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => showToast('상담 관리 기능 준비 중입니다.') },
-    { dot:'var(--green)',  text:'투약의뢰서 요청',  cnt:'4건',  bg:'var(--green-bg)',  tc:'var(--green-text)',  action:() => location.href='operation-medicine.html' },
-    { dot:'var(--purple)', text:'미발송 초대장',    cnt:'2건',  bg:'var(--purple-bg)', tc:'var(--purple-text)', action:() => location.href='operation-invitation.html' },
+function renderTodo(period) {
+  period = period || todoPeriod;
+  todoPeriod = period;
+
+  // 탭 활성화 동기화
+  document.querySelectorAll('#todoPeriodTabs .chart-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.period === period);
+  });
+
+  const teacherToday = [
+    { dot:'var(--blue)',   text:'새 글',      cnt:'3건',  bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => location.href='operation-notice-board.html' },
+    { dot:'#14B8A6',       text:'댓글',       cnt:'5건',  bg:'#CCFBF1',         tc:'#0D9488',            action:() => location.href='operation-notice-board.html' },
+    { dot:'var(--amber)',  text:'투약',       cnt:'3건',  bg:'var(--amber-bg)', tc:'var(--amber-text)',  action:() => location.href='operation-medicine.html' },
+    { dot:'var(--purple)', text:'상담',       cnt:'2건',  bg:'var(--purple-bg)',tc:'var(--purple-text)', action:() => showToast('상담 관리 기능 준비 중입니다.') },
   ];
+  const teacherWeek = [
+    { dot:'var(--blue)',   text:'새 글',      cnt:'14건', bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => location.href='operation-notice-board.html' },
+    { dot:'#14B8A6',       text:'댓글',       cnt:'23건', bg:'#CCFBF1',         tc:'#0D9488',            action:() => location.href='operation-notice-board.html' },
+    { dot:'var(--amber)',  text:'투약',       cnt:'9건',  bg:'var(--amber-bg)', tc:'var(--amber-text)',  action:() => location.href='operation-medicine.html' },
+    { dot:'var(--purple)', text:'상담',       cnt:'7건',  bg:'var(--purple-bg)',tc:'var(--purple-text)', action:() => showToast('상담 관리 기능 준비 중입니다.') },
+  ];
+  const orgToday = [
+    { dot:'var(--blue)',   text:'새 글',      cnt:'12건', bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => location.href='operation-notice-board.html' },
+    { dot:'#14B8A6',       text:'댓글',       cnt:'18건', bg:'#CCFBF1',         tc:'#0D9488',            action:() => location.href='operation-notice-board.html' },
+    { dot:'var(--amber)',  text:'투약',       cnt:'4건',  bg:'var(--amber-bg)', tc:'var(--amber-text)',  action:() => location.href='operation-medicine.html' },
+    { dot:'var(--purple)', text:'상담',       cnt:'4건',  bg:'var(--purple-bg)',tc:'var(--purple-text)', action:() => showToast('상담 관리 기능 준비 중입니다.') },
+  ];
+  const orgWeek = [
+    { dot:'var(--blue)',   text:'새 글',      cnt:'52건', bg:'var(--blue-bg)',   tc:'var(--blue-text)',   action:() => location.href='operation-notice-board.html' },
+    { dot:'#14B8A6',       text:'댓글',       cnt:'76건', bg:'#CCFBF1',         tc:'#0D9488',            action:() => location.href='operation-notice-board.html' },
+    { dot:'var(--amber)',  text:'투약',       cnt:'15건', bg:'var(--amber-bg)', tc:'var(--amber-text)',  action:() => location.href='operation-medicine.html' },
+    { dot:'var(--purple)', text:'상담',       cnt:'17건', bg:'var(--purple-bg)',tc:'var(--purple-text)', action:() => showToast('상담 관리 기능 준비 중입니다.') },
+  ];
+
+  const items = isTeacher
+    ? (period === 'today' ? teacherToday : teacherWeek)
+    : (period === 'today' ? orgToday    : orgWeek);
 
   // 클릭 액션은 인라인 온클릭이 아닌 이벤트 위임으로 처리
   const todoEl = document.createElement('div');
@@ -1148,6 +1279,102 @@ function renderTodo() {
   const body = document.getElementById('todoBody');
   body.innerHTML = '';
   body.appendChild(todoEl);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 금주 업로드 — 읽음 통계
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderReadStats() {
+  const body = document.getElementById('readStatsBody');
+  if (!READ_UPLOAD_DATA.length) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-state-ico">📭</div><div class="empty-state-txt">이번 주 업로드된 콘텐츠가 없습니다</div></div>`;
+    return;
+  }
+  const isAlbum = t => t === '앨범';
+  body.innerHTML = `<div class="read-list">${READ_UPLOAD_DATA.map(item => {
+    const pct = Math.round(item.read / item.total * 100);
+    const barColor = pct === 100 ? 'var(--green)' : pct >= 70 ? 'var(--accent)' : 'var(--amber)';
+    const ratioColor = pct === 100 ? 'var(--green-text)' : pct >= 70 ? 'var(--blue-text)' : 'var(--amber-text)';
+    const tagBg = isAlbum(item.type) ? '#EDE9FE' : '#DBEAFE';
+    const tagTc = isAlbum(item.type) ? '#5B21B6' : '#1E40AF';
+    return `
+    <div class="read-item" onclick="location.href='${isAlbum(item.type) ? 'operation-album.html' : 'operation-announcement.html'}'">
+      <div class="read-meta">
+        <span class="read-type-tag" style="background:${tagBg};color:${tagTc}">${item.type}</span>
+        <span class="read-title">${item.title}</span>
+        <span class="read-arrow">›</span>
+      </div>
+      <div class="read-bottom">
+        <span class="read-date">${item.date}</span>
+        <div class="read-bar-track"><div class="read-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+        <span class="read-ratio" style="color:${ratioColor}">${item.read}/${item.total}</span>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 투약 대기 큐
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderMedQueue() {
+  const body   = document.getElementById('medQueueBody');
+  const cntEl  = document.getElementById('medQueueCount');
+  const pending = MED_QUEUE_DATA.filter(m => !completedMeds.has(m.id));
+  cntEl.textContent = pending.length ? `(${pending.length}건)` : '';
+
+  if (!MED_QUEUE_DATA.length) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-state-ico">✅</div><div class="empty-state-txt">대기 중인 투약의뢰가 없습니다</div></div>`;
+    return;
+  }
+  body.innerHTML = `<div class="med-queue-list">${MED_QUEUE_DATA.map(m => {
+    const done = completedMeds.has(m.id);
+    return `
+    <div class="med-queue-item${done ? ' done' : ''}" data-med-id="${m.id}">
+      <div class="med-avatar">${m.name.charAt(0)}</div>
+      <div class="med-info">
+        <div class="med-name">${m.name} <span style="font-size:10px;color:var(--text-muted);font-weight:500">${m.className}</span></div>
+        <div class="med-desc">${m.brief}</div>
+      </div>
+      ${done
+        ? `<span class="med-done-badge">처리완료</span>`
+        : `<button class="med-complete-btn" onclick="completeMed('${m.id}')">완료처리</button>`
+      }
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function completeMed(id) {
+  completedMeds.add(id);
+  sessionStorage.setItem('dash_completedMeds', JSON.stringify([...completedMeds]));
+  const item = document.querySelector(`.med-queue-item[data-med-id="${id}"]`);
+  if (item) {
+    item.classList.add('done');
+    item.querySelector('.med-complete-btn').outerHTML = `<span class="med-done-badge">처리완료</span>`;
+  }
+  const pending = MED_QUEUE_DATA.filter(m => !completedMeds.has(m.id));
+  document.getElementById('medQueueCount').textContent = pending.length ? `(${pending.length}건)` : '';
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 다가오는 일정
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderSchedulePreview() {
+  const body = document.getElementById('schedBody');
+  if (!UPCOMING_SCHED.length) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-state-ico">📆</div><div class="empty-state-txt">등록된 일정이 없습니다</div></div>`;
+    return;
+  }
+  const ddayBg  = d => d === 'D-0' ? '#FEE2E2' : d.startsWith('D-') && parseInt(d.slice(2)) <= 7 ? '#FEF3C7' : '#F0F7FF';
+  const ddayTc  = d => d === 'D-0' ? '#991B1B' : d.startsWith('D-') && parseInt(d.slice(2)) <= 7 ? '#92400E' : 'var(--text-secondary)';
+  body.innerHTML = `<div class="sched-list">${UPCOMING_SCHED.map(s => `
+    <div class="sched-item" onclick="showToast('일정 관리 기능 준비 중입니다.')">
+      <span class="sched-dday" style="background:${ddayBg(s.dday)};color:${ddayTc(s.dday)}">${s.dday}</span>
+      <div class="sched-info">
+        <div class="sched-title">${s.title}</div>
+        <div class="sched-date">${s.date}</div>
+      </div>
+      <span class="sched-type-tag" style="background:${s.typeBg};color:${s.typeTc}">${s.type}</span>
+    </div>`).join('')}</div>`;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
