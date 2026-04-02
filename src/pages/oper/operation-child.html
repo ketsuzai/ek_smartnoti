@@ -50,12 +50,12 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
   display:flex; align-items:center; padding:0 24px; gap:12px;
   box-shadow:var(--shadow-sm); flex-shrink:0; z-index:50;
 }
-.breadcrumb { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); flex:1; }
+.breadcrumb { display:flex; align-items:center; gap:6px; font-size:14px; color:var(--text-secondary); flex:1; }
 .breadcrumb .cur { color:var(--text-primary); font-weight:600; }
-.bc-sep { color:var(--text-muted); font-size:11px; }
+.bc-sep { color:var(--text-muted); font-size:12px; }
 
 .topbar-right { display:flex; align-items:center; gap:10px; }
-.topbar-date  { font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+.topbar-date  { font-size:13px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
 .icon-btn {
   width:36px; height:36px; border-radius:var(--radius-md);
   display:flex; align-items:center; justify-content:center;
@@ -73,7 +73,7 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 /* 페이지 헤더 */
 .page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:18px; }
 .page-title  { font-size:21px; font-weight:800; letter-spacing:-0.5px; }
-.page-sub    { font-size:13px; color:var(--text-secondary); margin-top:3px; }
+.page-sub    { font-size:14px; color:var(--text-secondary); margin-top:3px; }
 
 /* ━━━ KPI ━━━ */
 .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:18px; }
@@ -89,24 +89,24 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .kpi-ico.amber  { background:var(--amber-bg); }
 .kpi-ico.red    { background:var(--red-bg); }
 .kpi-ico.purple { background:var(--purple-bg); }
-.kpi-label { font-size:11px; color:var(--text-secondary); font-weight:500; margin-bottom:2px; }
+.kpi-label { font-size:12px; color:var(--text-secondary); font-weight:500; margin-bottom:2px; }
 .kpi-value { font-size:24px; font-weight:800; color:var(--text-primary); letter-spacing:-0.8px; line-height:1; }
-.kpi-sub   { font-size:11px; color:var(--text-muted); margin-top:2px; }
+.kpi-sub   { font-size:12px; color:var(--text-muted); margin-top:2px; }
 
 /* ━━━ 필터 바 ━━━ */
 .filter-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .filter-group{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;}
 .fsel-wrap{position:relative;}
 .fsel-wrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;}
-.fsel{height:34px;padding:0 28px 0 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);appearance:none;cursor:pointer;outline:none;transition:.18s;}
+.fsel{height:34px;padding:0 28px 0 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);appearance:none;cursor:pointer;outline:none;transition:.18s;}
 .fsel:focus{border-color:var(--accent);}
 .search-wrap{display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface);transition:.18s;}
 .search-wrap:focus-within{border-color:var(--accent);}
-.search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:13px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:140px;}
-.btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
+.search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:140px;}
+.btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .btn-reset:hover{background:var(--border-light);}
 /* filter-select 유지 (테이블 정렬 셀렉트 용) */
-.filter-select{height:28px;padding:0 8px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:11px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);cursor:pointer;outline:none;transition:.18s;}
+.filter-select{height:28px;padding:0 8px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);cursor:pointer;outline:none;transition:.18s;}
 .filter-select:focus{border-color:var(--accent);}
 
 /* 보호자 검색 자동완성 */
@@ -118,15 +118,15 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 }
 .parent-dropdown.show { display:block; }
 .parent-dropdown-item {
-  padding:9px 12px; font-size:12px; cursor:pointer; transition:background 0.15s;
+  padding:9px 12px; font-size:13px; cursor:pointer; transition:background 0.15s;
   display:flex; flex-direction:column; gap:2px;
 }
 .parent-dropdown-item:hover { background:var(--accent-light); }
 .parent-dropdown-item .pd-name  { font-weight:700; color:var(--text-primary); }
-.parent-dropdown-item .pd-phone { font-size:11px; color:var(--text-secondary); }
+.parent-dropdown-item .pd-phone { font-size:12px; color:var(--text-secondary); }
 .parent-clear-btn {
   position:absolute; right:8px; top:50%; transform:translateY(-50%);
-  background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:13px;
+  background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:14px;
   display:none; padding:2px;
 }
 .parent-clear-btn.show { display:block; }
@@ -141,7 +141,7 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .btn {
   display:inline-flex; align-items:center; gap:6px;
   height:36px; padding:0 16px; border-radius:var(--radius-md);
-  font-size:13px; font-weight:600; font-family:'Pretendard',sans-serif;
+  font-size:14px; font-weight:600; font-family:'Pretendard',sans-serif;
   cursor:pointer; border:none; transition:0.18s; white-space:nowrap;
 }
 .btn-primary  { background:var(--accent); color:#fff; }
@@ -150,9 +150,9 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .btn-outline:hover  { border-color:var(--accent); color:var(--accent-dark); background:var(--accent-light); }
 .btn-danger   { background:var(--red-bg); color:var(--red-text); border:1.5px solid #FECACA; }
 .btn-danger:hover   { background:var(--red); color:#fff; }
-.btn-sm { height:30px; padding:0 12px; font-size:12px; }
+.btn-sm { height:30px; padding:0 12px; font-size:13px; }
 
-.selected-info { font-size:12px; font-weight:600; color:var(--text-secondary); }
+.selected-info { font-size:13px; font-weight:600; color:var(--text-secondary); }
 .selected-info span { color:var(--accent-dark); font-size:14px; font-weight:800; }
 
 /* ━━━ 테이블 카드 ━━━ */
@@ -165,17 +165,17 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
   padding:14px 18px; border-bottom:1px solid var(--border-light);
 }
 .table-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:6px; }
-.table-count { font-size:12px; color:var(--text-muted); font-weight:500; margin-left:4px; }
+.table-count { font-size:13px; color:var(--text-muted); font-weight:500; margin-left:4px; }
 
 .data-table { width:100%; border-collapse:collapse; }
 .data-table th {
-  font-size:11px; font-weight:700; color:var(--text-secondary);
+  font-size:12px; font-weight:700; color:var(--text-secondary);
   text-align:left; padding:10px 12px;
   border-bottom:1.5px solid var(--border-light); background:var(--bg-base);
   white-space:nowrap;
 }
 .data-table td {
-  font-size:12.5px; padding:11px 12px;
+  font-size:13px; padding:11px 12px;
   border-bottom:1px solid var(--border-light); vertical-align:middle;
 }
 .data-table tr:last-child td { border-bottom:none; }
@@ -187,16 +187,16 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .child-avatar {
   width:32px; height:32px; border-radius:50%;
   display:inline-flex; align-items:center; justify-content:center;
-  font-size:12px; font-weight:800; color:#fff; flex-shrink:0;
+  font-size:13px; font-weight:800; color:#fff; flex-shrink:0;
 }
 .child-name-wrap { display:flex; align-items:center; gap:8px; }
-.child-name      { font-size:13px; font-weight:700; color:var(--text-primary); }
-.child-birth-sub { font-size:11px; color:var(--text-muted); }
+.child-name      { font-size:14px; font-weight:700; color:var(--text-primary); }
+.child-birth-sub { font-size:12px; color:var(--text-muted); }
 
 /* 상태 뱃지 */
 .status-badge {
   display:inline-flex; align-items:center; gap:4px;
-  padding:3px 9px; border-radius:12px; font-size:11px; font-weight:700;
+  padding:3px 9px; border-radius:12px; font-size:12px; font-weight:700;
 }
 .status-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
 .s-enrolled  { background:var(--green-bg);  color:var(--green-text); }
@@ -208,39 +208,39 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 /* 반 뱃지 */
 .class-badge {
   display:inline-flex; align-items:center; gap:3px;
-  padding:3px 9px; border-radius:10px; font-size:11px; font-weight:600;
+  padding:3px 9px; border-radius:10px; font-size:12px; font-weight:600;
   background:var(--accent-light); color:var(--accent-dark); white-space:nowrap;
 }
 
 /* 앱 연결 */
-.app-connected     { color:var(--green); font-size:13px; }
-.app-not-connected { color:#D1D5DB;      font-size:13px; }
+.app-connected     { color:var(--green); font-size:14px; }
+.app-not-connected { color:#D1D5DB;      font-size:14px; }
 
 /* 보호자 링크 */
-.parent-link { color:var(--accent-dark); font-weight:600; text-decoration:none; cursor:pointer; font-size:12px; }
+.parent-link { color:var(--accent-dark); font-weight:600; text-decoration:none; cursor:pointer; font-size:13px; }
 .parent-link:hover { text-decoration:underline; }
 
 /* 성별 뱃지 */
-.gender-m { color:#3B82F6; font-weight:700; font-size:12px; }
-.gender-f { color:#EC4899; font-weight:700; font-size:12px; }
+.gender-m { color:#3B82F6; font-weight:700; font-size:13px; }
+.gender-f { color:#EC4899; font-weight:700; font-size:13px; }
 
 /* 빈 상태 */
 .empty-state { text-align:center; padding:48px 24px; color:var(--text-muted); }
 .empty-state-icon { font-size:40px; margin-bottom:10px; }
 .empty-state-text { font-size:14px; font-weight:600; color:var(--text-secondary); }
-.empty-state-sub  { font-size:12px; margin-top:4px; }
+.empty-state-sub  { font-size:13px; margin-top:4px; }
 
 /* 페이지네이션 */
 .pagination {
   display:flex; align-items:center; justify-content:space-between;
   padding:12px 18px; border-top:1px solid var(--border-light); flex-shrink:0;
 }
-.page-info  { font-size:12px; color:var(--text-muted); }
+.page-info  { font-size:13px; color:var(--text-muted); }
 .page-btns  { display:flex; gap:4px; }
 .page-btn {
   width:30px; height:30px; border-radius:var(--radius-sm);
   display:flex;align-items:center;justify-content:center;
-  font-size:12px; font-weight:600; cursor:pointer; border:1px solid var(--border-light);
+  font-size:13px; font-weight:600; cursor:pointer; border:1px solid var(--border-light);
   background:#fff; color:var(--text-secondary); transition:0.18s;
 }
 .page-btn:hover  { border-color:var(--accent); color:var(--accent-dark); }
@@ -277,7 +277,7 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 /* 패널 탭 */
 .panel-tabs { display:flex; border-bottom:1px solid var(--border-light); flex-shrink:0; background:#FAFCFF; }
 .panel-tab {
-  flex:1; padding:12px 8px; text-align:center; font-size:12px; font-weight:600;
+  flex:1; padding:12px 8px; text-align:center; font-size:13px; font-weight:600;
   color:var(--text-secondary); cursor:pointer; border-bottom:2.5px solid transparent;
   transition:0.18s; white-space:nowrap;
 }
@@ -291,7 +291,7 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 /* 패널 내 섹션 */
 .panel-section { margin-bottom:20px; }
 .panel-section-title {
-  font-size:11px; font-weight:800; color:var(--text-muted); letter-spacing:1px;
+  font-size:12px; font-weight:800; color:var(--text-muted); letter-spacing:1px;
   text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;
 }
 .panel-section-title::after { content:''; flex:1; height:1px; background:var(--border-light); }
@@ -299,8 +299,8 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .info-item { padding:10px 12px; background:var(--bg-base); border-radius:var(--radius-md); border:1px solid var(--border-light); }
 .info-item.full { grid-column:1/-1; }
-.info-label { font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
-.info-value { font-size:13px; font-weight:600; color:var(--text-primary); }
+.info-label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.info-value { font-size:14px; font-weight:600; color:var(--text-primary); }
 .info-value.muted { color:var(--text-muted); font-weight:400; }
 
 /* 보호자 카드 */
@@ -311,24 +311,24 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .parent-card.primary { border-left:3px solid var(--accent); }
 .parent-card.family  { border-left:3px solid var(--green); }
 .parent-card-avatar  { width:38px; height:38px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:14px; font-weight:800; color:#fff; flex-shrink:0; }
-.parent-card-name    { font-size:13px; font-weight:700; color:var(--text-primary); }
-.parent-card-meta    { font-size:11px; color:var(--text-secondary); display:flex; gap:10px; margin-top:3px; flex-wrap:wrap; }
-.parent-card-type    { font-size:10px; font-weight:700; padding:1px 7px; border-radius:10px; }
+.parent-card-name    { font-size:14px; font-weight:700; color:var(--text-primary); }
+.parent-card-meta    { font-size:12px; color:var(--text-secondary); display:flex; gap:10px; margin-top:3px; flex-wrap:wrap; }
+.parent-card-type    { font-size:12px; font-weight:700; padding:1px 7px; border-radius:10px; }
 .parent-card-type.primary { background:var(--blue-bg);  color:var(--blue-text); }
 .parent-card-type.family  { background:var(--green-bg); color:var(--green-text); }
-.parent-card-app     { font-size:11px; display:flex; align-items:center; gap:4px; }
+.parent-card-app     { font-size:12px; display:flex; align-items:center; gap:4px; }
 
 /* 알레르기 태그 */
 .allergy-tags { display:flex; flex-wrap:wrap; gap:6px; }
-.allergy-tag  { padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; background:var(--red-bg); color:var(--red-text); border:1px solid #FECACA; }
-.allergy-none { font-size:12px; color:var(--text-muted); }
+.allergy-tag  { padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600; background:var(--red-bg); color:var(--red-text); border:1px solid #FECACA; }
+.allergy-none { font-size:13px; color:var(--text-muted); }
 
 /* 이력 아이템 */
 .history-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--border-light); }
 .history-item:last-child { border-bottom:none; }
 .history-dot  { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:4px; }
-.history-text { font-size:12px; color:var(--text-primary); line-height:1.5; flex:1; }
-.history-date { font-size:10px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; flex-shrink:0; margin-top:2px; }
+.history-text { font-size:13px; color:var(--text-primary); line-height:1.5; flex:1; }
+.history-date { font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono',monospace; flex-shrink:0; margin-top:2px; }
 
 /* 패널 액션 바 */
 .panel-footer {
@@ -366,38 +366,38 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .form-row.full { grid-template-columns:1fr; }
 .form-group { display:flex; flex-direction:column; gap:5px; }
 .form-label {
-  font-size:12px; font-weight:700; color:var(--text-secondary);
+  font-size:13px; font-weight:700; color:var(--text-secondary);
   display:flex; align-items:center; gap:4px;
 }
-.form-label .req { color:var(--red); font-size:10px; }
+.form-label .req { color:var(--red); font-size:12px; }
 .form-input, .form-select, .form-textarea {
   height:38px; padding:0 12px; border:1.5px solid var(--border-light);
-  border-radius:var(--radius-md); font-size:13px; font-family:'Pretendard',sans-serif;
+  border-radius:var(--radius-md); font-size:14px; font-family:'Pretendard',sans-serif;
   color:var(--text-primary); transition:border-color 0.18s; outline:none; background:#fff;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--accent); }
 .form-textarea { height:80px; padding:10px 12px; resize:vertical; }
-.form-hint { font-size:11px; color:var(--text-muted); margin-top:3px; }
+.form-hint { font-size:12px; color:var(--text-muted); margin-top:3px; }
 
 /* 라디오 그룹 */
 .radio-group { display:flex; gap:10px; padding-top:4px; }
-.radio-label { display:flex; align-items:center; gap:5px; cursor:pointer; font-size:13px; font-weight:500; color:var(--text-primary); }
+.radio-label { display:flex; align-items:center; gap:5px; cursor:pointer; font-size:14px; font-weight:500; color:var(--text-primary); }
 .radio-label input { accent-color:var(--accent); width:15px; height:15px; cursor:pointer; }
 
 /* 보호자 연결 검색 */
 .parent-search-result { margin-top:6px; border:1.5px solid var(--border-light); border-radius:var(--radius-md); max-height:140px; overflow-y:auto; display:none; }
 .parent-search-result.show { display:block; }
-.psr-item { padding:9px 12px; font-size:12px; cursor:pointer; border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:10px; transition:background 0.15s; }
+.psr-item { padding:9px 12px; font-size:13px; cursor:pointer; border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:10px; transition:background 0.15s; }
 .psr-item:last-child { border-bottom:none; }
 .psr-item:hover { background:var(--accent-light); }
-.psr-avatar { width:28px; height:28px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:11px; font-weight:800; color:#fff; flex-shrink:0; }
+.psr-avatar { width:28px; height:28px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:12px; font-weight:800; color:#fff; flex-shrink:0; }
 .psr-name  { font-weight:700; color:var(--text-primary); }
-.psr-phone { font-size:11px; color:var(--text-secondary); }
+.psr-phone { font-size:12px; color:var(--text-secondary); }
 
 /* 선택된 보호자 칩 */
 .selected-parents-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; min-height:34px; padding:6px 8px; border:1.5px dashed var(--border-medium); border-radius:var(--radius-md); background:var(--bg-base); }
-.parent-chip { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:10px; background:var(--accent-light); color:var(--accent-dark); font-size:12px; font-weight:600; border:1px solid var(--border-medium); }
-.parent-chip .remove-chip { cursor:pointer; font-size:13px; color:var(--text-muted); transition:color 0.15s; }
+.parent-chip { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:10px; background:var(--accent-light); color:var(--accent-dark); font-size:13px; font-weight:600; border:1px solid var(--border-medium); }
+.parent-chip .remove-chip { cursor:pointer; font-size:14px; color:var(--text-muted); transition:color 0.15s; }
 .parent-chip .remove-chip:hover { color:var(--red); }
 
 /* 상태변경 모달 */
@@ -409,11 +409,11 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
 .status-option:hover  { border-color:var(--accent); background:var(--accent-light); }
 .status-option.active { border-color:var(--accent); background:var(--accent-light); }
 .status-option-badge  { flex-shrink:0; }
-.status-option-desc   { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+.status-option-desc   { font-size:12px; color:var(--text-secondary); margin-top:2px; }
 
 /* ━━━ 토스트 ━━━ */
 .toast-wrap { position:fixed; bottom:24px; right:24px; z-index:600; display:flex; flex-direction:column; gap:8px; }
-.toast { background:#1A1D2E; color:#fff; padding:10px 16px; border-radius:var(--radius-md); font-size:13px; box-shadow:var(--shadow-lg); animation:toastIn 0.25s ease; display:flex; align-items:center; gap:8px; }
+.toast { background:#1A1D2E; color:#fff; padding:10px 16px; border-radius:var(--radius-md); font-size:14px; box-shadow:var(--shadow-lg); animation:toastIn 0.25s ease; display:flex; align-items:center; gap:8px; }
 .toast.success { background:var(--green); }
 .toast.error   { background:var(--red); }
 @keyframes toastIn { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0)} }
@@ -520,8 +520,8 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
       <div class="table-header">
         <span class="table-title">원아 목록 <span class="table-count" id="tableCount"></span></span>
         <div style="display:flex;gap:8px;align-items:center">
-          <span style="font-size:11px;color:var(--text-muted)">정렬:</span>
-          <select class="filter-select" style="height:28px;font-size:11px;padding:0 8px" id="sortSelect" onchange="applyFilters()">
+          <span style="font-size:12px;color:var(--text-muted)">정렬:</span>
+          <select class="filter-select" style="height:28px;font-size:12px;padding:0 8px" id="sortSelect" onchange="applyFilters()">
             <option value="name">이름순</option>
             <option value="enroll">입원일순</option>
             <option value="birth">생년월일순</option>
@@ -625,14 +625,14 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
       </div>
 
       <div style="border-top:1px solid var(--border-light);padding-top:16px;margin-top:4px;margin-bottom:14px">
-        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text-primary)">👨‍👩‍👧 주보호자 연결 <span class="req" style="color:var(--red);font-size:11px">*</span></div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text-primary)">👨‍👩‍👧 주보호자 연결 <span class="req" style="color:var(--red);font-size:12px">*</span></div>
         <div class="form-group">
           <label class="form-label">보호자 검색</label>
           <input class="form-input" id="regParentSearch" placeholder="이름 또는 전화번호로 검색" oninput="searchParentForReg(this.value)" autocomplete="off">
           <div class="parent-search-result" id="regParentResults"></div>
         </div>
         <div class="selected-parents-wrap" id="selectedParentsWrap">
-          <span style="font-size:11px;color:var(--text-muted);margin:auto">검색하여 보호자를 선택하세요</span>
+          <span style="font-size:12px;color:var(--text-muted);margin:auto">검색하여 보호자를 선택하세요</span>
         </div>
         <div class="form-hint">⚠️ 주계정 학부모가 없는 경우, 먼저 보호자를 등록 후 원아를 연결하거나 미연결로 등록할 수 있습니다.</div>
       </div>
@@ -666,7 +666,7 @@ body { font-family:'Pretendard',sans-serif; background:var(--bg-base); color:var
       <div class="modal-close" onclick="closeStatusModal()">✕</div>
     </div>
     <div class="modal-body">
-      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px" id="statusModalDesc">
+      <div style="font-size:14px;color:var(--text-secondary);margin-bottom:14px" id="statusModalDesc">
         변경할 상태를 선택하세요.
       </div>
       <div class="status-options" id="statusOptions"></div>
@@ -1028,7 +1028,7 @@ function onParentSearch(val) {
     p.name.includes(val) || p.phone.includes(val)
   );
   if (!results.length) {
-    dd.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:var(--text-muted)">검색 결과가 없습니다</div>';
+    dd.innerHTML = '<div style="padding:10px 12px;font-size:13px;color:var(--text-muted)">검색 결과가 없습니다</div>';
     dd.classList.add('show'); return;
   }
   dd.innerHTML = results.map(p => `
@@ -1112,17 +1112,17 @@ function renderTable() {
         <td><span class="class-badge">${c.class_name}</span></td>
         <td>
           <span class="parent-link" onclick="event.stopPropagation();filterByParent('${c.primary_parent_id}','${c.primary_parent_name}','${c.primary_parent_phone}')">${c.primary_parent_name}</span>
-          <div style="font-size:10px;color:var(--text-muted)">${c.primary_parent_relation}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${c.primary_parent_relation}</div>
         </td>
         <td>
           <span class="parent-link" onclick="event.stopPropagation();openParentTab('${c.id}')">${c.parent_count}명</span>
         </td>
         <td style="font-size:16px;text-align:center" title="${allConnected?'전원 연결':someConnected?'일부 미연결':'미연결'}">${appIcon}</td>
-        <td style="font-size:12px;color:var(--text-secondary);font-family:'JetBrains Mono',monospace">${c.enroll_date}</td>
+        <td style="font-size:13px;color:var(--text-secondary);font-family:'JetBrains Mono',monospace">${c.enroll_date}</td>
         <td onclick="event.stopPropagation()">
           <div style="display:flex;gap:4px">
-            <button class="btn btn-outline btn-sm" style="padding:0 8px;height:26px;font-size:11px" onclick="openChildPanel('${c.id}','info')">상세</button>
-            <button class="btn btn-outline btn-sm" style="padding:0 8px;height:26px;font-size:11px" onclick="openStatusModal('${c.id}')">상태</button>
+            <button class="btn btn-outline btn-sm" style="padding:0 8px;height:26px;font-size:12px" onclick="openChildPanel('${c.id}','info')">상세</button>
+            <button class="btn btn-outline btn-sm" style="padding:0 8px;height:26px;font-size:12px" onclick="openStatusModal('${c.id}')">상태</button>
           </div>
         </td>
       </tr>
@@ -1246,9 +1246,9 @@ function renderPanelContent(tab) {
       <div class="panel-section">
         <div class="panel-section-title">관리 정보</div>
         <div class="info-grid">
-          <div class="info-item full"><div class="info-label">원아 ID</div><div class="info-value" style="font-family:'JetBrains Mono',monospace;font-size:12px">${c.id}</div></div>
-          <div class="info-item"><div class="info-label">최종 수정일</div><div class="info-value" style="font-size:12px">${c.updated_at.slice(0,10)}</div></div>
-          <div class="info-item"><div class="info-label">수정자</div><div class="info-value" style="font-size:12px">${c.updated_by}</div></div>
+          <div class="info-item full"><div class="info-label">원아 ID</div><div class="info-value" style="font-family:'JetBrains Mono',monospace;font-size:13px">${c.id}</div></div>
+          <div class="info-item"><div class="info-label">최종 수정일</div><div class="info-value" style="font-size:13px">${c.updated_at.slice(0,10)}</div></div>
+          <div class="info-item"><div class="info-label">수정자</div><div class="info-value" style="font-size:13px">${c.updated_by}</div></div>
         </div>
       </div>
     `;
@@ -1270,12 +1270,12 @@ function renderPanelContent(tab) {
               </div>
               <div class="parent-card-app" style="margin-top:5px">
                 ${p.app_connected
-                  ? `<span style="color:var(--green);font-size:12px">✅ 앱 연결됨</span><span style="font-size:11px;color:var(--text-muted);margin-left:6px">최근 접속: ${p.last_access}</span>`
-                  : `<span style="color:var(--red);font-size:12px">❌ 앱 미연결</span><span style="font-size:11px;color:var(--text-muted);margin-left:6px">초대 필요</span>`
+                  ? `<span style="color:var(--green);font-size:13px">✅ 앱 연결됨</span><span style="font-size:12px;color:var(--text-muted);margin-left:6px">최근 접속: ${p.last_access}</span>`
+                  : `<span style="color:var(--red);font-size:13px">❌ 앱 미연결</span><span style="font-size:12px;color:var(--text-muted);margin-left:6px">초대 필요</span>`
                 }
               </div>
             </div>
-            ${userRole !== 'teacher' ? `<button class="btn btn-outline btn-sm" style="height:28px;font-size:11px;flex-shrink:0" onclick="showToast('보호자 정보 수정 기능은 준비 중입니다.')">수정</button>` : ''}
+            ${userRole !== 'teacher' ? `<button class="btn btn-outline btn-sm" style="height:28px;font-size:12px;flex-shrink:0" onclick="showToast('보호자 정보 수정 기능은 준비 중입니다.')">수정</button>` : ''}
           </div>
         `).join('')}
       </div>
@@ -1301,7 +1301,7 @@ function renderPanelContent(tab) {
       </div>
       <div class="panel-section">
         <div class="panel-section-title">특이사항 메모</div>
-        <div style="padding:12px;background:var(--bg-base);border-radius:var(--radius-md);border:1px solid var(--border-light);font-size:13px;color:var(--text-primary);line-height:1.7;min-height:80px">
+        <div style="padding:12px;background:var(--bg-base);border-radius:var(--radius-md);border:1px solid var(--border-light);font-size:14px;color:var(--text-primary);line-height:1.7;min-height:80px">
           ${c.memo || '<span style="color:var(--text-muted)">등록된 특이사항이 없습니다.</span>'}
         </div>
         ${`<button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="showToast('메모 수정 기능은 준비 중입니다.')">✏️ 메모 수정</button>`}
@@ -1377,7 +1377,7 @@ function searchParentForReg(val) {
   if (!val.trim()) { box.classList.remove('show'); return; }
   const results = MOCK_PARENTS.filter(p => p.name.includes(val) || p.phone.includes(val));
   if (!results.length) {
-    box.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:var(--text-muted)">검색 결과 없음</div>';
+    box.innerHTML = '<div style="padding:10px 12px;font-size:13px;color:var(--text-muted)">검색 결과 없음</div>';
     box.classList.add('show'); return;
   }
   box.innerHTML = results.map(p => `
@@ -1405,7 +1405,7 @@ function addParentToReg(p) {
 function renderSelectedParents() {
   const wrap = document.getElementById('selectedParentsWrap');
   if (!selectedParentsForReg.length) {
-    wrap.innerHTML = '<span style="font-size:11px;color:var(--text-muted);margin:auto">검색하여 보호자를 선택하세요</span>';
+    wrap.innerHTML = '<span style="font-size:12px;color:var(--text-muted);margin:auto">검색하여 보호자를 선택하세요</span>';
     return;
   }
   wrap.innerHTML = selectedParentsForReg.map((p, i) => `
@@ -1454,7 +1454,7 @@ function openStatusModal(childId) {
     <div class="status-option ${c && c.status === s.value ? 'active' : ''}" onclick="selectStatusOpt(this,'${s.value}')">
       <div class="status-option-badge"><span class="status-badge ${s.cls}"><span class="status-dot" style="background:${s.dot}"></span>${s.label}</span></div>
       <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${s.label}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-primary)">${s.label}</div>
         <div class="status-option-desc">${s.desc}</div>
       </div>
     </div>
@@ -1472,7 +1472,7 @@ function openBulkStatus() {
     <div class="status-option" onclick="selectStatusOpt(this,'${s.value}')">
       <div class="status-option-badge"><span class="status-badge ${s.cls}"><span class="status-dot" style="background:${s.dot}"></span>${s.label}</span></div>
       <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">${s.label}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-primary)">${s.label}</div>
         <div class="status-option-desc">${s.desc}</div>
       </div>
     </div>
