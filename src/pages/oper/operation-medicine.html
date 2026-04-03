@@ -211,7 +211,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .modal-title{font-size:15px;font-weight:800;color:var(--text-primary);}
 .modal-close{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--bg-base);border:1.5px solid var(--border-light);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-secondary);transition:.15s;}
 .modal-close:hover{background:var(--red-bg);border-color:var(--red-bg);color:var(--red-text);}
-.modal-body{padding:20px 24px;}
+.modal-body{padding:20px 24px;max-height:60vh;overflow-y:auto;}
 .modal-footer{padding:14px 24px;border-top:1px solid var(--border-light);display:flex;gap:8px;justify-content:flex-end;}
 
 .modal-info-card{background:var(--bg-base);border-radius:var(--radius-md);padding:12px 14px;border:1px solid var(--border-light);margin-bottom:14px;}
@@ -226,10 +226,17 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .form-textarea{border:1.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px 12px;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);outline:none;transition:.18s;width:100%;resize:vertical;min-height:90px;line-height:1.5;}
 .form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,0.10);}
 
-/* ━━━ CONFIRM MODAL ━━━ */
-.confirm-icon{text-align:center;font-size:40px;padding:20px 0 8px;display:block;}
-.confirm-msg{text-align:center;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:6px;}
-.confirm-sub{text-align:center;font-size:13px;color:var(--text-secondary);line-height:1.5;}
+/* ━━━ CONFIRM MODAL INFOCARD ━━━ */
+.mc-child{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.mc-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--amber-text);background:var(--amber-bg);flex-shrink:0;}
+.mc-child-name{font-size:15px;font-weight:800;color:var(--text-primary);}
+.mc-child-meta{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+.mc-divider{border:none;border-top:1px solid var(--border-light);margin:0 0 14px;}
+.mc-rows{display:flex;flex-direction:column;gap:8px;}
+.mc-row{display:flex;gap:8px;font-size:13px;line-height:1.4;}
+.mc-label{flex-shrink:0;width:68px;color:var(--text-secondary);font-weight:500;}
+.mc-value{color:var(--text-primary);font-weight:600;}
+.mc-notes{background:var(--amber-bg);border-radius:var(--radius-sm);padding:8px 10px;font-size:12px;color:var(--amber-text);line-height:1.5;margin-top:10px;}
 
 /* ━━━ TOAST ━━━ */
 #toast-container{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:9999;}
@@ -430,11 +437,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span class="modal-title">처리 완료 확인</span>
       <button class="modal-close" onclick="closeConfirmModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <span class="confirm-icon">✅</span>
-      <p class="confirm-msg" id="confirmMsg">투약 처리를 완료하시겠습니까?</p>
-      <p class="confirm-sub" id="confirmSub"></p>
-    </div>
+    <div class="modal-body" id="confirmBody"><!-- JS 렌더 --></div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeConfirmModal()">취소</button>
       <button class="btn btn-success" onclick="confirmComplete()">처리 완료</button>
@@ -825,12 +828,35 @@ function closeDrawer() {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    CONFIRM COMPLETE MODAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function calcMedAge(dob) {
+  const [y, m, d] = dob.split('.').map(Number);
+  const today = new Date(2026, 2, 31);
+  let age = today.getFullYear() - y;
+  if (today.getMonth() + 1 < m || (today.getMonth() + 1 === m && today.getDate() < d)) age--;
+  return age;
+}
 function openConfirmModal(id) {
   const rec = MEDICINES.find(m => m.id === id);
   if (!rec) return;
   pendingActionId = id;
-  document.getElementById('confirmMsg').textContent = `${rec.childName} 원아의 투약 처리를 완료하시겠습니까?`;
-  document.getElementById('confirmSub').textContent = `약품: ${rec.medicineName} | 투약 시간: ${rec.times.join(', ')}`;
+  const age = calcMedAge(rec.dob);
+  document.getElementById('confirmBody').innerHTML = `
+    <div class="mc-child">
+      <div class="mc-avatar">${rec.childName[0]}</div>
+      <div>
+        <div class="mc-child-name">${rec.childName}</div>
+        <div class="mc-child-meta">${rec.className} · 만 ${age}세 · ${rec.dob}</div>
+      </div>
+    </div>
+    <hr class="mc-divider">
+    <div class="mc-rows">
+      <div class="mc-row"><span class="mc-label">약품명</span><span class="mc-value">${rec.medicineName} <span style="font-weight:500;color:var(--text-secondary)">(${rec.medicineType})</span></span></div>
+      <div class="mc-row"><span class="mc-label">투약시간</span><span class="mc-value">${rec.times.join(', ')}</span></div>
+      <div class="mc-row"><span class="mc-label">횟수·투약량</span><span class="mc-value">${rec.count}회 · ${rec.dose}</span></div>
+      <div class="mc-row"><span class="mc-label">투약방법</span><span class="mc-value">${rec.method}</span></div>
+    </div>
+    ${rec.notes ? `<div class="mc-notes">⚠️ ${rec.notes}</div>` : ''}
+  `;
   document.getElementById('confirmModal').classList.add('open');
 }
 function closeConfirmModal() {

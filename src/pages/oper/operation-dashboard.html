@@ -172,12 +172,12 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .grid-3col { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
-.card { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden; }
+.card { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden; max-height:340px; min-height:200px; display: flex; flex-direction: column; }
 .card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
 .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); display:flex;align-items:center;gap:6px; }
 .card-action { font-size: 13px; color: var(--accent-dark); font-weight: 600; cursor: pointer; }
 .card-action:hover { text-decoration: underline; }
-.card-body   { padding: 14px 18px; }
+.card-body   { padding: 14px 18px;overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-medium) transparent; }
 
 /* ━━━ 반 현황 카드 그리드 ━━━ */
 #mainCardBody { scrollbar-width: thin; scrollbar-color: var(--border-medium) transparent; }
@@ -397,7 +397,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .read-item { display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
 .read-item:hover .read-title { color: var(--accent-dark); }
 .read-meta { display: flex; align-items: center; gap: 6px; }
-.read-type-tag { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; flex-shrink: 0; }
+.read-type-tag { font-size: 13px; font-weight: 700; padding: 2px 6px; border-radius: 6px; flex-shrink: 0; }
 .read-title { font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .read-arrow { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 .read-bottom { display: flex; align-items: center; gap: 8px; }
@@ -417,6 +417,32 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .med-complete-btn { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm); border: 1.5px solid var(--amber); background: #fff; color: var(--amber-text); cursor: pointer; flex-shrink: 0; transition: 0.18s; white-space: nowrap; }
 .med-complete-btn:hover { background: var(--amber-bg); }
 .med-done-badge { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm); background: var(--green-bg); color: var(--green-text); flex-shrink: 0; }
+
+/* ━━━ 투약 컨펌 모달 ━━━ */
+.med-modal-overlay{position:fixed;inset:0;background:rgba(12,45,72,0.40);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;}
+.med-modal-overlay.open{opacity:1;pointer-events:all;}
+.med-modal-box{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:400px;max-width:92vw;overflow:hidden;display:flex;flex-direction:column;transform:scale(.96);transition:.2s;}
+.med-modal-overlay.open .med-modal-box{transform:scale(1);}
+.med-modal-header{padding:18px 22px 12px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+.med-modal-title{font-size:15px;font-weight:800;color:var(--text-primary);}
+.med-modal-close{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--bg-base);border:1.5px solid var(--border-light);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-secondary);transition:.15s;}
+.med-modal-close:hover{background:var(--red-bg);border-color:var(--red-bg);color:var(--red-text);}
+.med-modal-body{padding:20px 22px 16px;max-height:60vh;overflow-y:auto;}
+.med-confirm-child{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.med-confirm-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--amber-text);background:var(--amber-bg);flex-shrink:0;}
+.med-confirm-child-name{font-size:15px;font-weight:800;color:var(--text-primary);}
+.med-confirm-child-meta{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+.med-confirm-divider{border:none;border-top:1px solid var(--border-light);margin:0 0 14px;}
+.med-confirm-rows{display:flex;flex-direction:column;gap:8px;}
+.med-confirm-row{display:flex;gap:8px;font-size:13px;line-height:1.4;}
+.med-confirm-label{flex-shrink:0;width:68px;color:var(--text-secondary);font-weight:500;}
+.med-confirm-value{color:var(--text-primary);font-weight:600;}
+.med-confirm-notes{background:var(--amber-bg);border-radius:var(--radius-sm);padding:8px 10px;font-size:12px;color:var(--amber-text);line-height:1.5;margin-top:10px;}
+.med-modal-footer{padding:12px 22px 18px;display:flex;gap:8px;justify-content:flex-end;}
+.med-btn-ghost{height:36px;padding:0 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;background:transparent;color:var(--text-secondary);border:1.5px solid var(--border-light);transition:.15s;}
+.med-btn-ghost:hover{background:var(--bg-base);}
+.med-btn-success{height:36px;padding:0 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--green);color:#fff;border:none;transition:.15s;}
+.med-btn-success:hover{background:#059669;}
 
 /* ━━━ 다가오는 일정 ━━━ */
 .sched-list { display: flex; flex-direction: column; }
@@ -631,6 +657,21 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
       <button class="act-modal-close" onclick="closeActivityModal()">✕</button>
     </div>
     <div class="act-modal-body" id="actModalBody"><!-- JS 렌더 --></div>
+  </div>
+</div>
+
+<!-- ━━━ 투약 처리 컨펌 모달 ━━━ -->
+<div class="med-modal-overlay" id="medConfirmOverlay" onclick="overlayCloseMedConfirm(event)">
+  <div class="med-modal-box">
+    <div class="med-modal-header">
+      <span class="med-modal-title">투약 처리 완료 확인</span>
+      <button class="med-modal-close" onclick="closeMedConfirmModal()">✕</button>
+    </div>
+    <div class="med-modal-body" id="medConfirmBody"><!-- JS 렌더 --></div>
+    <div class="med-modal-footer">
+      <button class="med-btn-ghost" onclick="closeMedConfirmModal()">취소</button>
+      <button class="med-btn-success" onclick="confirmMedComplete()">처리 완료</button>
+    </div>
   </div>
 </div>
 
@@ -951,9 +992,26 @@ const READ_UPLOAD_DATA = [
   { type:'공지사항', title:'학부모 상담 일정안내',   date:'2026-03-28', read:30, total:30 },
 ];
 const MED_QUEUE_DATA = [
-  { id:'MQ001', name:'김민준', className:'햇님반', brief:'종합감기약 점심 후' },
-  { id:'MQ002', name:'이하윤', className:'달님반', brief:'알레르기약 하원 전' },
-  { id:'MQ003', name:'박지호', className:'햇님반', brief:'소화제 오전 간식 후' },
+  { id:'MQ001', name:'김민준', className:'햇님반', dob:'2021.05.12',
+    medicineName:'종합감기약', medicineType:'시럽',
+    times:['점심(12:30)', '오후(15:00)'], count:2, dose:'10ml',
+    method:'식후 복용', notes:'콧물·기침 증상. 졸음 유발 가능성 있으니 야외활동 주의.' },
+  { id:'MQ002', name:'이하윤', className:'달님반', dob:'2022.03.08',
+    medicineName:'알레르기약', medicineType:'정제',
+    times:['하원 전(16:30)'], count:1, dose:'0.5정',
+    method:'식후 복용', notes:'봄철 꽃가루 알레르기. 졸음 부작용 있을 수 있음.' },
+  { id:'MQ003', name:'박지호', className:'햇님반', dob:'2020.11.03',
+    medicineName:'소화제', medicineType:'정제',
+    times:['오전 간식 후(10:30)'], count:1, dose:'1정',
+    method:'식후 즉시', notes:'복통 호소로 소화 촉진 목적.' },
+  { id:'MQ004', name:'최수아', className:'별님반', dob:'2021.02.17',
+    medicineName:'타이레놀시럽', medicineType:'시럽',
+    times:['점심(12:30)'], count:1, dose:'5ml',
+    method:'식후 30분 복용', notes:'37.5도 이상 시 투약 요청. 알레르기 없음.' },
+  { id:'MQ005', name:'정윤서', className:'꽃님반', dob:'2021.06.28',
+    medicineName:'항생제', medicineType:'시럽',
+    times:['오후(14:00)'], count:1, dose:'7.5ml',
+    method:'식후 30분', notes:'중이염 치료 중. 빠짐없이 투약 필요.' },
 ];
 const completedMeds = new Set(JSON.parse(sessionStorage.getItem('dash_completedMeds') || '[]'));
 const UPCOMING_SCHED = [
@@ -1195,10 +1253,10 @@ function renderMainCard() {
             <div class="cls-card" onclick="openClassAttendanceModal('${cls.id}','${cls.plain}')"
               style="padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px">
               <div>
-                <div style="font-size:14px;font-weight:800;color:var(--text-primary);margin-bottom:4px;line-height:1.2">
-                  ${cls.plain}<span style="font-size:12px;color:var(--text-secondary);font-weight:400;margin-left:5px">${cls.age}</span>
+                <div style="font-size:15px;font-weight:800;color:var(--text-primary);margin-bottom:4px;line-height:1.2">
+                  ${cls.plain}<span style="font-size:13px;color:var(--text-secondary);font-weight:400;margin-left:5px">${cls.age}</span>
                 </div>
-                <div style="font-size:12px;color:var(--text-secondary);font-weight:500">담임 ${cls.teacher}&ensp;보조 ${cls.assistant}</div>
+                <div style="font-size:13px;color:var(--text-secondary);font-weight:500">담임 ${cls.teacher}&ensp;보조 ${cls.assistant}</div>
               </div>
               <div style="display:flex;gap:6px">
                 <div style="flex:1;background:var(--bg-base);border:1px solid var(--border-medium);border-radius:8px;padding:9px 4px;text-align:center">
@@ -1333,7 +1391,7 @@ function renderMedQueue() {
       <div class="med-avatar">${m.name.charAt(0)}</div>
       <div class="med-info">
         <div class="med-name">${m.name} <span style="font-size:11px;color:var(--text-muted);font-weight:500">${m.className}</span></div>
-        <div class="med-desc">${m.brief}</div>
+        <div class="med-desc">${m.medicineName} · ${m.times.join(', ')}</div>
       </div>
       ${done
         ? `<span class="med-done-badge">처리완료</span>`
@@ -1343,16 +1401,58 @@ function renderMedQueue() {
   }).join('')}</div>`;
 }
 
+let pendingMedId = null;
+
+function calcAge(dob) {
+  const [y, m, d] = dob.split('.').map(Number);
+  const today = new Date(2026, 2, 31); // 모킹 기준일
+  let age = today.getFullYear() - y;
+  if (today.getMonth() + 1 < m || (today.getMonth() + 1 === m && today.getDate() < d)) age--;
+  return age;
+}
 function completeMed(id) {
-  completedMeds.add(id);
+  const rec = MED_QUEUE_DATA.find(m => m.id === id);
+  if (!rec) return;
+  pendingMedId = id;
+  const age = calcAge(rec.dob);
+  document.getElementById('medConfirmBody').innerHTML = `
+    <div class="med-confirm-child">
+      <div class="med-confirm-avatar">${rec.name[0]}</div>
+      <div>
+        <div class="med-confirm-child-name">${rec.name}</div>
+        <div class="med-confirm-child-meta">${rec.className} · 만 ${age}세 · ${rec.dob}</div>
+      </div>
+    </div>
+    <hr class="med-confirm-divider">
+    <div class="med-confirm-rows">
+      <div class="med-confirm-row"><span class="med-confirm-label">약품명</span><span class="med-confirm-value">${rec.medicineName} <span style="font-weight:500;color:var(--text-secondary)">(${rec.medicineType})</span></span></div>
+      <div class="med-confirm-row"><span class="med-confirm-label">투약시간</span><span class="med-confirm-value">${rec.times.join(', ')}</span></div>
+      <div class="med-confirm-row"><span class="med-confirm-label">횟수·투약량</span><span class="med-confirm-value">${rec.count}회 · ${rec.dose}</span></div>
+      <div class="med-confirm-row"><span class="med-confirm-label">투약방법</span><span class="med-confirm-value">${rec.method}</span></div>
+    </div>
+    ${rec.notes ? `<div class="med-confirm-notes">⚠️ ${rec.notes}</div>` : ''}
+  `;
+  document.getElementById('medConfirmOverlay').classList.add('open');
+}
+function closeMedConfirmModal() {
+  document.getElementById('medConfirmOverlay').classList.remove('open');
+  pendingMedId = null;
+}
+function overlayCloseMedConfirm(e) {
+  if (e.target === e.currentTarget) closeMedConfirmModal();
+}
+function confirmMedComplete() {
+  if (!pendingMedId) return;
+  completedMeds.add(pendingMedId);
   sessionStorage.setItem('dash_completedMeds', JSON.stringify([...completedMeds]));
-  const item = document.querySelector(`.med-queue-item[data-med-id="${id}"]`);
+  const item = document.querySelector(`.med-queue-item[data-med-id="${pendingMedId}"]`);
   if (item) {
     item.classList.add('done');
     item.querySelector('.med-complete-btn').outerHTML = `<span class="med-done-badge">처리완료</span>`;
   }
   const pending = MED_QUEUE_DATA.filter(m => !completedMeds.has(m.id));
   document.getElementById('medQueueCount').textContent = pending.length ? `(${pending.length}건)` : '';
+  closeMedConfirmModal();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1373,7 +1473,7 @@ function renderSchedulePreview() {
         <div class="sched-title">${s.title}</div>
         <div class="sched-date">${s.date}</div>
       </div>
-      <span class="sched-type-tag" style="background:${s.typeBg};color:${s.typeTc}">${s.type}</span>
+     <!-- <span class="sched-type-tag" style="background:${s.typeBg};color:${s.typeTc}">${s.type}</span> -->
     </div>`).join('')}</div>`;
 }
 

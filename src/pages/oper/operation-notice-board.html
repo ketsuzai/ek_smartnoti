@@ -1582,9 +1582,8 @@ function renderSentDetailSingle(notice) {
     return `
       <div style="border-top:2px solid var(--border-light);margin-top:4px;padding-top:16px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-          <div class="tcc-avatar" style="background:${child.color};width:32px;height:32px;font-size:14px;">${child.name[0]}</div>
+          <div class="tcc-avatar" style="background:${child.color};width:32px;height:32px;font-size:14px;border-radius:50%;">${child.name[0]}</div>
           <div style="font-size:14px;font-weight:800;color:var(--text-primary);">${child.name}</div>
-          ${child.dailyEval ? '<span style="background:var(--blue-bg);color:var(--blue-text);font-size:12px;font-weight:700;padding:2px 7px;border-radius:6px;">종합평가 있음</span>' : ''}
         </div>
       </div>
       ${evalHTML}
