@@ -10,11 +10,11 @@
 .sidebar{width:var(--sidebar-width);background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;box-shadow:4px 0 20px rgba(12,45,72,0.18);}
 .sidebar-logo{height:var(--header-height);display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
 .logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#38BDF8);display:flex;align-items:center;justify-content:center;font-size:16px;}
-.logo-text{font-size:14px;font-weight:700;color:#fff;}
-.logo-sub{font-size:10px;color:var(--sidebar-text);}
+.logo-text{font-size:15px;font-weight:700;color:#fff;}
+.logo-sub{font-size:13px;color:var(--sidebar-text);}
 .org-banner{margin:12px 10px;background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.25);border-radius:10px;padding:10px 12px;}
-.org-banner-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.role-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.org-banner-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.role-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;}
 .role-badge.super{background:rgba(99,102,241,0.25);color:#A5B4FC;}
 .role-badge.org{background:rgba(14,165,233,0.25);color:#7DD3FC;}
 .role-badge.teacher{background:rgba(20,184,166,0.25);color:#5EEAD4;}
@@ -32,7 +32,7 @@
 .sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
 .nav-section{padding:14px 16px 4px;}
 .nav-section-label{font-size:10px;font-weight:700;color:rgba(184,217,240,0.45);letter-spacing:1px;text-transform:uppercase;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;margin:1px 8px;border-radius:10px;color:var(--sidebar-text);font-size:13px;font-weight:500;cursor:pointer;transition:0.18s;text-decoration:none;user-select:none;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;margin:1px 8px;border-radius:10px;color:var(--sidebar-text);font-size:15px;font-weight:500;cursor:pointer;transition:0.18s;text-decoration:none;user-select:none;}
 .nav-item:hover{background:var(--sidebar-hover);color:#fff;}
 .nav-item.active{background:var(--sidebar-active);color:#fff;font-weight:600;}
 .nav-item.active .nav-icon{color:#38BDF8;}
