@@ -36,7 +36,8 @@
 .nav-item:hover{background:var(--sidebar-hover);color:#fff;}
 .nav-item.active{background:var(--sidebar-active);color:#fff;font-weight:600;}
 .nav-item.active .nav-icon{color:#38BDF8;}
-.nav-item.disabled{opacity:0.35;cursor:not-allowed;pointer-events:none;}
+.nav-item.disabled{opacity:0.45;cursor:not-allowed;pointer-events:none;}
+.nav-badge.soon{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);font-size:9px;letter-spacing:0.3px;}
 .nav-icon{font-size:15px;flex-shrink:0;}
 .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;}
 .nav-badge.sky{background:var(--accent);}
@@ -143,24 +144,24 @@
 
     const NAV = [
       { icon:'🏠', label:'대시보드',                             href:'operation-dashboard.html'  },
-      { section: '학급 관리' },
-      { icon:'👥', label:'반 관리',                              href:'operation-class.html'       },
-      { icon:'🧒', label:'원아 관리',                            href:'operation-child.html'       },
-      { icon:'📨', label:'초대장 관리',                          href:'operation-invitation.html',
-                   badge: inviteBadge, badgeClass:'sky'                                            },
       { section: '콘텐츠' },
       { icon:'📋', label:'알림장',                               href:'operation-notice-board.html',
                    badge: noticeBadge                                                               },
+      { icon:'📅', label:'출석부',                               href:'operation-attendance.html', comingSoon: true },
+      { icon:'🍱', label:'식단표',                               href:'operation-meal.html',        comingSoon: true },
       { icon:'📢', label:'공지사항',                             href:'operation-announcement.html'},
       { icon:'🖼️', label:'앨범',                                 href:'operation-album.html'       },
-      { icon:'📅', label:'일정 관리',                            href:'operation-schedule.html'    },
-      { icon:'💬', label:'상담 관리',                            href:'operation-consulting.html'  },
+      { icon:'🗓️', label:'스케쥴',                               href:'operation-schedule.html',    comingSoon: true },
+      { icon:'💬', label:'상담 관리',                            href:'operation-consulting.html',  comingSoon: true },
       { icon:'💊', label:'투약의뢰서',                           href:'operation-medicine.html'    },
       { section: '기관 관리' },
       { icon:'🏢', label: isTeacher ? '기관정보 조회' : '기관정보 관리',
                    href: 'operation-org-info.html'                                                 },
-      { section: '통계' },
-      { icon:'📊', label:'통계',                                 href:'operation-dashboard.html'   },
+      { icon:'👥', label:'멤버/승인',                            href:'operation-member.html',      comingSoon: true },
+      { icon:'🏫', label:'반 관리',                              href:'operation-class.html'       },
+      { icon:'🎓', label:'진급/졸업',                            href:'operation-graduation.html',  comingSoon: true },
+      { icon:'📨', label:'초대장 관리',                          href:'operation-invitation.html',
+                   badge: inviteBadge, badgeClass:'sky'                                            },
     ];
 
     const nav = document.getElementById('sidebarNav');
@@ -169,9 +170,11 @@
         return `<div class="nav-section"><span class="nav-section-label">${m.section}</span></div>`;
       }
       const isActive    = (filename === m.href);
-      const badgeHtml   = m.badge ? `<span class="nav-badge ${m.badgeClass || ''}">${m.badge}</span>` : '';
-      const disabledCls = m.disabled ? 'disabled' : '';
-      return `<a class="nav-item ${isActive ? 'active' : ''} ${disabledCls}" href="${m.href}">
+      const badgeHtml   = m.comingSoon
+        ? `<span class="nav-badge soon">준비중</span>`
+        : m.badge ? `<span class="nav-badge ${m.badgeClass || ''}">${m.badge}</span>` : '';
+      const disabledCls = m.comingSoon ? 'disabled' : '';
+      return `<a class="nav-item ${isActive ? 'active' : ''} ${disabledCls}" href="${m.comingSoon ? '#' : m.href}">
         <span class="nav-icon">${m.icon}</span>${m.label}${badgeHtml}
       </a>`;
     }).join('');
