@@ -212,10 +212,20 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .comment-send-btn{height:36px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;font-family:'Pretendard',sans-serif;}
 .comment-send-btn:hover{background:var(--accent-dark);}
 
-/* ━━━ READ PANEL ━━━ */
-.read-panel-back{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text-secondary);background:none;border:none;padding:4px 0;transition:.15s;font-family:'Pretendard',sans-serif;margin-bottom:12px;}
-.read-panel-back:hover{color:var(--text-primary);}
-.read-panel-title{font-size:14px;font-weight:800;color:var(--text-primary);margin-bottom:12px;}
+/* ━━━ READ STATUS BTN — unread highlight ━━━ */
+.read-status-btn.has-unread{background:#FFF3E0;border-color:#FB8C00;color:#BF360C;}
+.read-status-btn.has-unread:hover{background:#FFE0B2;border-color:#E65100;}
+
+/* ━━━ READ PANEL OVERLAY ━━━ */
+.drawer-read-overlay{position:absolute;inset:0;background:var(--bg-surface);z-index:20;display:flex;flex-direction:column;transform:translateX(102%);transition:.26s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 16px rgba(12,45,72,.10);}
+.drawer-read-overlay.open{transform:translateX(0);}
+.drawer-read-overlay-header{padding:14px 18px 12px;border-bottom:1px solid var(--border-light);flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.drawer-read-overlay-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.drawer-read-overlay-body::-webkit-scrollbar{width:4px;}
+.drawer-read-overlay-body::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:2px;}
+.read-panel-back{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text-secondary);background:none;border:none;padding:4px 6px;transition:.15s;font-family:'Pretendard',sans-serif;border-radius:var(--radius-sm);}
+.read-panel-back:hover{background:var(--bg-base);color:var(--text-primary);}
+.read-panel-title{font-size:14px;font-weight:800;color:var(--text-primary);flex:1;}
 .read-stats-row{display:flex;gap:10px;margin-bottom:12px;}
 .read-stat-box{flex:1;background:var(--bg-base);border-radius:var(--radius-md);padding:10px 14px;border:1px solid var(--border-light);text-align:center;}
 .read-stat-val{font-size:22px;font-weight:800;color:var(--text-primary);}
@@ -501,7 +511,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
         </div>
         <div class="drawer-header-right">
           <button class="read-status-btn" id="readStatusBtn" onclick="showReadPanel()">
-            👁 <span id="readRatio">0/0</span>
+            👁 학부모 읽음 <span id="readRatio">0/0</span>
           </button>
           <button class="drawer-close" onclick="closeDrawer()">✕</button>
         </div>
@@ -511,33 +521,34 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     </div>
 
     <div class="drawer-body" id="drawerBody">
-      <!-- VIEW A: 내용 -->
-      <div id="drawerContentView">
-        <div class="drawer-divider" style="margin-top:0;"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">내용</div>
-          <div class="notice-body-box" id="dContent"></div>
-        </div>
-        <div class="drawer-section" id="drawerPhotoSection" style="display:none;">
-          <div class="drawer-section-title">사진</div>
-          <div class="photo-grid" id="drawerPhotoGrid"></div>
-        </div>
-        <div class="drawer-section" id="drawerFileSection" style="display:none;">
-          <div class="drawer-section-title">첨부파일</div>
-          <div class="file-list" id="drawerFileList"></div>
-        </div>
-        <div class="drawer-divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">댓글 (<span id="drawerCommentCount">0</span>)</div>
-          <div class="comment-list" id="drawerCommentList"></div>
-          <div id="drawerCommentInputArea"></div>
-        </div>
+      <div class="drawer-divider" style="margin-top:0;"></div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">내용</div>
+        <div class="notice-body-box" id="dContent"></div>
       </div>
+      <div class="drawer-section" id="drawerPhotoSection" style="display:none;">
+        <div class="drawer-section-title">사진</div>
+        <div class="photo-grid" id="drawerPhotoGrid"></div>
+      </div>
+      <div class="drawer-section" id="drawerFileSection" style="display:none;">
+        <div class="drawer-section-title">첨부파일</div>
+        <div class="file-list" id="drawerFileList"></div>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">댓글 (<span id="drawerCommentCount">0</span>)</div>
+        <div class="comment-list" id="drawerCommentList"></div>
+        <div id="drawerCommentInputArea"></div>
+      </div>
+    </div>
 
-      <!-- VIEW B: 읽음 현황 -->
-      <div id="drawerReadView" style="display:none;">
-        <button class="read-panel-back" onclick="showContentView()">← 뒤로</button>
-        <div class="read-panel-title">수신자 읽음 현황</div>
+    <!-- 읽음현황 오버레이 (패널 내 슬라이드인) -->
+    <div class="drawer-read-overlay" id="drawerReadOverlay">
+      <div class="drawer-read-overlay-header">
+        <button class="read-panel-back" onclick="closeReadOverlay()">← 뒤로</button>
+        <div class="read-panel-title">학부모 읽음 현황</div>
+      </div>
+      <div class="drawer-read-overlay-body">
         <div class="read-stats-row" id="readStatsRow"></div>
         <table class="read-recipients-table">
           <thead><tr><th>이름</th><th>역할</th><th>읽음여부</th><th>읽은시간</th></tr></thead>
@@ -1302,7 +1313,11 @@ function openDrawer(id) {
   const unread = (n.readStatus||[]).filter(r => !r.read).length;
   resendBtn.innerHTML = `📣 미확인 학부모 알림 재전송 (<span id="unreadCount">${unread}</span>명)`;
 
-  showContentView();
+  // Unread highlight on button
+  const rsBtn = document.getElementById('readStatusBtn');
+  rsBtn.classList.toggle('has-unread', unread > 0);
+
+  closeReadOverlay();
   document.getElementById('detailDrawer').classList.add('open');
 }
 
@@ -1311,10 +1326,8 @@ function closeDrawer() {
   currentNoticeId = null;
 }
 
-function showContentView() {
-  document.getElementById('drawerContentView').style.display = 'block';
-  document.getElementById('drawerReadView').style.display = 'none';
-  document.getElementById('drawerBody').scrollTop = 0;
+function closeReadOverlay() {
+  document.getElementById('drawerReadOverlay').classList.remove('open');
 }
 
 function showReadPanel() {
@@ -1350,9 +1363,7 @@ function showReadPanel() {
 
   document.getElementById('unreadCount').textContent = unread.length;
   document.getElementById('resendBtn').disabled = false;
-  document.getElementById('drawerContentView').style.display = 'none';
-  document.getElementById('drawerReadView').style.display = 'block';
-  document.getElementById('drawerBody').scrollTop = 0;
+  document.getElementById('drawerReadOverlay').classList.add('open');
 }
 
 function handleResend() {
