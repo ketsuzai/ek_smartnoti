@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>식단표 UX 와이어프레임 — 3가지 안</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Pretendard', sans-serif; background: #F0F4F8; color: #1A1D2E; }
+
+/* ━━━ TAB NAV ━━━ */
+.tab-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: #1A1D2E; height: 54px;
+  display: flex; align-items: center; padding: 0 24px; gap: 0;
+}
+.tab-nav-title { color: #9CA3AF; font-size: 13px; font-weight: 600; margin-right: 24px; white-space: nowrap; }
+.tab-btn {
+  height: 54px; padding: 0 22px; border: none; background: transparent;
+  color: #9CA3AF; font-size: 14px; font-weight: 600; font-family: 'Pretendard', sans-serif;
+  cursor: pointer; border-bottom: 3px solid transparent; transition: .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: #E2E8F0; }
+.tab-btn.active { color: #fff; border-bottom-color: #0EA5E9; }
+
+/* ━━━ FRAME CONTAINER ━━━ */
+.frame-wrap { margin-top: 54px; padding: 32px 40px; }
+.frame-section { display: none; }
+.frame-section.active { display: block; }
+
+/* ━━━ SECTION HEADER ━━━ */
+.section-header { margin-bottom: 24px; }
+.section-title { font-size: 20px; font-weight: 800; color: #1A1D2E; margin-bottom: 6px; }
+.section-desc { font-size: 14px; color: #6B7280; line-height: 1.6; }
+.section-desc strong { color: #0EA5E9; }
+
+/* ━━━ WF COLORS (Wireframe palette) ━━━ */
+:root {
+  --wf-bg: #FFFFFF;
+  --wf-surface: #F8FAFC;
+  --wf-border: #CBD5E1;
+  --wf-border-dark: #94A3B8;
+  --wf-text: #334155;
+  --wf-muted: #94A3B8;
+  --wf-accent: #0EA5E9;
+  --wf-accent-light: #E0F2FE;
+  --wf-selected: #BAE6FD;
+  --wf-tag1: #FED7AA; /* 오전간식 */
+  --wf-tag2: #BFDBFE; /* 점심 */
+  --wf-tag3: #DDD6FE; /* 오후간식 */
+  --wf-tag4: #C7D2FE; /* 석식 */
+}
+
+/* ━━━ BROWSER CHROME ━━━ */
+.browser {
+  background: #E2E8F0; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  border: 1px solid #CBD5E1;
+  max-width: 1140px; margin: 0 auto;
+}
+.browser-bar {
+  background: #D1D5DB; height: 38px; display: flex; align-items: center;
+  padding: 0 14px; gap: 8px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.r { background: #F87171; }
+.dot.y { background: #FBBF24; }
+.dot.g { background: #34D399; }
+.url-bar {
+  flex: 1; height: 22px; background: #fff; border-radius: 4px;
+  display: flex; align-items: center; padding: 0 10px;
+  font-size: 11px; color: #94A3B8; margin: 0 10px;
+}
+
+/* ━━━ APP SHELL ━━━ */
+.app-shell {
+  display: flex; height: 600px; background: var(--wf-surface);
+}
+.wf-sidebar {
+  width: 180px; background: #0C2D48; flex-shrink: 0;
+  display: flex; flex-direction: column; padding: 16px 0;
+}
+.wf-sidebar-logo {
+  padding: 0 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 8px;
+}
+.wf-nav-item {
+  padding: 9px 16px; font-size: 12px; color: #7FB3D3; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+}
+.wf-nav-item.active { background: rgba(14,165,233,0.2); color: #fff; }
+.wf-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; flex-shrink: 0; }
+.wf-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.wf-topbar {
+  height: 48px; background: #fff; border-bottom: 1px solid var(--wf-border);
+  display: flex; align-items: center; padding: 0 18px; gap: 8px; flex-shrink: 0;
+}
+.wf-breadcrumb { font-size: 12px; color: var(--wf-muted); flex: 1; }
+.wf-breadcrumb span { color: var(--wf-text); font-weight: 700; }
+.wf-btn {
+  height: 30px; padding: 0 12px; border-radius: 6px; font-size: 12px;
+  font-weight: 700; font-family: 'Pretendard', sans-serif; cursor: pointer; border: none;
+  background: var(--wf-accent); color: #fff;
+}
+.wf-btn-sm { height: 26px; padding: 0 10px; font-size: 11px; }
+.wf-btn-outline {
+  background: #fff; color: var(--wf-text); border: 1.5px solid var(--wf-border);
+}
+.wf-content { flex: 1; overflow: hidden; padding: 14px 16px; }
+
+/* ━━━ CALENDAR (SHARED) ━━━ */
+.wf-cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.wf-cal-nav { display: flex; align-items: center; gap: 8px; }
+.wf-cal-month { font-size: 14px; font-weight: 800; }
+.wf-cal-nav-btn {
+  width: 24px; height: 24px; border-radius: 5px; border: 1.5px solid var(--wf-border);
+  background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--wf-muted);
+}
+.wf-cal-grid { width: 100%; border-collapse: collapse; }
+.wf-cal-grid th {
+  font-size: 10px; font-weight: 700; color: var(--wf-muted); text-align: center;
+  padding: 4px 0; border-bottom: 1.5px solid var(--wf-border);
+}
+.wf-cal-grid th:first-child { color: #F87171; }
+.wf-cal-grid th:last-child { color: #60A5FA; }
+.wf-cal-grid td {
+  border: 1px solid #E2E8F0; vertical-align: top;
+  padding: 4px 4px 2px; cursor: pointer; transition: .1s;
+}
+.wf-cal-grid td:hover { background: #F0F9FF; }
+.wf-date-num {
+  width: 20px; height: 20px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; font-size: 10px; font-weight: 700;
+}
+.wf-cal-grid td.today .wf-date-num { background: var(--wf-accent); color: #fff; }
+.wf-cal-grid td.selected { background: var(--wf-selected); }
+.wf-cal-grid td.other { opacity: .3; pointer-events: none; }
+.wf-tags { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.wf-tag {
+  font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wf-tag.t1 { background: var(--wf-tag1); color: #92400E; }
+.wf-tag.t2 { background: var(--wf-tag2); color: #1E40AF; }
+.wf-tag.t3 { background: var(--wf-tag3); color: #5B21B6; }
+.wf-tag.t4 { background: var(--wf-tag4); color: #3730A3; }
+
+/* ━━━ CONTENT PANEL ━━━ */
+.wf-panel {
+  background: #fff; border-radius: 10px; border: 1px solid var(--wf-border);
+  overflow: hidden;
+}
+.wf-panel-header {
+  padding: 10px 14px; border-bottom: 1px solid var(--wf-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.wf-panel-date { font-size: 13px; font-weight: 800; }
+.wf-panel-btns { display: flex; gap: 6px; }
+.wf-panel-body { padding: 12px 14px; }
+.wf-meal-item {
+  padding: 8px 10px; background: #F8FAFC; border-radius: 8px;
+  border: 1px solid var(--wf-border); margin-bottom: 8px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.wf-meal-thumb {
+  width: 48px; height: 48px; border-radius: 6px; background: #E2E8F0;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.wf-meal-info { flex: 1; min-width: 0; }
+.wf-meal-menu { font-size: 11px; color: var(--wf-text); line-height: 1.5; }
+
+/* ━━━ OPTION 1: SPLIT VIEW ━━━ */
+.opt1-body { display: flex; height: 100%; gap: 14px; overflow: hidden; }
+.opt1-left { flex: 0 0 55%; display: flex; flex-direction: column; min-width: 0; }
+.opt1-right {
+  flex: 1; overflow-y: auto; min-width: 0;
+  padding-right: 2px;
+}
+.opt1-right::-webkit-scrollbar { width: 4px; }
+.opt1-right::-webkit-scrollbar-thumb { background: var(--wf-border); border-radius: 2px; }
+.opt1-cal-wrap { background: #fff; border-radius: 10px; border: 1px solid var(--wf-border); padding: 12px; height: 100%; }
+
+/* ━━━ OPTION 2: ACCORDION ━━━ */
+.opt2-body { overflow-y: auto; height: 100%; }
+.opt2-body::-webkit-scrollbar { width: 4px; }
+.opt2-body::-webkit-scrollbar-thumb { background: var(--wf-border); border-radius: 2px; }
+.opt2-cal-wrap { background: #fff; border-radius: 10px; border: 1px solid var(--wf-border); padding: 12px; margin-bottom: 12px; }
+.opt2-week-row td { border: 1px solid #E2E8F0; }
+.week-row-dimmed td { background: #F8FAFC; opacity: 0; height: 0; padding: 0 !important; border: none !important; overflow: hidden; }
+.accordion-hint {
+  text-align: center; padding: 6px;
+  font-size: 11px; color: var(--wf-muted); border-top: 1px dashed var(--wf-border);
+  margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.wf-cal-grid.accordion tr.collapsed td { display: none; }
+.wf-cal-grid.accordion tr.selected-row td { display: table-cell; }
+
+/* ━━━ OPTION 3: STICKY ━━━ */
+.opt3-body { overflow-y: auto; height: 100%; position: relative; }
+.opt3-body::-webkit-scrollbar { width: 4px; }
+.opt3-body::-webkit-scrollbar-thumb { background: var(--wf-border); border-radius: 2px; }
+.opt3-sticky-cal {
+  position: sticky; top: 0; z-index: 10;
+  background: #fff; border-radius: 10px; border: 1px solid var(--wf-border);
+  padding: 10px 12px; margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.opt3-mini-grid td {
+  height: 32px; padding: 2px 4px;
+}
+.opt3-mini-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin: 0 1px;
+}
+
+/* ━━━ ANNOTATION ━━━ */
+.annotation-row {
+  max-width: 1140px; margin: 0 auto 32px;
+  display: flex; gap: 12px;
+}
+.annotation-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  background: #fff; border: 1.5px solid var(--wf-border); color: var(--wf-text);
+}
+.annotation-chip.good { border-color: #34D399; color: #065F46; background: #D1FAE5; }
+.annotation-chip.bad { border-color: #F87171; color: #991B1B; background: #FEE2E2; }
+
+/* ━━━ PRO/CON ━━━ */
+.procon-row {
+  max-width: 1140px; margin: 16px auto 0;
+  display: flex; gap: 16px;
+}
+.procon-box {
+  flex: 1; background: #fff; border-radius: 10px; border: 1px solid var(--wf-border);
+  padding: 14px 16px;
+}
+.procon-title { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+.procon-title.pro { color: #059669; }
+.procon-title.con { color: #DC2626; }
+.procon-item { font-size: 12px; color: #4B5563; line-height: 1.7; display: flex; gap: 6px; }
+.procon-item::before { content: '·'; color: #94A3B8; flex-shrink: 0; }
+
+/* ━━━ HOTSPOT / CALLOUT ━━━ */
+.hotspot {
+  position: absolute; width: 20px; height: 20px; border-radius: 50%;
+  background: #F59E0B; color: #fff; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); z-index: 20;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <span class="tab-nav-title">식단표 UX 와이어프레임</span>
+  <button class="tab-btn active" onclick="switchTab(0)">안 1 — Split View</button>
+  <button class="tab-btn" onclick="switchTab(1)">안 2 — Accordion Calendar</button>
+  <button class="tab-btn" onclick="switchTab(2)">안 3 — Sticky Mini Calendar</button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     안 1: Split View
+════════════════════════════════════════ -->
+<div class="frame-wrap frame-section active" id="tab0">
+  <div class="section-header">
+    <div style="max-width:1140px;margin:0 auto;">
+      <div class="section-title">안 1 — 좌우 2분할 (Split View)</div>
+      <div class="section-desc">달력은 <strong>좌측 55%</strong>에 고정, 콘텐츠 패널은 <strong>우측 45%</strong>에 독립 표시. 달력을 조작하면서 우측에서 내용을 동시에 확인.</div>
+    </div>
+  </div>
+
+  <div class="browser" style="max-width:1140px;margin:0 auto 16px;">
+    <div class="browser-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url-bar">localhost / operation-meal.html</div>
+    </div>
+    <div class="app-shell">
+      <!-- Sidebar -->
+      <div class="wf-sidebar">
+        <div class="wf-sidebar-logo">🥗 키드키즈</div>
+        <div class="wf-nav-item"><div class="wf-nav-dot"></div>공지사항</div>
+        <div class="wf-nav-item"><div class="wf-nav-dot"></div>앨범</div>
+        <div class="wf-nav-item active"><div class="wf-nav-dot"></div>식단표</div>
+        <div class="wf-nav-item"><div class="wf-nav-dot"></div>투약의뢰서</div>
+        <div class="wf-nav-item"><div class="wf-nav-dot"></div>출석부</div>
+      </div>
+      <!-- Main -->
+      <div class="wf-main">
+        <div class="wf-topbar">
+          <div class="wf-breadcrumb">운영관리 › 해맑은 어린이집 › <span>식단표</span></div>
+          <button class="wf-btn wf-btn-sm">+ 식단 등록</button>
+        </div>
+        <div class="wf-content">
+          <div class="opt1-body">
+            <!-- LEFT: Full Calendar -->
+            <div class="opt1-left">
+              <div class="opt1-cal-wrap">
+                <div class="wf-cal-header">
+                  <div class="wf-cal-nav">
+                    <button class="wf-cal-nav-btn">‹</button>
+                    <div class="wf-cal-month">2026년 4월</div>
+                    <button class="wf-cal-nav-btn">›</button>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <span style="font-size:10px;color:#94A3B8;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#FED7AA;display:inline-block"></span>오전간식</span>
+                    <span style="font-size:10px;color:#94A3B8;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#BFDBFE;display:inline-block"></span>점심</span>
+                    <span style="font-size:10px;color:#94A3B8;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#DDD6FE;display:inline-block"></span>오후간식</span>
+                  </div>
+                </div>
+                <table class="wf-cal-grid" style="margin-top:4px;">
+                  <thead>
+                    <tr><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr>
+                  </thead>
+                  <tbody id="opt1-cal-body"></tbody>
+                </table>
+              </div>
+            </div>
+            <!-- RIGHT: Content Panel -->
+            <div class="opt1-right">
+              <div class="wf-panel">
+                <div class="wf-panel-header">
+                  <div class="wf-panel-date">2026년 4월 7일 (화)</div>
+                  <div class="wf-panel-btns">
+                    <button class="wf-btn wf-btn-sm wf-btn-outline">✏️ 수정</button>
+                    <button class="wf-btn wf-btn-sm" style="background:#FEE2E2;color:#991B1B;">🗑️ 삭제</button>
+                  </div>
+                </div>
+                <div class="wf-panel-body">
+                  <div class="wf-meal-item">
+                    <div class="wf-meal-thumb">🍎</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t1" style="margin-bottom:4px;display:inline-flex;">오전 간식</span>
+                      <div class="wf-meal-menu">요구르트 · 크래커</div>
+                    </div>
+                  </div>
+                  <div class="wf-meal-item">
+                    <div class="wf-meal-thumb">🍱</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t2" style="margin-bottom:4px;display:inline-flex;">점심 식사</span>
+                      <div class="wf-meal-menu">잡곡밥 · 미역국 · 닭볶음탕 · 브로콜리무침 · 깍두기</div>
+                    </div>
+                  </div>
+                  <div style="text-align:center;padding:16px;color:#94A3B8;font-size:12px;">
+                    오후 간식 · 석식은 미등록
+                  </div>
+                </div>
+              </div>
+              <!-- 다른 날짜 힌트 -->
+              <div style="margin-top:10px;background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:12px 14px;text-align:center;color:#94A3B8;font-size:11px;">
+                ← 달력에서 다른 날짜를 클릭하면 이 패널이 갱신됩니다
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="procon-row" style="max-width:1140px;margin:0 auto;">
+    <div class="procon-box">
+      <div class="procon-title pro">✅ 장점</div>
+      <div class="procon-item">달력과 내용이 항상 동시에 보임 — 스크롤 불필요</div>
+      <div class="procon-item">PC 어드민의 표준 패턴, 학습 부담 없음</div>
+      <div class="procon-item">날짜 전환 시 우측 패널만 교체 → 자연스러운 흐름</div>
+    </div>
+    <div class="procon-box">
+      <div class="procon-title con">⚠️ 주의사항</div>
+      <div class="procon-item">달력 셀 너비가 좁아져 태그 텍스트를 짧게 줄여야 함</div>
+      <div class="procon-item">좁은 모니터에서 양쪽이 모두 좁아질 수 있음</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     안 2: Accordion Calendar
+════════════════════════════════════════ -->
+<div class="frame-wrap frame-section" id="tab1">
+  <div class="section-header">
+    <div style="max-width:1140px;margin:0 auto;">
+      <div class="section-title">안 2 — 아코디언 달력 (Accordion Calendar)</div>
+      <div class="section-desc">날짜 클릭 시 <strong>선택된 주(Week)만 남기고</strong> 나머지 행을 접음. 달력 높이가 ~80% 줄어들고 콘텐츠 패널이 바로 아래에 표시됨.</div>
+    </div>
+  </div>
+
+  <!-- BEFORE STATE -->
+  <div style="max-width:1140px;margin:0 auto 16px;display:flex;gap:20px;align-items:flex-start;">
+
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:800;color:#94A3B8;letter-spacing:.5px;margin-bottom:8px;padding-left:4px;">BEFORE — 날짜 선택 전 (전체 달력)</div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">날짜 미선택 상태</div>
+        </div>
+        <div class="app-shell">
+          <div class="wf-sidebar">
+            <div class="wf-sidebar-logo">🥗 키드키즈</div>
+            <div class="wf-nav-item active"><div class="wf-nav-dot"></div>식단표</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>투약의뢰서</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>출석부</div>
+          </div>
+          <div class="wf-main">
+            <div class="wf-topbar">
+              <div class="wf-breadcrumb">운영관리 › <span>식단표</span></div>
+              <button class="wf-btn wf-btn-sm">+ 식단 등록</button>
+            </div>
+            <div class="wf-content">
+              <div class="opt2-body">
+                <div class="opt2-cal-wrap">
+                  <div class="wf-cal-header">
+                    <div class="wf-cal-nav">
+                      <button class="wf-cal-nav-btn">‹</button>
+                      <div class="wf-cal-month">2026년 4월</div>
+                      <button class="wf-cal-nav-btn">›</button>
+                    </div>
+                  </div>
+                  <table class="wf-cal-grid" style="margin-top:4px;" id="opt2-before-cal"></table>
+                </div>
+                <div style="text-align:center;padding:24px;color:#94A3B8;font-size:12px;background:#fff;border-radius:10px;border:1px dashed #CBD5E1;">
+                  날짜를 선택하면 식단 내용이 여기에 표시됩니다
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:120px;color:#94A3B8;font-size:22px;gap:4px;">
+      <div>클릭</div>
+      <div>→</div>
+    </div>
+
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:800;color:#0EA5E9;letter-spacing:.5px;margin-bottom:8px;padding-left:4px;">AFTER — 날짜 선택 후 (해당 주만 표시)</div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">4월 7일 선택됨</div>
+        </div>
+        <div class="app-shell">
+          <div class="wf-sidebar">
+            <div class="wf-sidebar-logo">🥗 키드키즈</div>
+            <div class="wf-nav-item active"><div class="wf-nav-dot"></div>식단표</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>투약의뢰서</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>출석부</div>
+          </div>
+          <div class="wf-main">
+            <div class="wf-topbar">
+              <div class="wf-breadcrumb">운영관리 › <span>식단표</span></div>
+              <button class="wf-btn wf-btn-sm">+ 식단 등록</button>
+            </div>
+            <div class="wf-content">
+              <div class="opt2-body">
+                <div class="opt2-cal-wrap">
+                  <div class="wf-cal-header">
+                    <div class="wf-cal-nav">
+                      <button class="wf-cal-nav-btn">‹</button>
+                      <div class="wf-cal-month">2026년 4월</div>
+                      <button class="wf-cal-nav-btn">›</button>
+                    </div>
+                    <button style="font-size:11px;color:#94A3B8;background:none;border:1px solid #E2E8F0;border-radius:5px;padding:3px 8px;cursor:pointer;">▼ 전체 보기</button>
+                  </div>
+                  <!-- Only selected week row -->
+                  <table class="wf-cal-grid" style="margin-top:4px;" id="opt2-after-cal"></table>
+                  <div class="accordion-hint">▲ 이번 주 · 다른 주를 보려면 전체 보기 클릭</div>
+                </div>
+                <!-- Content Panel right below -->
+                <div class="wf-panel">
+                  <div class="wf-panel-header">
+                    <div class="wf-panel-date">2026년 4월 7일 (화)</div>
+                    <div class="wf-panel-btns">
+                      <button class="wf-btn wf-btn-sm wf-btn-outline">✏️ 수정</button>
+                      <button class="wf-btn wf-btn-sm" style="background:#FEE2E2;color:#991B1B;">🗑️</button>
+                    </div>
+                  </div>
+                  <div class="wf-panel-body">
+                    <div class="wf-meal-item">
+                      <div class="wf-meal-thumb">🍎</div>
+                      <div class="wf-meal-info">
+                        <span class="wf-tag t1" style="margin-bottom:3px;display:inline-flex;">오전 간식</span>
+                        <div class="wf-meal-menu">요구르트 · 크래커</div>
+                      </div>
+                    </div>
+                    <div class="wf-meal-item">
+                      <div class="wf-meal-thumb">🍱</div>
+                      <div class="wf-meal-info">
+                        <span class="wf-tag t2" style="margin-bottom:3px;display:inline-flex;">점심 식사</span>
+                        <div class="wf-meal-menu">잡곡밥 · 미역국 · 닭볶음탕</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="procon-row" style="max-width:1140px;margin:0 auto;">
+    <div class="procon-box">
+      <div class="procon-title pro">✅ 장점</div>
+      <div class="procon-item">동일 화면 너비를 유지 — 달력 태그 텍스트 손실 없음</div>
+      <div class="procon-item">선택 후 달력 → 콘텐츠 순서의 자연스러운 수직 흐름</div>
+      <div class="procon-item">같은 주 날짜 변경은 스크롤 없이 즉시 가능</div>
+    </div>
+    <div class="procon-box">
+      <div class="procon-title con">⚠️ 주의사항</div>
+      <div class="procon-item">다른 주로 이동하려면 "전체 보기" 버튼을 한 번 더 눌러야 함</div>
+      <div class="procon-item">아코디언 애니메이션 구현 필요</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     안 3: Sticky Mini Calendar
+════════════════════════════════════════ -->
+<div class="frame-wrap frame-section" id="tab2">
+  <div class="section-header">
+    <div style="max-width:1140px;margin:0 auto;">
+      <div class="section-title">안 3 — 스티키 미니 달력 (Sticky Compact Calendar)</div>
+      <div class="section-desc">셀 높이를 <strong>130px → 40px</strong>로 압축해 달력 전체 높이를 절반으로 줄이고, <strong>스크롤해도 상단에 고정</strong>. 콘텐츠 패널은 아래에서 전체 너비 사용.</div>
+    </div>
+  </div>
+
+  <!-- Scroll demo -->
+  <div style="max-width:1140px;margin:0 auto 16px;display:flex;gap:20px;">
+
+    <!-- Before scroll -->
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:800;color:#94A3B8;letter-spacing:.5px;margin-bottom:8px;padding-left:4px;">초기 상태 — 페이지 최상단</div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">스크롤 위치: 0</div>
+        </div>
+        <div class="app-shell">
+          <div class="wf-sidebar">
+            <div class="wf-sidebar-logo">🥗 키드키즈</div>
+            <div class="wf-nav-item active"><div class="wf-nav-dot"></div>식단표</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>출석부</div>
+          </div>
+          <div class="wf-main">
+            <div class="wf-topbar">
+              <div class="wf-breadcrumb">운영관리 › <span>식단표</span></div>
+              <button class="wf-btn wf-btn-sm">+ 식단 등록</button>
+            </div>
+            <div class="wf-content" style="overflow:hidden;">
+              <!-- Mini sticky cal -->
+              <div class="opt3-sticky-cal" style="position:relative;">
+                <div class="wf-cal-header" style="margin-bottom:6px;">
+                  <div class="wf-cal-nav">
+                    <button class="wf-cal-nav-btn">‹</button>
+                    <div class="wf-cal-month">2026년 4월</div>
+                    <button class="wf-cal-nav-btn">›</button>
+                  </div>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <span style="font-size:9px;color:#94A3B8;display:flex;align-items:center;gap:2px;"><span class="opt3-mini-tag-dot" style="background:#FED7AA;"></span>오전</span>
+                    <span style="font-size:9px;color:#94A3B8;display:flex;align-items:center;gap:2px;"><span class="opt3-mini-tag-dot" style="background:#BFDBFE;"></span>점심</span>
+                    <span style="font-size:9px;color:#94A3B8;display:flex;align-items:center;gap:2px;"><span class="opt3-mini-tag-dot" style="background:#DDD6FE;"></span>오후</span>
+                  </div>
+                </div>
+                <table class="wf-cal-grid opt3-mini-grid" id="opt3-cal"></table>
+              </div>
+              <!-- Content panel below -->
+              <div class="wf-panel" style="margin-top:10px;">
+                <div class="wf-panel-header">
+                  <div class="wf-panel-date">2026년 4월 7일 (화)</div>
+                  <div class="wf-panel-btns">
+                    <button class="wf-btn wf-btn-sm wf-btn-outline">✏️ 수정</button>
+                    <button class="wf-btn wf-btn-sm" style="background:#FEE2E2;color:#991B1B;">🗑️</button>
+                  </div>
+                </div>
+                <div class="wf-panel-body" style="display:flex;gap:10px;flex-wrap:wrap;">
+                  <div class="wf-meal-item" style="flex:1;min-width:180px;">
+                    <div class="wf-meal-thumb" style="width:36px;height:36px;font-size:14px;">🍎</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t1" style="margin-bottom:3px;display:inline-flex;">오전 간식</span>
+                      <div class="wf-meal-menu">요구르트 · 크래커</div>
+                    </div>
+                  </div>
+                  <div class="wf-meal-item" style="flex:1;min-width:180px;">
+                    <div class="wf-meal-thumb" style="width:36px;height:36px;font-size:14px;">🍱</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t2" style="margin-bottom:3px;display:inline-flex;">점심 식사</span>
+                      <div class="wf-meal-menu">잡곡밥 · 미역국 · 닭볶음탕 · 깍두기</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:120px;color:#94A3B8;font-size:22px;gap:4px;">
+      <div style="font-size:11px;">스크롤↓</div>
+      <div>→</div>
+    </div>
+
+    <!-- After scroll: sticky cal still visible -->
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:800;color:#0EA5E9;letter-spacing:.5px;margin-bottom:8px;padding-left:4px;">스크롤 후 — 달력이 상단에 고정된 상태</div>
+      <div class="browser">
+        <div class="browser-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+          <div class="url-bar">스크롤 중 — 달력 sticky 고정</div>
+        </div>
+        <div class="app-shell">
+          <div class="wf-sidebar">
+            <div class="wf-sidebar-logo">🥗 키드키즈</div>
+            <div class="wf-nav-item active"><div class="wf-nav-dot"></div>식단표</div>
+            <div class="wf-nav-item"><div class="wf-nav-dot"></div>출석부</div>
+          </div>
+          <div class="wf-main">
+            <div class="wf-topbar">
+              <div class="wf-breadcrumb">운영관리 › <span>식단표</span></div>
+              <button class="wf-btn wf-btn-sm">+ 식단 등록</button>
+            </div>
+            <div class="wf-content" style="overflow:hidden;">
+              <!-- Sticky cal (always on top) -->
+              <div style="background:#fff;border-radius:10px;border:1px solid var(--wf-border);padding:10px 12px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,0.08);border-top:2px solid var(--wf-accent);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <button class="wf-cal-nav-btn">‹</button>
+                    <div class="wf-cal-month">2026년 4월</div>
+                    <button class="wf-cal-nav-btn">›</button>
+                  </div>
+                  <span style="font-size:10px;color:var(--wf-accent);font-weight:700;background:var(--wf-accent-light);padding:2px 8px;border-radius:4px;">📌 고정됨</span>
+                </div>
+                <table class="wf-cal-grid opt3-mini-grid" id="opt3-cal-sticky"></table>
+              </div>
+              <!-- Full-width content panel (scrolled into view) -->
+              <div style="background:#fff;border-radius:10px;border:1px solid var(--wf-border);overflow:hidden;">
+                <div style="padding:10px 14px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;justify-content:space-between;">
+                  <div style="font-size:13px;font-weight:800;">2026년 4월 7일 (화) <span style="font-size:11px;color:#94A3B8;font-weight:500;">— 전체 너비 활용</span></div>
+                  <div style="display:flex;gap:6px;">
+                    <button class="wf-btn wf-btn-sm wf-btn-outline">✏️ 수정</button>
+                    <button class="wf-btn wf-btn-sm" style="background:#FEE2E2;color:#991B1B;">🗑️ 삭제</button>
+                  </div>
+                </div>
+                <div style="padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div class="wf-meal-item">
+                    <div class="wf-meal-thumb" style="width:40px;height:40px;font-size:16px;">🍎</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t1" style="margin-bottom:3px;display:inline-flex;">오전 간식</span>
+                      <div class="wf-meal-menu">요구르트 · 크래커</div>
+                    </div>
+                  </div>
+                  <div class="wf-meal-item">
+                    <div class="wf-meal-thumb" style="width:40px;height:40px;font-size:16px;">🍱</div>
+                    <div class="wf-meal-info">
+                      <span class="wf-tag t2" style="margin-bottom:3px;display:inline-flex;">점심 식사</span>
+                      <div class="wf-meal-menu">잡곡밥 · 미역국 · 닭볶음탕 · 깍두기</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="procon-row" style="max-width:1140px;margin:0 auto;">
+    <div class="procon-box">
+      <div class="procon-title pro">✅ 장점</div>
+      <div class="procon-item">코드 변경 최소 — 셀 높이 조정 + position:sticky 적용</div>
+      <div class="procon-item">달력이 항상 상단 고정 → 어느 스크롤 위치에서도 날짜 변경 가능</div>
+      <div class="procon-item">콘텐츠 패널이 전체 너비를 사용 → 사진 썸네일 등 풍부한 표현 가능</div>
+    </div>
+    <div class="procon-box">
+      <div class="procon-title con">⚠️ 주의사항</div>
+      <div class="procon-item">셀 높이가 줄면 식사구분 태그 텍스트 → 컬러 도트로 변경 필요</div>
+      <div class="procon-item">등록 상태를 파악하려면 범례(legend)와 도트 색상 일치가 중요</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ━━━ MOCK DATA ━━━
+const hasMealDates = ['2026-04-01','2026-04-02','2026-04-03','2026-04-07','2026-04-08','2026-04-10','2026-04-14','2026-04-15'];
+const mealData = {
+  '2026-04-01': ['t1','t2'],
+  '2026-04-02': ['t1','t2','t3'],
+  '2026-04-03': ['t1','t2','t3','t4'],
+  '2026-04-07': ['t1','t2'],
+  '2026-04-08': ['t1','t2','t3'],
+  '2026-04-10': ['t2','t3'],
+  '2026-04-14': ['t1','t2','t3','t4'],
+  '2026-04-15': ['t1','t2'],
+};
+const tagLabels = { t1:'오전', t2:'점심', t3:'오후', t4:'석식' };
+
+function buildCalBody(tbodyEl, options = {}) {
+  const { compact = false, selectedWeekOnly = false, selectedDate = '2026-04-07' } = options;
+  const year = 2026, month = 3; // April
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = 30;
+  const selectedWeek = Math.floor((firstDay + new Date(selectedDate).getDate() - 1) / 7);
+
+  const cellH = compact ? '32px' : '62px';
+
+  let html = '<thead><tr>';
+  ['일','월','화','수','목','금','토'].forEach((d,i) => {
+    html += `<th style="color:${i===0?'#F87171':i===6?'#60A5FA':'#94A3B8'};font-size:10px;font-weight:700;text-align:center;padding:4px 0;border-bottom:1.5px solid #E2E8F0;">${d}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  let day = 1 - firstDay;
+  for (let row = 0; row < 6; row++) {
+    const allPast = day > daysInMonth && row > 0;
+    if (allPast) break;
+    if (selectedWeekOnly && row !== selectedWeek) { day += 7; continue; }
+
+    html += '<tr>';
+    for (let col = 0; col < 7; col++, day++) {
+      const dateStr = `2026-04-${String(day).padStart(2,'0')}`;
+      const isOther = day < 1 || day > daysInMonth;
+      const isToday = day === 7;
+      const isSel = dateStr === selectedDate;
+      const meals = !isOther && mealData[dateStr] ? mealData[dateStr] : [];
+
+      let bg = isOther ? '#F8FAFC' : isSel ? '#BAE6FD' : '#fff';
+      let numStyle = isToday
+        ? 'background:#0EA5E9;color:#fff;'
+        : col===0 ? 'color:#F87171;' : col===6 ? 'color:#60A5FA;' : '';
+
+      html += `<td style="border:1px solid #E2E8F0;vertical-align:top;padding:3px 3px 2px;height:${cellH};cursor:${isOther?'default':'pointer'};background:${bg};opacity:${isOther?'.3':'1'};">`;
+      html += `<div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;${numStyle}">${isOther ? '' : day}</div>`;
+      if (!isOther && meals.length > 0) {
+        if (compact) {
+          // dots only
+          html += `<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px;">`;
+          meals.forEach(t => {
+            const dotColors = { t1:'#FED7AA', t2:'#BFDBFE', t3:'#DDD6FE', t4:'#C7D2FE' };
+            html += `<span style="width:6px;height:6px;border-radius:50%;background:${dotColors[t]};display:inline-block;"></span>`;
+          });
+          html += `</div>`;
+        } else {
+          html += `<div style="display:flex;flex-direction:column;gap:1px;margin-top:2px;">`;
+          meals.slice(0,3).forEach(t => {
+            const tagColors = {
+              t1: 'background:#FED7AA;color:#92400E;',
+              t2: 'background:#BFDBFE;color:#1E40AF;',
+              t3: 'background:#DDD6FE;color:#5B21B6;',
+              t4: 'background:#C7D2FE;color:#3730A3;',
+            };
+            html += `<span style="font-size:9px;font-weight:700;padding:1px 3px;border-radius:2px;${tagColors[t]}">${tagLabels[t]}</span>`;
+          });
+          html += `</div>`;
+        }
+      }
+      html += `</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody>';
+  return html;
+}
+
+// ━━━ RENDER CALS ━━━
+document.addEventListener('DOMContentLoaded', () => {
+  // Option 1
+  const opt1 = document.getElementById('opt1-cal-body');
+  if (opt1) {
+    // replace table with full table
+    const tbl = opt1.closest('table');
+    tbl.outerHTML = `<table class="wf-cal-grid" style="margin-top:4px;">${buildCalBody(null, {compact:false, selectedDate:'2026-04-07'})}</table>`;
+  }
+
+  // Render using innerHTML on table elements
+  const calTargets = [
+    { id: 'opt2-before-cal', opts: { compact: false, selectedDate: null } },
+    { id: 'opt2-after-cal',  opts: { compact: false, selectedWeekOnly: true, selectedDate: '2026-04-07' } },
+    { id: 'opt3-cal',        opts: { compact: true, selectedDate: '2026-04-07' } },
+    { id: 'opt3-cal-sticky', opts: { compact: true, selectedDate: '2026-04-07' } },
+  ];
+
+  calTargets.forEach(({ id, opts }) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = buildCalBody(el, opts);
+  });
+
+  // opt1 special
+  const opt1Tbl = document.querySelector('#tab0 table.wf-cal-grid');
+  if (opt1Tbl) opt1Tbl.innerHTML = buildCalBody(null, { compact: false, selectedDate: '2026-04-07' });
+});
+
+// ━━━ TABS ━━━
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.frame-section').forEach((s,i) => s.classList.toggle('active', i===idx));
+}
+</script>
+</body>
+</html>

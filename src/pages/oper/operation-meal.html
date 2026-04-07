@@ -47,14 +47,16 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .topbar-right{display:flex;align-items:center;gap:10px;}
 .topbar-date{font-size:13px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
 
-/* ━━━ CONTENT ━━━ */
-.content{flex:1;overflow-y:auto;padding:24px;}
-.content::-webkit-scrollbar{width:5px;}
-.content::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:3px;}
-.content-inner{max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
+/* ━━━ CONTENT — SPLIT LAYOUT ━━━ */
+.content{flex:1;overflow:hidden;padding:0;}
+.split-layout{display:flex;height:100%;gap:16px;padding:20px 24px;overflow:hidden;}
+.split-left{flex:0 0 58%;display:flex;flex-direction:column;gap:14px;min-width:0;overflow:hidden;}
+.split-right{flex:1;overflow-y:auto;min-width:0;}
+.split-right::-webkit-scrollbar{width:5px;}
+.split-right::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:3px;}
 
 /* ━━━ PAGE HEADER ━━━ */
-.page-header{display:flex;align-items:center;justify-content:space-between;}
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .page-title{font-size:20px;font-weight:800;color:var(--text-primary);}
 .page-title-sub{font-size:13px;color:var(--text-secondary);margin-top:2px;font-weight:500;}
 
@@ -69,7 +71,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .btn-sm{height:32px;padding:0 12px;font-size:13px;}
 
 /* ━━━ CALENDAR CARD ━━━ */
-.calendar-card{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden;}
+.calendar-card{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden;flex:1;display:flex;flex-direction:column;}
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border-light);}
 .cal-nav{display:flex;align-items:center;gap:12px;}
 .cal-nav-btn{width:34px;height:34px;border-radius:var(--radius-md);border:1.5px solid var(--border-light);background:var(--bg-base);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-secondary);transition:.15s;}
@@ -80,13 +82,15 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block;}
 
 /* Calendar grid */
-.cal-grid{width:100%;}
-.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1.5px solid var(--border-light);}
-.cal-wday{padding:9px 4px;text-align:center;font-size:11px;font-weight:800;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;}
+.cal-grid{width:100%;flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.cal-grid::-webkit-scrollbar{width:4px;}
+.cal-grid::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:2px;}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1.5px solid var(--border-light);flex-shrink:0;}
+.cal-wday{padding:8px 4px;text-align:center;font-size:11px;font-weight:800;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;}
 .cal-wday:first-child{color:#EF4444;}
 .cal-wday:last-child{color:#3B82F6;}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
-.cal-cell{height:130px;padding:8px 8px 30px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);cursor:pointer;transition:.15s;position:relative;display:flex;flex-direction:column;gap:6px;}
+.cal-cell{height:100px;padding:6px 6px 26px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);cursor:pointer;transition:.15s;position:relative;display:flex;flex-direction:column;gap:4px;}
 .cal-cell:nth-child(7n){border-right:none;}
 /* last row cells - remove bottom border for cells in last row */
 .cal-cell:hover{background:#F8FCFF;}
@@ -104,7 +108,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .cal-cell.selected.today.saturday .cal-date-num{color:#fff;}
 .cal-date-num{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border-radius:50%;flex-shrink:0;transition:.15s;}
 .cal-tags{display:flex;flex-direction:column;gap:2px;flex:1;}
-.meal-tag{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:3px;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.meal-tag{display:inline-flex;align-items:center;gap:3px;padding:1px 5px;border-radius:3px;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .meal-tag.snack-am{background:var(--snack-am-bg);color:var(--snack-am-text);}
 .meal-tag.lunch{background:var(--lunch-bg);color:var(--lunch-text);}
 .meal-tag.snack-pm{background:var(--snack-pm-bg);color:var(--snack-pm-text);}
@@ -116,7 +120,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
 /* ━━━ CONTENT PANEL ━━━ */
 .panel-card{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden;animation:panelIn .22s ease;}
-@keyframes panelIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes panelIn{from{opacity:0;transform:translateX(6px);}to{opacity:1;transform:translateX(0);}}
 .panel-header{padding:16px 20px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
 .panel-date{font-size:16px;font-weight:800;color:var(--text-primary);}
 .panel-actions{display:flex;align-items:center;gap:8px;}
@@ -214,52 +218,55 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     </div>
   </div>
 
-  <!-- CONTENT -->
+  <!-- CONTENT — SPLIT LAYOUT -->
   <div class="content">
-    <div class="content-inner">
+    <div class="split-layout">
 
-      <!-- Page Header -->
-      <div class="page-header">
-        <div>
-          <div class="page-title">🍱 식단표</div>
-          <div class="page-title-sub">기관 공통 급식 식단을 등록하고 학부모에게 공유합니다</div>
+      <!-- LEFT: Calendar -->
+      <div class="split-left">
+        <div class="page-header">
+          <div>
+            <div class="page-title">🍱 식단표</div>
+            <div class="page-title-sub">기관 공통 급식 식단을 등록하고 학부모에게 공유합니다</div>
+          </div>
+          <button class="btn btn-primary" id="btnAddMeal">
+            <span>+</span> 식단 등록
+          </button>
         </div>
-        <button class="btn btn-primary" id="btnAddMeal">
-          <span>+</span> 식단 등록
-        </button>
+
+        <div class="calendar-card">
+          <div class="cal-header">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="btnPrevMonth">‹</button>
+              <div class="cal-month" id="calMonthLabel"></div>
+              <button class="cal-nav-btn" id="btnNextMonth">›</button>
+            </div>
+            <div class="cal-legend">
+              <div class="cal-legend-item"><span class="legend-dot" style="background:#C2410C"></span>오전간식</div>
+              <div class="cal-legend-item"><span class="legend-dot" style="background:#1D4ED8"></span>점심</div>
+              <div class="cal-legend-item"><span class="legend-dot" style="background:#6D28D9"></span>오후간식</div>
+              <div class="cal-legend-item"><span class="legend-dot" style="background:#3730A3"></span>석식</div>
+            </div>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-weekdays">
+              <div class="cal-wday">일</div>
+              <div class="cal-wday">월</div>
+              <div class="cal-wday">화</div>
+              <div class="cal-wday">수</div>
+              <div class="cal-wday">목</div>
+              <div class="cal-wday">금</div>
+              <div class="cal-wday">토</div>
+            </div>
+            <div class="cal-days" id="calDays"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Calendar Card -->
-      <div class="calendar-card">
-        <div class="cal-header">
-          <div class="cal-nav">
-            <button class="cal-nav-btn" id="btnPrevMonth">‹</button>
-            <div class="cal-month" id="calMonthLabel"></div>
-            <button class="cal-nav-btn" id="btnNextMonth">›</button>
-          </div>
-          <div class="cal-legend">
-            <div class="cal-legend-item"><span class="legend-dot" style="background:#C2410C"></span>오전 간식</div>
-            <div class="cal-legend-item"><span class="legend-dot" style="background:#1D4ED8"></span>점심 식사</div>
-            <div class="cal-legend-item"><span class="legend-dot" style="background:#6D28D9"></span>오후 간식</div>
-            <div class="cal-legend-item"><span class="legend-dot" style="background:#3730A3"></span>석식</div>
-          </div>
-        </div>
-        <div class="cal-grid">
-          <div class="cal-weekdays">
-            <div class="cal-wday">일</div>
-            <div class="cal-wday">월</div>
-            <div class="cal-wday">화</div>
-            <div class="cal-wday">수</div>
-            <div class="cal-wday">목</div>
-            <div class="cal-wday">금</div>
-            <div class="cal-wday">토</div>
-          </div>
-          <div class="cal-days" id="calDays"></div>
-        </div>
+      <!-- RIGHT: Content Panel (항상 표시) -->
+      <div class="split-right">
+        <div id="contentPanel"></div>
       </div>
-
-      <!-- Content Panel (날짜 선택 시 표시) -->
-      <div id="contentPanel" style="display:none;"></div>
 
     </div>
   </div>
@@ -489,15 +496,15 @@ document.addEventListener('DOMContentLoaded', () => {
     currentMonth--;
     if (currentMonth < 0) { currentMonth = 11; currentYear--; }
     selectedDate = null;
-    document.getElementById('contentPanel').style.display = 'none';
     renderCalendar();
+    renderPanel(null);
   });
   document.getElementById('btnNextMonth').addEventListener('click', () => {
     currentMonth++;
     if (currentMonth > 11) { currentMonth = 0; currentYear++; }
     selectedDate = null;
-    document.getElementById('contentPanel').style.display = 'none';
     renderCalendar();
+    renderPanel(null);
   });
 
   document.getElementById('btnAddMeal').addEventListener('click', () => {
@@ -637,8 +644,22 @@ function selectDate(dateStr) {
 
 function renderPanel(dateStr) {
   const panel = document.getElementById('contentPanel');
-  const meal = getMealPlan(dateStr);
 
+  if (!dateStr) {
+    panel.innerHTML = `
+      <div class="panel-card">
+        <div class="panel-body">
+          <div class="panel-empty">
+            <div class="panel-empty-icon">📅</div>
+            <div class="panel-empty-title">날짜를 선택해주세요</div>
+            <div class="panel-empty-desc">달력에서 날짜를 클릭하면 식단 내용이 표시됩니다.</div>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const meal = getMealPlan(dateStr);
   const d = new Date(dateStr + 'T00:00:00');
   const DAYS = ['일','월','화','수','목','금','토'];
   const dateLabel = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS[d.getDay()]})`;
@@ -698,7 +719,6 @@ function renderPanel(dateStr) {
 
   html += `</div></div>`;
   panel.innerHTML = html;
-  panel.style.display = 'block';
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
