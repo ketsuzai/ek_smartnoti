@@ -178,6 +178,27 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .photo-hover{position:absolute;inset:0;background:rgba(12,45,72,0.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:.18s;border-radius:var(--radius-md);}
 .photo-hover-icon{font-size:22px;color:#fff;}
 
+/* ━━━ ALBUM COMMENTS ━━━ */
+.album-comment-section{border-top:1px solid var(--border-light);margin-top:16px;padding-top:14px;}
+.album-comment-title{font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:10px;}
+.comment-list{display:flex;flex-direction:column;gap:12px;margin-bottom:12px;}
+.comment-item{display:flex;gap:10px;}
+.comment-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-light);color:var(--accent-dark);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.comment-avatar.teacher{background:var(--green-bg);color:var(--green-text);}
+.comment-body{flex:1;min-width:0;}
+.comment-header{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.comment-author{font-size:13px;font-weight:700;color:var(--text-primary);}
+.comment-time{font-size:12px;color:var(--text-muted);}
+.comment-text{font-size:13px;color:var(--text-primary);line-height:1.6;word-break:break-word;}
+.comment-delete-btn{background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-muted);padding:0 2px;margin-left:auto;font-family:'Pretendard',sans-serif;line-height:1;transition:color .15s;}
+.comment-delete-btn:hover{color:#EF4444;}
+.comment-empty{font-size:13px;color:var(--text-muted);text-align:center;padding:14px 0;}
+.album-comment-input-row{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border-light);}
+.album-comment-input{flex:1;height:36px;padding:0 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;outline:none;transition:.18s;color:var(--text-primary);}
+.album-comment-input:focus{border-color:var(--accent);}
+.album-comment-send-btn{height:36px;padding:0 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;font-family:'Pretendard',sans-serif;}
+.album-comment-send-btn:hover{background:var(--accent-dark);}
+
 /* ━━━ LIGHTBOX ━━━ */
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.22s;}
 .lightbox.open{opacity:1;pointer-events:all;}
@@ -350,6 +371,14 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     </div>
     <div class="modal-body">
       <div class="photo-grid" id="photoGrid"></div>
+      <div class="album-comment-section">
+        <div class="album-comment-title">댓글 (<span id="albumCommentCount">0</span>)</div>
+        <div class="comment-list" id="albumCommentList"></div>
+        <div class="album-comment-input-row">
+          <input class="album-comment-input" id="albumCommentInput" placeholder="댓글을 입력하세요">
+          <button class="album-comment-send-btn" onclick="submitAlbumComment()">전송</button>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
@@ -479,18 +508,31 @@ function initRoleContext() {
 // 1. 목 데이터
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const ALBUMS_RAW = [
-  {id:'A001', title:'봄 소풍 나들이',   cls:'전체',  count:34, author:'김원장', date:'2026.03.22', likes:18, comments:5},
-  {id:'A002', title:'3월 생일 파티',    cls:'전체',  count:28, author:'김원장', date:'2026.03.20', likes:24, comments:8},
-  {id:'A003', title:'햇님반 텃밭 가꾸기',cls:'햇님반',count:18, author:'박교사', date:'2026.03.18', likes:12, comments:3},
-  {id:'A004', title:'달님반 요리활동',  cls:'달님반', count:22, author:'이교사', date:'2026.03.15', likes:15, comments:4},
-  {id:'A005', title:'별님반 과학실험',  cls:'별님반', count:15, author:'최교사', date:'2026.03.12', likes:9,  comments:2},
-  {id:'A006', title:'꽃님반 미술시간',  cls:'꽃님반', count:19, author:'정교사', date:'2026.03.10', likes:21, comments:6},
-  {id:'A007', title:'3월 입학식',       cls:'전체',  count:45, author:'김원장', date:'2026.03.02', likes:52, comments:17},
-  {id:'A008', title:'햇님반 독서활동',  cls:'햇님반', count:12, author:'박교사', date:'2026.02.28', likes:7,  comments:1},
-  {id:'A009', title:'달님반 체육활동',  cls:'달님반', count:20, author:'이교사', date:'2026.02.25', likes:11, comments:3},
-  {id:'A010', title:'전체 등원 첫날',   cls:'전체',  count:38, author:'김원장', date:'2026.02.03', likes:40, comments:13},
-  {id:'A011', title:'꽃님반 블록놀이',  cls:'꽃님반', count:10, author:'정교사', date:'2026.02.20', likes:6,  comments:2},
-  {id:'A012', title:'별님반 야외수업',  cls:'별님반', count:17, author:'최교사', date:'2026.02.18', likes:13, comments:4},
+  {id:'A001', title:'봄 소풍 나들이',    cls:'전체',  count:34, author:'김원장', date:'2026.03.22', likes:18, comments:5,
+    commentList:[
+      {id:'ac1', author:'김민지 엄마', initials:'김', isTeacher:false, text:'사진이 너무 예쁘게 잘 나왔어요!', time:'2026.03.22 15:20'},
+      {id:'ac2', author:'박교사',      initials:'박', isTeacher:true,  text:'날씨가 좋아서 아이들이 정말 신나했어요 😊', time:'2026.03.22 16:00'},
+      {id:'ac3', author:'이현우 엄마', initials:'이', isTeacher:false, text:'즐거운 시간 만들어 주셔서 감사합니다!', time:'2026.03.22 17:10'},
+    ]},
+  {id:'A002', title:'3월 생일 파티',     cls:'전체',  count:28, author:'김원장', date:'2026.03.20', likes:24, comments:8,
+    commentList:[
+      {id:'ac4', author:'최준혁 엄마', initials:'최', isTeacher:false, text:'생일 파티 준비해 주셔서 감사해요!', time:'2026.03.20 14:30'},
+      {id:'ac5', author:'박교사',      initials:'박', isTeacher:true,  text:'아이들 모두 너무 즐거워했어요!', time:'2026.03.20 15:00'},
+    ]},
+  {id:'A003', title:'햇님반 텃밭 가꾸기',cls:'햇님반', count:18, author:'박교사', date:'2026.03.18', likes:12, comments:3,
+    commentList:[
+      {id:'ac6', author:'박교사',      initials:'박', isTeacher:true,  text:'아이들이 직접 씨앗을 심어봤어요!', time:'2026.03.18 11:00'},
+      {id:'ac7', author:'김서준 엄마', initials:'김', isTeacher:false, text:'집에서도 식물 키우고 싶다고 하더라고요!', time:'2026.03.18 18:20'},
+    ]},
+  {id:'A004', title:'달님반 요리활동',  cls:'달님반', count:22, author:'이교사', date:'2026.03.15', likes:15, comments:4, commentList:[]},
+  {id:'A005', title:'별님반 과학실험',  cls:'별님반', count:15, author:'최교사', date:'2026.03.12', likes:9,  comments:2, commentList:[]},
+  {id:'A006', title:'꽃님반 미술시간',  cls:'꽃님반', count:19, author:'정교사', date:'2026.03.10', likes:21, comments:6, commentList:[]},
+  {id:'A007', title:'3월 입학식',       cls:'전체',  count:45, author:'김원장', date:'2026.03.02', likes:52, comments:17, commentList:[]},
+  {id:'A008', title:'햇님반 독서활동',  cls:'햇님반', count:12, author:'박교사', date:'2026.02.28', likes:7,  comments:1, commentList:[]},
+  {id:'A009', title:'달님반 체육활동',  cls:'달님반', count:20, author:'이교사', date:'2026.02.25', likes:11, comments:3, commentList:[]},
+  {id:'A010', title:'전체 등원 첫날',   cls:'전체',  count:38, author:'김원장', date:'2026.02.03', likes:40, comments:13, commentList:[]},
+  {id:'A011', title:'꽃님반 블록놀이',  cls:'꽃님반', count:10, author:'정교사', date:'2026.02.20', likes:6,  comments:2, commentList:[]},
+  {id:'A012', title:'별님반 야외수업',  cls:'별님반', count:17, author:'최교사', date:'2026.02.18', likes:13, comments:4, commentList:[]},
 ];
 
 // 앨범별 커버 그라디언트
@@ -524,6 +566,7 @@ let currentView = 'grid'; // 'grid' | 'list'
 let deleteTargetId = null;
 let lbPhotos = [];
 let lbIndex = 0;
+let currentAlbumId = null;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 3. 초기화
@@ -704,6 +747,8 @@ function openDetail(id) {
   `).join('');
 
   document.getElementById('photoGrid').innerHTML = photoItems;
+  currentAlbumId = id;
+  renderAlbumComments(id);
   openModal('detailModal');
 }
 
@@ -901,6 +946,71 @@ function showToast(type, msg) {
   t.innerHTML = `<span>${icons[type]||'💬'}</span><span>${msg}</span>`;
   c.appendChild(t);
   setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),320); }, 2800);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ALBUM COMMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function renderAlbumComments(albumId) {
+  const a = albums.find(x => x.id === albumId);
+  const list = document.getElementById('albumCommentList');
+  const countEl = document.getElementById('albumCommentCount');
+  if (!a || !list) return;
+  const cmts = a.commentList || [];
+  const ME = sessionStorage.getItem('userName') || '박교사';
+  if (countEl) countEl.textContent = cmts.length;
+  if (!cmts.length) {
+    list.innerHTML = '<div class="comment-empty">아직 댓글이 없습니다</div>';
+    return;
+  }
+  list.innerHTML = cmts.map(c => {
+    const canDel = c.isTeacher && c.author === ME;
+    return `
+    <div class="comment-item" id="acitem-${c.id}">
+      <div class="comment-avatar${c.isTeacher?' teacher':''}">${c.initials}</div>
+      <div class="comment-body">
+        <div class="comment-header">
+          <span class="comment-author">${c.author}</span>
+          <span class="comment-time">${c.time}</span>
+          ${canDel ? `<button class="comment-delete-btn" onclick="deleteAlbumComment('${albumId}','${c.id}')">삭제</button>` : ''}
+        </div>
+        <div class="comment-text">${c.text}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function submitAlbumComment() {
+  const inp = document.getElementById('albumCommentInput');
+  const text = inp ? inp.value.trim() : '';
+  if (!text) return;
+  const a = albums.find(x => x.id === currentAlbumId);
+  if (!a) return;
+  const ME = sessionStorage.getItem('userName') || '박교사';
+  if (!a.commentList) a.commentList = [];
+  a.commentList.push({
+    id: 'ac'+Date.now(),
+    author: ME,
+    initials: ME[0],
+    isTeacher: true,
+    text,
+    time: new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\.\s/g,'.').replace(/\.$/,'') + ' ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
+  });
+  a.comments = a.commentList.length;
+  if (inp) inp.value = '';
+  renderAlbumComments(currentAlbumId);
+  showToast('success', '댓글이 등록되었습니다');
+}
+
+function deleteAlbumComment(albumId, commentId) {
+  const a = albums.find(x => x.id === albumId);
+  if (!a || !a.commentList) return;
+  const idx = a.commentList.findIndex(x => x.id === commentId);
+  if (idx === -1) return;
+  a.commentList.splice(idx, 1);
+  a.comments = a.commentList.length;
+  renderAlbumComments(albumId);
+  showToast('success', '댓글이 삭제되었습니다');
 }
 </script>
 </body>
