@@ -705,10 +705,10 @@ const assignedClasses = effectiveRole === 'teacher'
 // 목업 데이터
 // ═══════════════════════════════════════════════
 const ALL_CLASSES = [
-  { id:'CLS001', name:'햇님반', age:'만3세', teacher:'이하늘' },
-  { id:'CLS002', name:'달님반', age:'만4세', teacher:'박민지' },
-  { id:'CLS003', name:'별님반', age:'만5세', teacher:'최서연' },
-  { id:'CLS004', name:'꽃님반', age:'만2세', teacher:'김보라' },
+  { id:'CLS001', name:'햇님반', age:'만5세', teacher:'이하늘' },
+  { id:'CLS002', name:'달님반', age:'만4세', teacher:'박소현' },
+  { id:'CLS003', name:'별빛반', age:'만5세', teacher:'최서연' },
+  { id:'CLS004', name:'꽃님반', age:'만3세', teacher:'김나연' },
 ];
 
 const MOCK_PARENTS = [
@@ -933,10 +933,13 @@ function initRegisterClassOptions() {
 
 // ━━━ KPI ━━━
 function renderKPI() {
-  const total     = MOCK_CHILDREN.length;
-  const enrolled  = MOCK_CHILDREN.filter(c => c.status === 'enrolled').length;
-  const inactive  = MOCK_CHILDREN.filter(c => ['graduated','withdrawn'].includes(c.status)).length;
-  const noApp     = MOCK_CHILDREN.filter(c => c.parents.some(p => !p.app_connected)).length;
+  const baseData = (effectiveRole === 'teacher' && assignedClasses)
+    ? MOCK_CHILDREN.filter(c => assignedClasses.some(a => a.id === c.class_id))
+    : MOCK_CHILDREN;
+  const total     = baseData.length;
+  const enrolled  = baseData.filter(c => c.status === 'enrolled').length;
+  const inactive  = baseData.filter(c => ['graduated','withdrawn'].includes(c.status)).length;
+  const noApp     = baseData.filter(c => c.parents.some(p => !p.app_connected)).length;
 
   document.getElementById('kpiGrid').innerHTML = `
     <div class="kpi-card">

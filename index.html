@@ -379,6 +379,18 @@
         sessionStorage.setItem('userId',    id);
         sessionStorage.removeItem('operationContext'); // 이전 컨텍스트 초기화
 
+        // 교사 계정: 기본 담당 반 세팅 (org-selector를 거치지 않으므로 모킹값 주입)
+        if (account.role === 'teacher') {
+          if (!sessionStorage.getItem('assignedClasses')) {
+            sessionStorage.setItem('assignedClasses', JSON.stringify([
+              { id: 'CLS001', name: '햇님반' },
+              { id: 'CLS003', name: '별빛반' }
+            ]));
+          }
+        } else {
+          sessionStorage.removeItem('assignedClasses');
+        }
+
         btn.innerText = `${account.name} 인증 성공 ✓`;
         btn.style.background = "#10B981";
         btn.style.opacity = "1";

@@ -327,7 +327,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
               <option value="">전체 반</option>
               <option value="햇님반">햇님반</option>
               <option value="달님반">달님반</option>
-              <option value="별님반">별님반</option>
+              <option value="별빛반">별빛반</option>
               <option value="꽃님반">꽃님반</option>
             </select>
           </div>
@@ -457,7 +457,7 @@ const MED_OP_CTX     = JSON.parse(sessionStorage.getItem('operationContext') || 
 const MED_EFFECTIVE  = (MED_OP_CTX && MED_OP_CTX.contextRole) ? MED_OP_CTX.contextRole : MED_USER_ROLE;
 const MED_IS_TEACHER = MED_EFFECTIVE === 'teacher';
 const MED_ASSIGNED   = MED_IS_TEACHER
-  ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"}]')
+  ? JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001","name":"햇님반"},{"id":"CLS003","name":"별빛반"}]')
   : null;
 const MED_ASSIGNED_NAMES = MED_ASSIGNED ? MED_ASSIGNED.map(c => c.name) : null;
 
@@ -512,7 +512,7 @@ const MEDICINES = [
     history: []
   },
   {
-    id: 'MED004', childName: '최수아', className: '별님반', dob: '2021.02.17', guardian: '최아버지',
+    id: 'MED004', childName: '최수아', className: '별빛반', dob: '2021.02.17', guardian: '최아버지',
     medicineName: '알레르기약', medicineType: '정제', times: ['점심(12:30)'], count: 1, dose: '0.5정',
     method: '식후 복용', notes: '봄철 꽃가루 알레르기. 졸음 부작용 있을 수 있음.', storage: 'room',
     submitTime: '2026.03.24 07:58', date: '2026-03-24', status: '처리완료', signed: true,
@@ -533,7 +533,7 @@ const MEDICINES = [
     history: []
   },
   {
-    id: 'MED007', childName: '윤하린', className: '별님반', dob: '2021.03.05', guardian: '윤아버지',
+    id: 'MED007', childName: '윤하린', className: '별빛반', dob: '2021.03.05', guardian: '윤아버지',
     medicineName: '코감기약', medicineType: '시럽', times: ['점심(12:30)'], count: 1, dose: '5ml',
     method: '식후 복용', notes: '콧물 증상.', storage: 'room',
     submitTime: '2026.03.23 15:20', date: '2026-03-23', status: '처리완료', signed: true,
@@ -568,7 +568,7 @@ const MEDICINES = [
     history: [{action:'처리완료', actor:'박선생님', time:'2026.03.22 12:30', memo:'점심 이후 정상 도포'}]
   },
   {
-    id: 'MED012', childName: '류민채', className: '별님반', dob: '2020.04.25', guardian: '류어머니',
+    id: 'MED012', childName: '류민채', className: '별빛반', dob: '2020.04.25', guardian: '류어머니',
     medicineName: '혈압약', medicineType: '정제', times: ['점심(12:30)'], count: 1, dose: '0.5정',
     method: '식후 즉시', notes: '소아 심장 질환 관리 약물. 절대 누락 금지.', storage: 'room',
     submitTime: '2026.03.22 10:00', date: '2026-03-22', status: '거절', signed: false,

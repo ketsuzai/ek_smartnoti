@@ -376,32 +376,32 @@ const ALL_CHILDREN = [
 
 let CLASSES = [
   {
-    id:'CLS001', name:'송이반', ageGroup:'5세', year:2025, capacity:20, status:'active', createdAt:'2025-03-01',
+    id:'CLS001', name:'햇님반', ageGroup:'5세', year:2025, capacity:20, status:'active', createdAt:'2025-03-01',
     teachers:[
-      { id:'T001', name:'강하나', role:'lead' },
-      { id:'T002', name:'박하나', role:'assistant' },
+      { id:'T001', name:'이하늘', role:'lead' },
+      { id:'T002', name:'김보라', role:'assistant' },
     ],
     children:['C001','C002','C003','C004','C005','C006','C007','C008','C009'],
   },
   {
-    id:'CLS002', name:'뿌리반', ageGroup:'4세', year:2025, capacity:25, status:'active', createdAt:'2025-03-01',
+    id:'CLS002', name:'달님반', ageGroup:'4세', year:2025, capacity:25, status:'active', createdAt:'2025-03-01',
     teachers:[
-      { id:'T003', name:'유지아', role:'lead' },
-      { id:'T004', name:'김민호', role:'assistant' },
+      { id:'T003', name:'박소현', role:'lead' },
+      { id:'T004', name:'최유리', role:'assistant' },
     ],
     children:['C010','C011','C012','C013'],
   },
   {
-    id:'CLS003', name:'나무반', ageGroup:'3세', year:2025, capacity:15, status:'active', createdAt:'2025-03-01',
+    id:'CLS003', name:'별빛반', ageGroup:'5세', year:2025, capacity:15, status:'active', createdAt:'2025-03-01',
     teachers:[
-      { id:'T005', name:'나예리', role:'lead' },
+      { id:'T005', name:'최서연', role:'lead' },
     ],
     children:['C014','C015','C016'],
   },
   {
-    id:'CLS004', name:'잎새반', ageGroup:'2세', year:2025, capacity:10, status:'inactive', createdAt:'2025-03-01',
+    id:'CLS004', name:'꽃님반', ageGroup:'3세', year:2025, capacity:10, status:'inactive', createdAt:'2025-03-01',
     teachers:[
-      { id:'T006', name:'로미오', role:'lead' },
+      { id:'T006', name:'김나연', role:'lead' },
     ],
     children:['C017','C018'],
   },
@@ -413,7 +413,7 @@ let CLASSES = [
 const userRole = sessionStorage.getItem('userRole') || 'org_admin';
 const _opCtx = JSON.parse(sessionStorage.getItem('operationContext') || 'null');
 const effectiveRole = (_opCtx && _opCtx.contextRole) ? _opCtx.contextRole : userRole;
-const assignedClasses = JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001"},{"id":"CLS002"}]');
+const assignedClasses = JSON.parse(sessionStorage.getItem('assignedClasses') || '[{"id":"CLS001"},{"id":"CLS003"}]');
 const canManage = effectiveRole !== 'teacher';
 
 let filteredClasses = [];
