@@ -1622,7 +1622,7 @@ function renderSentDetailSingle(notice) {
       </div>
       <div class="comment-section">
         <div class="psec-title" style="margin-bottom:12px;">댓글 · 대댓글</div>
-        <div class="comment-list">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
+        <div class="comment-list" id="nbclist-${child.id}">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
         <div class="comment-input-wrap">
           <textarea class="comment-textarea" id="nb-ta-${child.id}" placeholder="${child.name} 학부모에게 답글을 작성하세요..."></textarea>
           <button class="comment-send-btn" onclick="submitNbComment('${child.id}')">➤</button>
@@ -1791,7 +1791,7 @@ function renderSentDetailChild(notice, child) {
     </div>
     <div class="comment-section">
       <div class="psec-title" style="margin-bottom:12px;">댓글 · 대댓글</div>
-      <div class="comment-list">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
+      <div class="comment-list" id="nbclist-${child.id}">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
       <div class="comment-input-wrap">
         <textarea class="comment-textarea" id="nb-ta-${child.id}" placeholder="학부모에게 답글을 작성하세요..."></textarea>
         <button class="comment-send-btn" onclick="submitNbComment('${child.id}')">➤</button>
@@ -2821,17 +2821,32 @@ function submitNbComment(childId) {
   for (const n of allNotices) {
     const child = (n.children||[]).find(c => c.id === childId);
     if (child) {
-      child.comments.push({
-        id: 'nb_c'+Date.now(),
-        author: ME,
-        type: 'teacher',
-        color: '#3B82F6',
-        relation: '교사',
-        text,
-        time: new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
-      });
+      const newId = 'nb_c'+Date.now();
+      const now = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      child.comments.push({id:newId, author:ME, type:'teacher', color:'#3B82F6', relation:'교사', text, time:now});
       child.commentCount = child.comments.length;
       if (inp) inp.value = '';
+      // DOM에 즉시 추가
+      const list = document.getElementById('nbclist-' + childId);
+      if (list) {
+        const empty = list.querySelector('.comment-empty, p');
+        if (empty) empty.remove();
+        const el = document.createElement('div');
+        el.className = 'comment-item';
+        el.id = 'nbcitem-' + newId;
+        el.innerHTML = `
+          <div class="comment-avatar teacher">${ME[0]}</div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="comment-author">${ME}</span>
+              <span class="comment-role-badge crb-teacher">교사</span>
+              <span class="comment-time">${now}</span>
+              <button class="comment-delete-btn" onclick="deleteNbComment('${childId}','${newId}')">삭제</button>
+            </div>
+            <div class="comment-text">${text}</div>
+          </div>`;
+        list.appendChild(el);
+      }
       showToast('댓글이 등록되었습니다', 'success');
       return;
     }
@@ -2839,6 +2854,7 @@ function submitNbComment(childId) {
 }
 
 function deleteNbComment(childId, commentId) {
+  if (!confirm('댓글을 삭제하시겠습니까?')) return;
   const allNotices = [...MOCK_SENT, ...MOCK_RECEIVED];
   for (const n of allNotices) {
     const child = (n.children||[]).find(c => c.id === childId);

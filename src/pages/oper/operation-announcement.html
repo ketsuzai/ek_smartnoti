@@ -1481,6 +1481,7 @@ function submitComment() {
 }
 
 function deleteComment(commentId) {
+  if (!confirm('댓글을 삭제하시겠습니까?')) return;
   const n = notices.find(x => x.id === currentNoticeId);
   if (!n) return;
   const idx = n.comments.findIndex(x => x.id === commentId);
@@ -1494,6 +1495,7 @@ function deleteComment(commentId) {
 }
 
 function deleteReply(commentId, replyId) {
+  if (!confirm('답변을 삭제하시겠습니까?')) return;
   const n = notices.find(x => x.id === currentNoticeId);
   if (!n) return;
   const c = n.comments.find(x => x.id === commentId);

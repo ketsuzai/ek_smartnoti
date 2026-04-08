@@ -1003,6 +1003,7 @@ function submitAlbumComment() {
 }
 
 function deleteAlbumComment(albumId, commentId) {
+  if (!confirm('댓글을 삭제하시겠습니까?')) return;
   const a = albums.find(x => x.id === albumId);
   if (!a || !a.commentList) return;
   const idx = a.commentList.findIndex(x => x.id === commentId);
@@ -1010,7 +1011,7 @@ function deleteAlbumComment(albumId, commentId) {
   a.commentList.splice(idx, 1);
   a.comments = a.commentList.length;
   renderAlbumComments(albumId);
-  showToast('success', '댓글이 삭제되었습니다');
+  showToast('댓글이 삭제되었습니다', 'success');
 }
 </script>
 </body>
