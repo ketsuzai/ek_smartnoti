@@ -1813,7 +1813,7 @@ function openReceivedDetail(id) {
   const cs = CAT_STYLE[r.category];
   const comments = r.comments.map(cm => {
     const isTeacher = cm.type === 'teacher';
-    return `<div class="comment-item">
+    return `<div class="comment-item" id="nbcitem-${cm.id}">
       <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
       <div class="comment-body">
         <div class="comment-header">
