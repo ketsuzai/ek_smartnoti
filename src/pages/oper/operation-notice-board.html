@@ -340,21 +340,22 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
 /* ━━━ 댓글 ━━━ */
 .comment-section{border-top:1px solid var(--border-light);padding-top:14px;}
-.comment-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.comment-list{display:flex;flex-direction:column;gap:12px;margin-bottom:12px;}
 .comment-item{display:flex;gap:10px;}
 .comment-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0;}
-.comment-bubble{flex:1;background:var(--bg-base);border-radius:0 10px 10px 10px;padding:8px 12px;border:1px solid var(--border-light);}
-.comment-bubble.teacher-bubble{background:var(--accent-light);border-color:var(--border-medium);}
-.comment-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.comment-avatar.teacher{background:var(--green-bg);color:var(--green-text);}
+.comment-body{flex:1;min-width:0;}
+.comment-header{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
 .comment-author{font-size:13px;font-weight:700;color:var(--text-primary);}
-.comment-role{font-size:12px;font-weight:600;padding:1px 6px;border-radius:6px;}
-.cr-teacher{background:var(--blue-bg);color:var(--blue-text);}
-.cr-parent{background:var(--green-bg);color:var(--green-text);}
-.comment-time{font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-left:auto;}
-.comment-text{font-size:13px;line-height:1.55;color:var(--text-primary);}
-.reply-item{margin-left:30px;}
-.reply-item .comment-bubble{background:#fff;border:1px dashed var(--border-medium);}
-.comment-input-wrap{display:flex;gap:8px;align-items:flex-end;}
+.comment-role-badge{font-size:11px;font-weight:600;padding:1px 5px;border-radius:5px;}
+.crb-teacher{background:var(--blue-bg);color:var(--blue-text);}
+.crb-parent{background:var(--green-bg);color:var(--green-text);}
+.comment-time{font-size:12px;color:var(--text-muted);}
+.comment-text{font-size:13px;color:var(--text-primary);line-height:1.6;word-break:break-word;}
+.comment-delete-btn{background:none;border:none;cursor:pointer;font-size:11px;color:var(--text-muted);padding:0 2px;margin-left:auto;font-family:'Pretendard',sans-serif;line-height:1;transition:color .15s;}
+.comment-delete-btn:hover{color:#EF4444;}
+.comment-empty{font-size:13px;color:var(--text-muted);text-align:center;padding:14px 0;}
+.comment-input-wrap{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light);}
 .comment-textarea{flex:1;border:1.5px solid var(--border-light);border-radius:var(--radius-md);padding:9px 12px;font-size:13px;font-family:'Pretendard',sans-serif;resize:none;height:60px;outline:none;transition:border-color .18s;line-height:1.5;}
 .comment-textarea:focus{border-color:var(--accent);}
 .comment-send-btn{height:60px;width:44px;border-radius:var(--radius-md);background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;transition:.18s;flex-shrink:0;}
@@ -865,15 +866,18 @@ const MOCK_SENT = [
       { url:'https://placehold.co/400x300/FCE7F3/EC4899?text=율동영상', type:'video', isRepresentative:false }
     ],
     children:[
-      { id:'C001', name:'김도현', color:'#3B82F6', isRead:true, commentCount:1,
-        comments:[{ author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'집에서도 블록 얘기를 하더라고요! 감사합니다 선생님 😊', time:'15:22' }]},
+      { id:'C001', name:'김도현', color:'#3B82F6', isRead:true, commentCount:2,
+        comments:[
+          { id:'nb_c1', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'집에서도 블록 얘기를 하더라고요! 감사합니다 선생님 😊', time:'15:22' },
+          { id:'nb_c2', author:'박교사', type:'teacher', color:'#3B82F6', relation:'교사', text:'네, 오늘 정말 집중해서 잘 했어요 😊', time:'15:45' }
+        ]},
       { id:'C002', name:'이서연', color:'#10B981', isRead:true, commentCount:2,
         comments:[
-          { author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10' },
-          { author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11' }
+          { id:'nb_c3', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10' },
+          { id:'nb_c4', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11' }
         ]},
       { id:'C003', name:'박준서', color:'#F59E0B', isRead:false, commentCount:1,
-        comments:[{ author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00' }]}
+        comments:[{ id:'nb_c5', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00' }]}
     ]
   },
   // ─ 단일·발행·사진·종합평가
@@ -904,16 +908,16 @@ const MOCK_SENT = [
     children:[
       { id:'C004', name:'최유진', color:'#8B5CF6', isRead:false, commentCount:2,
         comments:[
-          { author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10' },
-          { author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12' }
+          { id:'nb_c6', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10' },
+          { id:'nb_c7', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12' }
         ]},
       { id:'C005', name:'정민호', color:'#F97316', isRead:true, commentCount:1,
-        comments:[{ author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30' }]},
+        comments:[{ id:'nb_c8', author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30' }]},
       { id:'C006', name:'강지아', color:'#EC4899', isRead:true, commentCount:0, comments:[]},
       { id:'C007', name:'윤서준', color:'#14B8A6', isRead:false, commentCount:1,
-        comments:[{ author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00' }]},
+        comments:[{ id:'nb_c9', author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00' }]},
       { id:'C008', name:'임하린', color:'#6366F1', isRead:true, commentCount:1,
-        comments:[{ author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20' }]},
+        comments:[{ id:'nb_c10', author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20' }]},
       { id:'C009', name:'송채원', color:'#F43F5E', isRead:false, commentCount:0, comments:[]},
       { id:'C010', name:'조한결', color:'#0EA5E9', isRead:true, commentCount:0, comments:[]}
     ]
@@ -968,7 +972,7 @@ const MOCK_SENT = [
     photos:[{ url:'https://placehold.co/400x300/DCFCE7/16A34A?text=동요발표▶', type:'video', isRepresentative:true }],
     children:[
       { id:'C010', name:'조한결', color:'#0EA5E9', isRead:false, commentCount:1,
-        comments:[{ author:'조영철 아빠', type:'parent', color:'#0EA5E9', relation:'아빠', text:'아이가 너무 좋아했어요! 영상 감사드려요 🎵', time:'18:30' }]}
+        comments:[{ id:'nb_c11', author:'조영철 아빠', type:'parent', color:'#0EA5E9', relation:'아빠', text:'아이가 너무 좋아했어요! 영상 감사드려요 🎵', time:'18:30' }]}
     ]
   },
   // ─ 다중·발행·사진3장·댓글8개·모두읽음
@@ -986,23 +990,23 @@ const MOCK_SENT = [
     children:[
       { id:'C001', name:'김도현', color:'#3B82F6', isRead:true, commentCount:2,
         comments:[
-          { author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'텃밭 체험 좋아요! 집에서 같이 해볼게요 🌱', time:'16:00' },
-          { author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'사진 감사합니다', time:'16:01' }
+          { id:'nb_c12', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'텃밭 체험 좋아요! 집에서 같이 해볼게요 🌱', time:'16:00' },
+          { id:'nb_c13', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'사진 감사합니다', time:'16:01' }
         ]},
       { id:'C002', name:'이서연', color:'#10B981', isRead:true, commentCount:1,
-        comments:[{ author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'서연이가 좋아했겠네요!', time:'16:15' }]},
+        comments:[{ id:'nb_c14', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'서연이가 좋아했겠네요!', time:'16:15' }]},
       { id:'C003', name:'박준서', color:'#F59E0B', isRead:true, commentCount:2,
         comments:[
-          { author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'와 신기해 보이네요', time:'16:30' },
-          { author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'준서가 씩씩하게 잘 하네요 👍', time:'16:31' }
+          { id:'nb_c15', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'와 신기해 보이네요', time:'16:30' },
+          { id:'nb_c16', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'준서가 씩씩하게 잘 하네요 👍', time:'16:31' }
         ]},
       { id:'C017', name:'이준혁', color:'#14B8A6', isRead:true, commentCount:2,
         comments:[
-          { author:'이수현 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'준혁이 첫 텃밭 체험이에요!', time:'17:00' },
-          { author:'이수현 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'사진 보내주실 수 있나요?', time:'17:01' }
+          { id:'nb_c17', author:'이수현 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'준혁이 첫 텃밭 체험이에요!', time:'17:00' },
+          { id:'nb_c18', author:'이수현 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'사진 보내주실 수 있나요?', time:'17:01' }
         ]},
       { id:'C018', name:'장예은', color:'#F43F5E', isRead:true, commentCount:1,
-        comments:[{ author:'장미래 엄마', type:'parent', color:'#F43F5E', relation:'엄마', text:'예은이 활짝 웃고 있네요!', time:'17:20' }]}
+        comments:[{ id:'nb_c19', author:'장미래 엄마', type:'parent', color:'#F43F5E', relation:'엄마', text:'예은이 활짝 웃고 있네요!', time:'17:20' }]}
     ]
   },
   // ─ 단일·발행·사진·미읽음·댓글없음
@@ -1027,7 +1031,7 @@ const MOCK_SENT = [
     photos:[{ url:'https://placehold.co/400x300/E0F7FA/0097A7?text=눈오는날', type:'photo', isRepresentative:true }],
     children:[
       { id:'C011', name:'한서아', color:'#A855F7', isRead:true, commentCount:1,
-        comments:[{ author:'한정민 엄마', type:'parent', color:'#A855F7', relation:'엄마', text:'눈 보고 신기해했겠어요!', time:'14:00' }]},
+        comments:[{ id:'nb_c20', author:'한정민 엄마', type:'parent', color:'#A855F7', relation:'엄마', text:'눈 보고 신기해했겠어요!', time:'14:00' }]},
       { id:'C012', name:'배도윤', color:'#22C55E', isRead:false, commentCount:0, comments:[]}
     ]
   }
@@ -1586,16 +1590,18 @@ function renderSentDetailSingle(notice) {
       </div>`;
     }
 
+    const NB_ME = sessionStorage.getItem('userName') || '박교사';
     const comments = child.comments.map(cm => {
       const isTeacher = cm.type === 'teacher';
-      const wrapClass = cm.isReply ? 'comment-item reply-item' : 'comment-item';
-      return `<div class="${wrapClass}">
-        <div class="comment-avatar" style="background:${cm.color}">${cm.author[0]}</div>
-        <div class="comment-bubble ${isTeacher?'teacher-bubble':''}">
-          <div class="comment-meta">
+      const canDel = isTeacher && cm.author === NB_ME;
+      return `<div class="comment-item" id="nbcitem-${cm.id}">
+        <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
+        <div class="comment-body">
+          <div class="comment-header">
             <span class="comment-author">${cm.author}</span>
-            <span class="comment-role ${isTeacher?'cr-teacher':'cr-parent'}">${isTeacher?'교사':'학부모'}</span>
+            <span class="comment-role-badge ${isTeacher?'crb-teacher':'crb-parent'}">${isTeacher?'교사':'학부모'}</span>
             <span class="comment-time">${cm.time}</span>
+            ${canDel ? `<button class="comment-delete-btn" onclick="deleteNbComment('${child.id}','${cm.id}')">삭제</button>` : ''}
           </div>
           <div class="comment-text">${cm.text}</div>
         </div>
@@ -1616,10 +1622,10 @@ function renderSentDetailSingle(notice) {
       </div>
       <div class="comment-section">
         <div class="psec-title" style="margin-bottom:12px;">댓글 · 대댓글</div>
-        <div class="comment-list">${comments||'<p style="font-size:13px;color:var(--text-muted);padding:8px 0">아직 댓글이 없습니다.</p>'}</div>
+        <div class="comment-list">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
         <div class="comment-input-wrap">
-          <textarea class="comment-textarea" placeholder="${child.name} 학부모에게 답글을 작성하세요..."></textarea>
-          <button class="comment-send-btn" onclick="showToast('댓글이 등록되었습니다.','success')">➤</button>
+          <textarea class="comment-textarea" id="nb-ta-${child.id}" placeholder="${child.name} 학부모에게 답글을 작성하세요..."></textarea>
+          <button class="comment-send-btn" onclick="submitNbComment('${child.id}')">➤</button>
         </div>
       </div>`;
   }).join('');
@@ -1758,16 +1764,18 @@ function renderSentDetailChild(notice, child) {
     </div>`;
   }
 
+  const NB_ME2 = sessionStorage.getItem('userName') || '박교사';
   const comments = child.comments.map(cm => {
     const isTeacher = cm.type === 'teacher';
-    const wrapClass = cm.isReply ? 'comment-item reply-item' : 'comment-item';
-    return `<div class="${wrapClass}">
-      <div class="comment-avatar" style="background:${cm.color}">${cm.author[0]}</div>
-      <div class="comment-bubble ${isTeacher?'teacher-bubble':''}">
-        <div class="comment-meta">
+    const canDel = isTeacher && cm.author === NB_ME2;
+    return `<div class="comment-item" id="nbcitem-${cm.id}">
+      <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
+      <div class="comment-body">
+        <div class="comment-header">
           <span class="comment-author">${cm.author}</span>
-          <span class="comment-role ${isTeacher?'cr-teacher':'cr-parent'}">${isTeacher?'교사':'학부모'}</span>
+          <span class="comment-role-badge ${isTeacher?'crb-teacher':'crb-parent'}">${isTeacher?'교사':'학부모'}</span>
           <span class="comment-time">${cm.time}</span>
+          ${canDel ? `<button class="comment-delete-btn" onclick="deleteNbComment('${child.id}','${cm.id}')">삭제</button>` : ''}
         </div>
         <div class="comment-text">${cm.text}</div>
       </div>
@@ -1783,10 +1791,10 @@ function renderSentDetailChild(notice, child) {
     </div>
     <div class="comment-section">
       <div class="psec-title" style="margin-bottom:12px;">댓글 · 대댓글</div>
-      <div class="comment-list">${comments||'<p style="font-size:13px;color:var(--text-muted);padding:8px 0">아직 댓글이 없습니다.</p>'}</div>
+      <div class="comment-list">${comments||'<p class="comment-empty">아직 댓글이 없습니다.</p>'}</div>
       <div class="comment-input-wrap">
-        <textarea class="comment-textarea" placeholder="학부모에게 답글을 작성하세요..."></textarea>
-        <button class="comment-send-btn" onclick="showToast('댓글이 등록되었습니다.','success')">➤</button>
+        <textarea class="comment-textarea" id="nb-ta-${child.id}" placeholder="학부모에게 답글을 작성하세요..."></textarea>
+        <button class="comment-send-btn" onclick="submitNbComment('${child.id}')">➤</button>
       </div>
     </div>`;
 }
@@ -1803,18 +1811,20 @@ function openReceivedDetail(id) {
   r.isRead = true;
   document.getElementById('rdpTitle').textContent = r.subLabel;
   const cs = CAT_STYLE[r.category];
-  const comments = r.comments.map(cm => `
-    <div class="comment-item">
-      <div class="comment-avatar" style="background:${cm.color}">${cm.author[0]}</div>
-      <div class="comment-bubble teacher-bubble">
-        <div class="comment-meta">
+  const comments = r.comments.map(cm => {
+    const isTeacher = cm.type === 'teacher';
+    return `<div class="comment-item">
+      <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
+      <div class="comment-body">
+        <div class="comment-header">
           <span class="comment-author">${cm.author}</span>
-          <span class="comment-role cr-teacher">교사</span>
+          <span class="comment-role-badge ${isTeacher?'crb-teacher':'crb-parent'}">${isTeacher?'교사':'학부모'}</span>
           <span class="comment-time">${cm.time}</span>
         </div>
         <div class="comment-text">${cm.text}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   document.getElementById('rdpBody').innerHTML = `
     <div class="psec">
@@ -1836,7 +1846,7 @@ function openReceivedDetail(id) {
     </div>
     <div class="comment-section">
       <div class="psec-title" style="margin-bottom:12px;">답글</div>
-      <div class="comment-list">${comments||'<p style="font-size:13px;color:var(--text-muted);padding:8px 0">아직 답글이 없습니다.</p>'}</div>
+      <div class="comment-list">${comments||'<p class="comment-empty">아직 답글이 없습니다.</p>'}</div>
       <div class="comment-input-wrap">
         <textarea class="comment-textarea" placeholder="${r.parent}님께 답글을 작성하세요..."></textarea>
         <button class="comment-send-btn" onclick="sendReceivedReply('${r.id}')">➤</button>
@@ -2800,6 +2810,50 @@ function showToast(msg, type) {
   wrap.appendChild(t);
   setTimeout(() => t.style.opacity = '0', 2200);
   setTimeout(() => t.remove(), 2600);
+}
+
+function submitNbComment(childId) {
+  const inp = document.getElementById('nb-ta-' + childId);
+  const text = inp ? inp.value.trim() : '';
+  if (!text) { showToast('댓글 내용을 입력하세요', 'warning'); return; }
+  const ME = sessionStorage.getItem('userName') || '박교사';
+  const allNotices = [...MOCK_SENT, ...MOCK_RECEIVED];
+  for (const n of allNotices) {
+    const child = (n.children||[]).find(c => c.id === childId);
+    if (child) {
+      child.comments.push({
+        id: 'nb_c'+Date.now(),
+        author: ME,
+        type: 'teacher',
+        color: '#3B82F6',
+        relation: '교사',
+        text,
+        time: new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
+      });
+      child.commentCount = child.comments.length;
+      if (inp) inp.value = '';
+      showToast('댓글이 등록되었습니다', 'success');
+      return;
+    }
+  }
+}
+
+function deleteNbComment(childId, commentId) {
+  const allNotices = [...MOCK_SENT, ...MOCK_RECEIVED];
+  for (const n of allNotices) {
+    const child = (n.children||[]).find(c => c.id === childId);
+    if (child) {
+      const idx = child.comments.findIndex(x => x.id === commentId);
+      if (idx !== -1) {
+        child.comments.splice(idx, 1);
+        child.commentCount = child.comments.length;
+        const el = document.getElementById('nbcitem-' + commentId);
+        if (el) el.remove();
+        showToast('댓글이 삭제되었습니다', 'success');
+      }
+      return;
+    }
+  }
 }
 
 document.addEventListener('keydown', e => {
