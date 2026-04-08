@@ -90,7 +90,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .cal-wday:first-child{color:#EF4444;}
 .cal-wday:last-child{color:#3B82F6;}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
-.cal-cell{height:100px;padding:6px 6px 26px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);cursor:pointer;transition:.15s;position:relative;display:flex;flex-direction:column;gap:4px;}
+.cal-cell{height:124px;padding:6px 6px 26px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);cursor:pointer;transition:.15s;position:relative;display:flex;flex-direction:column;gap:4px;}
 .cal-cell:nth-child(7n){border-right:none;}
 /* last row cells - remove bottom border for cells in last row */
 .cal-cell:hover{background:#F8FCFF;}
@@ -114,9 +114,19 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .meal-tag.snack-pm{background:var(--snack-pm-bg);color:var(--snack-pm-text);}
 .meal-tag.dinner{background:var(--dinner-bg);color:var(--dinner-text);}
 .meal-photo-icon{font-size:13px;flex-shrink:0;}
-.cal-hover-btn{display:none;position:absolute;bottom:6px;right:6px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'Pretendard',sans-serif;white-space:nowrap;}
-.cal-cell:not(.other-month):hover .cal-hover-btn{display:flex;align-items:center;gap:3px;}
-.cal-cell.has-meal:not(.other-month):hover .cal-hover-btn{background:var(--accent-dark);}
+/* 미등록 셀 hover '+' 오버레이 */
+.cal-cell-plus{
+  display:none;position:absolute;inset:0;
+  align-items:center;justify-content:center;
+  background:rgba(14,165,233,0.08);
+  border-radius:0;pointer-events:none;
+}
+.cal-cell-plus::after{
+  content:'+';font-size:28px;font-weight:300;
+  color:var(--accent);opacity:.7;line-height:1;
+}
+.cal-cell:not(.other-month):not(.has-meal):hover .cal-cell-plus{display:flex;}
+.cal-cell:not(.other-month):not(.has-meal):hover{cursor:pointer;}
 
 /* ━━━ CONTENT PANEL ━━━ */
 .panel-card{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden;animation:panelIn .22s ease;}
@@ -141,41 +151,26 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .panel-empty-title{font-size:15px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;}
 .panel-empty-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
 
-/* ━━━ MODAL OVERLAY ━━━ */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.22s;}
-.modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-box{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-modal);width:100%;max-width:600px;max-height:90vh;display:flex;flex-direction:column;transform:scale(.95);transition:.22s;}
-.modal-overlay.open .modal-box{transform:scale(1);}
-.modal-header{padding:18px 22px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.modal-title{font-size:16px;font-weight:800;color:var(--text-primary);}
-.modal-close{width:30px;height:30px;border-radius:var(--radius-md);border:1.5px solid var(--border-light);background:var(--bg-base);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-secondary);transition:.15s;}
-.modal-close:hover{background:var(--red-bg);border-color:var(--red-bg);color:var(--red-text);}
-.modal-body{flex:1;overflow-y:auto;padding:20px 22px;}
-.modal-body::-webkit-scrollbar{width:4px;}
-.modal-body::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:2px;}
-.modal-footer{padding:14px 22px;border-top:1px solid var(--border-light);display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-shrink:0;}
-
-/* Modal form */
-.form-field{margin-bottom:18px;}
-.form-label{font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;display:block;}
-.form-input{width:100%;height:38px;padding:0 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);outline:none;transition:.18s;}
-.form-input:focus{border-color:var(--accent);}
-.meal-section-divider{border:none;border-top:1.5px solid var(--border-light);margin:18px 0 16px;}
-.meal-section-label{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.meal-section-title{font-size:13px;font-weight:800;color:var(--text-secondary);}
-.meal-textarea{width:100%;min-height:70px;padding:10px 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);resize:vertical;outline:none;transition:.18s;line-height:1.6;}
-.meal-textarea:focus{border-color:var(--accent);}
-.meal-textarea::placeholder{color:var(--text-muted);}
-.photo-upload-area{width:130px;height:130px;border:1.5px dashed var(--border-medium);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:.18s;background:var(--bg-base);}
+/* ━━━ PANEL EDIT MODE ━━━ */
+.panel-header.edit-mode{background:var(--accent-light);border-bottom-color:var(--accent);}
+.panel-edit-hint{font-size:12px;color:var(--accent-dark);font-weight:600;margin-top:2px;}
+.pedit-body{padding:0;}
+.pedit-section{padding:14px 20px;border-bottom:1px solid var(--border-light);}
+.pedit-section:last-of-type{border-bottom:none;}
+.pedit-section-head{margin-bottom:8px;}
+.pedit-textarea{width:100%;min-height:62px;padding:9px 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-base);resize:vertical;outline:none;transition:.18s;line-height:1.6;}
+.pedit-textarea:focus{border-color:var(--accent);background:#fff;}
+.pedit-textarea::placeholder{color:var(--text-muted);}
+.pedit-photo-row{display:flex;align-items:flex-start;gap:10px;margin-top:8px;}
+.photo-upload-area{width:80px;height:80px;border:1.5px dashed var(--border-medium);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:.18s;background:var(--bg-base);flex-shrink:0;}
 .photo-upload-area:hover{border-color:var(--accent);background:var(--accent-light);}
-.photo-upload-label{font-size:12px;color:var(--text-muted);}
-.photo-preview-wrap{display:flex;align-items:flex-start;gap:10px;}
-.photo-preview-thumb{width:130px;height:130px;border-radius:var(--radius-md);background:var(--border-light);object-fit:cover;border:1px solid var(--border-medium);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;}
-.photo-remove-btn{font-size:12px;color:var(--red-text);background:var(--red-bg);border:none;border-radius:var(--radius-sm);padding:3px 8px;cursor:pointer;font-family:'Pretendard',sans-serif;font-weight:700;transition:.15s;}
+.photo-upload-label{font-size:11px;color:var(--text-muted);text-align:center;}
+.photo-preview-wrap{display:flex;align-items:flex-start;gap:8px;}
+.photo-preview-thumb{width:80px;height:80px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border-medium);display:block;flex-shrink:0;}
+.photo-remove-btn{font-size:11px;color:var(--red-text);background:var(--red-bg);border:none;border-radius:var(--radius-sm);padding:2px 7px;cursor:pointer;font-family:'Pretendard',sans-serif;font-weight:700;transition:.15s;margin-top:4px;display:block;}
 .photo-remove-btn:hover{background:var(--red);color:#fff;}
-.form-hint{font-size:12px;color:var(--text-muted);margin-top:4px;}
-.form-err{font-size:12px;color:var(--red-text);margin-top:4px;display:none;}
-.form-err.show{display:block;}
+.pedit-err{font-size:12px;color:var(--red-text);padding:6px 20px 14px;display:none;}
+.pedit-err.show{display:block;}
 
 /* ━━━ CONFIRM MODAL ━━━ */
 .cm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:400;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;}
@@ -268,114 +263,6 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
         <div id="contentPanel"></div>
       </div>
 
-    </div>
-  </div>
-</div>
-
-<!-- 식단 등록/수정 Modal -->
-<div class="modal-overlay" id="mealModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title" id="mealModalTitle">식단 등록</div>
-      <button class="modal-close" onclick="closeMealModal()">×</button>
-    </div>
-    <div class="modal-body" id="mealModalBody">
-      <!-- 날짜 -->
-      <div class="form-field">
-        <label class="form-label">날짜</label>
-        <input type="date" class="form-input" id="mealDateInput">
-      </div>
-
-      <!-- 오전 간식 -->
-      <hr class="meal-section-divider">
-      <div class="meal-section-label">
-        <span class="meal-type-badge snack-am">오전 간식</span>
-      </div>
-      <div class="form-field">
-        <label class="form-label">메뉴 입력</label>
-        <textarea class="meal-textarea" id="snackAmMenu" placeholder="예) 찐빵, 우유"></textarea>
-      </div>
-      <div class="form-field" id="snackAmPhotoField">
-        <label class="form-label">사진 <span style="font-weight:500;color:var(--text-muted)">(선택사항)</span></label>
-        <div id="snackAmPhotoPreview"></div>
-        <div class="photo-upload-area" id="snackAmUploadArea" onclick="triggerPhotoUpload('snack_am')">
-          <div style="font-size:22px">📷</div>
-          <div class="photo-upload-label">클릭하여 사진 업로드</div>
-        </div>
-      </div>
-
-      <!-- 점심 식사 -->
-      <hr class="meal-section-divider">
-      <div class="meal-section-label">
-        <span class="meal-type-badge lunch">점심 식사</span>
-      </div>
-      <div class="form-field">
-        <label class="form-label">메뉴 입력</label>
-        <textarea class="meal-textarea" id="lunchMenu" placeholder="예) 잡곡밥, 미역국, 돈까스, 깍두기, 요구르트"></textarea>
-      </div>
-      <div class="form-field">
-        <label class="form-label">사진 <span style="font-weight:500;color:var(--text-muted)">(선택사항)</span></label>
-        <div id="lunchPhotoPreview"></div>
-        <div class="photo-upload-area" id="lunchUploadArea" onclick="triggerPhotoUpload('lunch')">
-          <div style="font-size:22px">📷</div>
-          <div class="photo-upload-label">클릭하여 사진 업로드</div>
-        </div>
-      </div>
-
-      <!-- 오후 간식 -->
-      <hr class="meal-section-divider">
-      <div class="meal-section-label">
-        <span class="meal-type-badge snack-pm">오후 간식</span>
-      </div>
-      <div class="form-field">
-        <label class="form-label">메뉴 입력</label>
-        <textarea class="meal-textarea" id="snackPmMenu" placeholder="예) 쿠키, 주스"></textarea>
-      </div>
-      <div class="form-field">
-        <label class="form-label">사진 <span style="font-weight:500;color:var(--text-muted)">(선택사항)</span></label>
-        <div id="snackPmPhotoPreview"></div>
-        <div class="photo-upload-area" id="snackPmUploadArea" onclick="triggerPhotoUpload('snack_pm')">
-          <div style="font-size:22px">📷</div>
-          <div class="photo-upload-label">클릭하여 사진 업로드</div>
-        </div>
-      </div>
-
-      <!-- 석식 -->
-      <hr class="meal-section-divider">
-      <div class="meal-section-label">
-        <span class="meal-type-badge dinner">석식</span>
-      </div>
-      <div class="form-field">
-        <label class="form-label">메뉴 입력</label>
-        <textarea class="meal-textarea" id="dinnerMenu" placeholder="예) 된장찌개, 잡채, 현미밥"></textarea>
-      </div>
-      <div class="form-field">
-        <label class="form-label">사진 <span style="font-weight:500;color:var(--text-muted)">(선택사항)</span></label>
-        <div id="dinnerPhotoPreview"></div>
-        <div class="photo-upload-area" id="dinnerUploadArea" onclick="triggerPhotoUpload('dinner')">
-          <div style="font-size:22px">📷</div>
-          <div class="photo-upload-label">클릭하여 사진 업로드</div>
-        </div>
-      </div>
-
-      <div class="form-err" id="modalErr">최소 1개 식사구분을 입력해주세요.</div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeMealModal()">취소</button>
-      <button class="btn btn-primary" onclick="saveMeal()">저장</button>
-    </div>
-  </div>
-</div>
-
-<!-- 중복 날짜 덮어쓰기 확인 Modal -->
-<div class="cm-overlay" id="dupModal">
-  <div class="cm-box">
-    <div class="cm-icon">⚠️</div>
-    <div class="cm-title">이미 등록된 식단이 있습니다</div>
-    <div class="cm-msg"><strong id="dupModalDate"></strong>에 이미 등록된 식단이 있습니다.<br>현재 입력한 내용으로 덮어쓰시겠습니까?</div>
-    <div class="cm-btns">
-      <button class="cm-btn cm-cancel" onclick="closeDupModal()">취소</button>
-      <button class="cm-btn" style="background:var(--accent);color:#fff;" onclick="confirmDupOverwrite()">덮어쓰기</button>
     </div>
   </div>
 </div>
@@ -480,9 +367,9 @@ let selectedDate = null;
 let editingId = null;
 let deletingDate = null;
 let pendingPhotoKey = null;
-let pendingDupDate = null;
-let pendingDupValues = null;
-const mockPhotos = {}; // key -> dataURL or 'mock'
+let panelMode = 'view';   // 'view' | 'edit'
+let panelEditDate = null;
+let panelPhotos = {};
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // INIT
@@ -508,7 +395,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btnAddMeal').addEventListener('click', () => {
-    openMealModal(null);
+    const target = selectedDate || formatDate(TODAY);
+    if (selectedDate !== target) {
+      selectedDate = target;
+      renderCalendar();
+    }
+    openPanelEdit(target);
   });
 });
 
@@ -616,18 +508,11 @@ function buildCell(day, dateStr, otherMonth, isToday = false, isSelected = false
     cell.appendChild(tagsWrap);
   }
 
-  // Hover button
-  if (!otherMonth) {
-    const hoverBtn = document.createElement('button');
-    hoverBtn.className = 'cal-hover-btn';
-    if (hasMeal) {
-      hoverBtn.innerHTML = '✏️ 수정하기';
-      hoverBtn.addEventListener('click', (e) => { e.stopPropagation(); selectDate(dateStr); openMealModal(dateStr); });
-    } else {
-      hoverBtn.innerHTML = '+ 등록하기';
-      hoverBtn.addEventListener('click', (e) => { e.stopPropagation(); openMealModal(dateStr); });
-    }
-    cell.appendChild(hoverBtn);
+  // 미등록 셀 '+' 오버레이 (CSS ::after로 렌더링, JS는 div만 추가)
+  if (!otherMonth && !hasMeal) {
+    const plusEl = document.createElement('div');
+    plusEl.className = 'cal-cell-plus';
+    cell.appendChild(plusEl);
   }
 
   return cell;
@@ -637,6 +522,11 @@ function buildCell(day, dateStr, otherMonth, isToday = false, isSelected = false
 // SELECT DATE → SHOW PANEL
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function selectDate(dateStr) {
+  if (panelMode === 'edit' && dateStr !== panelEditDate) {
+    if (!confirm('저장하지 않은 내용이 있습니다. 이동하시겠습니까?')) return;
+    panelMode = 'view';
+    panelPhotos = {};
+  }
   selectedDate = dateStr;
   renderCalendar();
   renderPanel(dateStr);
@@ -670,7 +560,7 @@ function renderPanel(dateStr) {
         <div class="panel-date">${dateLabel}</div>
         <div class="panel-actions">
           ${meal ? `
-            <button class="btn btn-outline btn-sm" onclick="openMealModal('${dateStr}')">✏️ 수정</button>
+            <button class="btn btn-outline btn-sm" onclick="openPanelEdit('${dateStr}')">✏️ 수정</button>
             <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red-text);border:1.5px solid var(--red-bg);" onclick="openDeleteModal('${dateStr}')">🗑️ 삭제</button>
           ` : ''}
         </div>
@@ -681,9 +571,9 @@ function renderPanel(dateStr) {
   if (meal) {
     const sections = [
       { key_m: 'snack_am_menu', key_i: 'snack_am_image_url', cls: 'snack-am', label: '오전 간식' },
-      { key_m: 'lunch_menu',    key_i: 'lunch_image_url',    cls: 'lunch',    label: '점심 식사'    },
-      { key_m: 'snack_pm_menu', key_i: 'snack_pm_image_url', cls: 'snack-pm', label: '오후 간식'},
-      { key_m: 'dinner_menu',   key_i: 'dinner_image_url',   cls: 'dinner',   label: '석식'    },
+      { key_m: 'lunch_menu',    key_i: 'lunch_image_url',    cls: 'lunch',    label: '점심 식사' },
+      { key_m: 'snack_pm_menu', key_i: 'snack_pm_image_url', cls: 'snack-pm', label: '오후 간식' },
+      { key_m: 'dinner_menu',   key_i: 'dinner_image_url',   cls: 'dinner',   label: '석식' },
     ];
     const registered = sections.filter(s => meal[s.key_m]);
 
@@ -712,7 +602,7 @@ function renderPanel(dateStr) {
         <div class="panel-empty-icon">🍽️</div>
         <div class="panel-empty-title">등록된 식단이 없습니다.</div>
         <div class="panel-empty-desc">이 날짜에 등록된 식단 정보가 없습니다.</div>
-        <button class="btn btn-primary" onclick="openMealModal('${dateStr}')">+ 식단 등록하기</button>
+        <button class="btn btn-primary" onclick="openPanelEdit('${dateStr}')">+ 식단 등록하기</button>
       </div>
     `;
   }
@@ -722,146 +612,173 @@ function renderPanel(dateStr) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// MEAL MODAL
+// PANEL EDIT MODE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const photoPreviewIds = {
-  snack_am: 'snackAmPhotoPreview',
-  lunch: 'lunchPhotoPreview',
-  snack_pm: 'snackPmPhotoPreview',
-  dinner: 'dinnerPhotoPreview'
-};
-const photoUploadAreaIds = {
-  snack_am: 'snackAmUploadArea',
-  lunch: 'lunchUploadArea',
-  snack_pm: 'snackPmUploadArea',
-  dinner: 'dinnerUploadArea'
-};
+const MEAL_SECTIONS = [
+  { key: 'snack_am', key_m: 'snack_am_menu', key_i: 'snack_am_image_url', cls: 'snack-am', label: '오전 간식', placeholder: '예) 찐빵, 우유' },
+  { key: 'lunch',    key_m: 'lunch_menu',    key_i: 'lunch_image_url',    cls: 'lunch',    label: '점심 식사', placeholder: '예) 잡곡밥, 미역국, 돈까스, 깍두기' },
+  { key: 'snack_pm', key_m: 'snack_pm_menu', key_i: 'snack_pm_image_url', cls: 'snack-pm', label: '오후 간식', placeholder: '예) 쿠키, 주스' },
+  { key: 'dinner',   key_m: 'dinner_menu',   key_i: 'dinner_image_url',   cls: 'dinner',   label: '석식',     placeholder: '예) 된장찌개, 잡채, 현미밥' },
+];
 
-function openMealModal(dateStr) {
-  const existing = dateStr ? getMealPlan(dateStr) : null;
+function openPanelEdit(dateStr) {
+  const existing = getMealPlan(dateStr);
   editingId = existing ? existing.id : null;
+  panelEditDate = dateStr;
+  panelMode = 'edit';
+  panelPhotos = {};
 
-  document.getElementById('mealModalTitle').textContent = editingId ? '식단 수정' : '식단 등록';
-  document.getElementById('mealDateInput').value = dateStr || formatDate(TODAY);
-  document.getElementById('mealDateInput').disabled = !!dateStr;
+  const d = new Date(dateStr + 'T00:00:00');
+  const DAYS = ['일','월','화','수','목','금','토'];
+  const dateLabel = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS[d.getDay()]})`;
 
-  // Reset fields
-  document.getElementById('snackAmMenu').value  = existing?.snack_am_menu  || '';
-  document.getElementById('lunchMenu').value    = existing?.lunch_menu     || '';
-  document.getElementById('snackPmMenu').value  = existing?.snack_pm_menu  || '';
-  document.getElementById('dinnerMenu').value   = existing?.dinner_menu    || '';
-  document.getElementById('modalErr').classList.remove('show');
+  let sectionsHtml = MEAL_SECTIONS.map(s => {
+    const val = existing?.[s.key_m] || '';
+    return `
+      <div class="pedit-section">
+        <div class="pedit-section-head">
+          <span class="meal-type-badge ${s.cls}">${s.label}</span>
+        </div>
+        <textarea class="pedit-textarea" id="pedit-${s.key}" placeholder="${s.placeholder}">${val}</textarea>
+        <div class="pedit-photo-row">
+          <div id="pedit-photo-preview-${s.key}"></div>
+          <div class="photo-upload-area" id="pedit-upload-${s.key}" onclick="triggerPanelPhoto('${s.key}')">
+            <div style="font-size:20px">📷</div>
+            <div class="photo-upload-label">사진 업로드</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 
-  // Reset / restore photo previews
-  const imgKeyMap = {
-    snack_am: 'snack_am_image_url',
-    lunch: 'lunch_image_url',
-    snack_pm: 'snack_pm_image_url',
-    dinner: 'dinner_image_url'
-  };
-  ['snack_am','lunch','snack_pm','dinner'].forEach(k => {
-    const existingImg = existing?.[imgKeyMap[k]];
-    if (existingImg) {
-      renderPhotoPreview(k, existingImg);
-    } else {
-      renderPhotoPreview(k, null);
-    }
+  const panel = document.getElementById('contentPanel');
+  panel.innerHTML = `
+    <div class="panel-card">
+      <div class="panel-header edit-mode">
+        <div>
+          <div class="panel-date">${dateLabel}</div>
+          <div class="panel-edit-hint">${editingId ? '식단 수정 중' : '식단 등록 중'}</div>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-outline btn-sm" onclick="cancelPanelEdit()">취소</button>
+          <button class="btn btn-primary btn-sm" onclick="savePanelEdit()">저장</button>
+        </div>
+      </div>
+      <div class="panel-body pedit-body">
+        ${sectionsHtml}
+        <div class="pedit-err" id="pedit-err">최소 1개 식사구분을 입력해주세요.</div>
+      </div>
+    </div>`;
+
+  // 기존 이미지 복원
+  MEAL_SECTIONS.forEach(s => {
+    const imgUrl = existing?.[s.key_i];
+    if (imgUrl) renderPanelPhotoPreview(s.key, imgUrl);
   });
 
-  const overlay = document.getElementById('mealModal');
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // 첫 번째 textarea에 포커스
+  document.getElementById('pedit-snack_am')?.focus();
 }
 
-function closeMealModal() {
-  document.getElementById('mealModal').classList.remove('open');
-  document.body.style.overflow = '';
+function cancelPanelEdit() {
+  panelMode = 'view';
+  panelPhotos = {};
+  panelEditDate = null;
+  renderPanel(selectedDate);
 }
 
-function saveMeal() {
-  const dateVal  = document.getElementById('mealDateInput').value;
-  const snackAm  = document.getElementById('snackAmMenu').value.trim();
-  const lunch    = document.getElementById('lunchMenu').value.trim();
-  const snackPm  = document.getElementById('snackPmMenu').value.trim();
-  const dinner   = document.getElementById('dinnerMenu').value.trim();
-  const errEl    = document.getElementById('modalErr');
+function savePanelEdit() {
+  const values = {};
+  MEAL_SECTIONS.forEach(s => {
+    values[s.key] = document.getElementById(`pedit-${s.key}`)?.value.trim() || '';
+  });
 
-  if (!snackAm && !lunch && !snackPm && !dinner) {
-    errEl.classList.add('show');
+  const hasAny = MEAL_SECTIONS.some(s => values[s.key]);
+  if (!hasAny) {
+    document.getElementById('pedit-err').classList.add('show');
     return;
   }
-  errEl.classList.remove('show');
 
   if (editingId) {
     const plan = mealPlans.find(p => p.id === editingId);
     if (plan) {
-      plan.snack_am_menu  = snackAm  || null;
-      plan.lunch_menu     = lunch    || null;
-      plan.snack_pm_menu  = snackPm  || null;
-      plan.dinner_menu    = dinner   || null;
-      plan.updated_at     = new Date().toISOString();
+      MEAL_SECTIONS.forEach(s => {
+        plan[s.key_m] = values[s.key] || null;
+        if (panelPhotos[s.key] !== undefined) plan[s.key_i] = panelPhotos[s.key] || null;
+      });
+      plan.updated_at = new Date().toISOString();
     }
   } else {
-    // Check duplicate
-    const dup = getMealPlan(dateVal);
-    if (dup) {
-      pendingDupDate   = dateVal;
-      pendingDupValues = { snackAm, lunch, snackPm, dinner };
-      const d = new Date(dateVal + 'T00:00:00');
-      const DAYS = ['일','월','화','수','목','금','토'];
-      document.getElementById('dupModalDate').textContent =
-        `${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS[d.getDay()]})`;
-      document.getElementById('dupModal').classList.add('open');
-      return;
-    }
     const newPlan = {
       id: 'MP' + String(Date.now()).slice(-4),
       org_id: 'ORG001',
-      date: dateVal,
-      snack_am_menu: snackAm  || null, snack_am_image_url: null,
-      lunch_menu:    lunch    || null, lunch_image_url:    null,
-      snack_pm_menu: snackPm  || null, snack_pm_image_url: null,
-      dinner_menu:   dinner   || null, dinner_image_url:   null,
+      date: panelEditDate,
       created_by: 'TCH001',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
+    MEAL_SECTIONS.forEach(s => {
+      newPlan[s.key_m] = values[s.key] || null;
+      newPlan[s.key_i] = panelPhotos[s.key] || null;
+    });
     mealPlans.push(newPlan);
   }
 
-  closeMealModal();
+  const savedDate = panelEditDate;
+  panelMode = 'view';
+  panelPhotos = {};
+  panelEditDate = null;
   renderCalendar();
-  if (selectedDate === dateVal || editingId) {
-    renderPanel(dateVal || (mealPlans.find(p => p.id === editingId)?.date));
-  }
+  renderPanel(savedDate);
   showToast(editingId ? '✅ 식단이 수정되었습니다.' : '✅ 식단이 등록되었습니다.');
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// DUPLICATE DATE CONFIRM
+// PANEL PHOTO
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function closeDupModal() {
-  document.getElementById('dupModal').classList.remove('open');
-  pendingDupDate   = null;
-  pendingDupValues = null;
+function triggerPanelPhoto(key) {
+  pendingPhotoKey = key;
+  document.getElementById('photoFileInput').click();
 }
 
-function confirmDupOverwrite() {
-  if (!pendingDupDate || !pendingDupValues) return;
-  const plan = getMealPlan(pendingDupDate);
-  if (plan) {
-    plan.snack_am_menu = pendingDupValues.snackAm || null;
-    plan.lunch_menu    = pendingDupValues.lunch    || null;
-    plan.snack_pm_menu = pendingDupValues.snackPm  || null;
-    plan.dinner_menu   = pendingDupValues.dinner   || null;
-    plan.updated_at    = new Date().toISOString();
+function handlePhotoSelect(e) {
+  const file = e.target.files[0];
+  if (!file || !pendingPhotoKey) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    panelPhotos[pendingPhotoKey] = ev.target.result;
+    renderPanelPhotoPreview(pendingPhotoKey, ev.target.result);
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function renderPanelPhotoPreview(key, url) {
+  const preview = document.getElementById(`pedit-photo-preview-${key}`);
+  const uploadArea = document.getElementById(`pedit-upload-${key}`);
+  if (!preview) return;
+  if (!url) {
+    preview.innerHTML = '';
+    if (uploadArea) uploadArea.style.display = '';
+    return;
   }
-  const savedDate = pendingDupDate;
-  closeDupModal();
-  closeMealModal();
-  renderCalendar();
-  selectDate(savedDate);
-  showToast('✅ 식단이 수정되었습니다.');
+  preview.innerHTML = `
+    <div class="photo-preview-wrap">
+      <img class="photo-preview-thumb" src="${url}" alt="사진 미리보기">
+      <div>
+        <button class="photo-remove-btn" onclick="removePanelPhoto('${key}')">삭제</button>
+      </div>
+    </div>`;
+  if (uploadArea) uploadArea.style.display = 'none';
+}
+
+function removePanelPhoto(key) {
+  panelPhotos[key] = null;
+  if (editingId) {
+    const plan = mealPlans.find(p => p.id === editingId);
+    const s = MEAL_SECTIONS.find(s => s.key === key);
+    if (plan && s) plan[s.key_i] = null;
+  }
+  renderPanelPhotoPreview(key, null);
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -887,61 +804,6 @@ function confirmDelete() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// PHOTO
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function triggerPhotoUpload(key) {
-  pendingPhotoKey = key;
-  document.getElementById('photoFileInput').click();
-}
-
-function handlePhotoSelect(e) {
-  const file = e.target.files[0];
-  if (!file || !pendingPhotoKey) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    mockPhotos[pendingPhotoKey] = ev.target.result;
-    renderPhotoPreview(pendingPhotoKey, ev.target.result);
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function renderPhotoPreview(key, url) {
-  const wrap = document.getElementById(photoPreviewIds[key]);
-  const uploadArea = document.getElementById(photoUploadAreaIds[key]);
-  if (!wrap) return;
-  if (!url) {
-    wrap.innerHTML = '';
-    if (uploadArea) uploadArea.style.display = '';
-    return;
-  }
-  wrap.innerHTML = `
-    <div class="photo-preview-wrap">
-      <div class="photo-preview-thumb">
-        <img src="${url}" alt="사진 미리보기" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md);">
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px;justify-content:flex-end;">
-        <button class="photo-remove-btn" onclick="removePhoto('${key}')">삭제</button>
-      </div>
-    </div>
-  `;
-  if (uploadArea) uploadArea.style.display = 'none';
-}
-
-function removePhoto(key) {
-  delete mockPhotos[key];
-  // mock_image_url도 초기화 (수정 시 기존 이미지 제거)
-  if (editingId) {
-    const plan = mealPlans.find(p => p.id === editingId);
-    if (plan) {
-      const imgKeyMap = { snack_am:'snack_am_image_url', lunch:'lunch_image_url', snack_pm:'snack_pm_image_url', dinner:'dinner_image_url' };
-      if (imgKeyMap[key]) plan[imgKeyMap[key]] = null;
-    }
-  }
-  renderPhotoPreview(key, null);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // TOAST
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function showToast(msg) {
@@ -962,17 +824,8 @@ function showToast(msg) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (document.getElementById('deleteModal').classList.contains('open')) closeDeleteModal();
-    else if (document.getElementById('dupModal').classList.contains('open')) closeDupModal();
-    else if (document.getElementById('mealModal').classList.contains('open')) closeMealModal();
+    else if (panelMode === 'edit') cancelPanelEdit();
   }
-});
-document.getElementById('dupModal').addEventListener('click', function(e) {
-  if (e.target === this) closeDupModal();
-});
-
-// Click outside to close modals
-document.getElementById('mealModal').addEventListener('click', function(e) {
-  if (e.target === this) closeMealModal();
 });
 document.getElementById('deleteModal').addEventListener('click', function(e) {
   if (e.target === this) closeDeleteModal();
