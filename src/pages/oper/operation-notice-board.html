@@ -127,6 +127,10 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:140px;}
 .btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .btn-reset:hover{background:var(--border-light);}
+.search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;cursor:pointer;transition:.18s;}
+.search-btn:hover{background:#2f4dd4;}
+.search-selectable .fsel-wrap.search-field-sel{border-right:1.5px solid var(--border-light);}
+.search-selectable .fsel-wrap.search-field-sel .fsel{border:none;border-radius:0;height:34px;background:var(--bg-base);font-size:13px;min-width:90px;}
 .filter-date-range{display:flex;align-items:center;gap:4px;}
 .filter-date-range input{height:32px;padding:0 8px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;color:var(--text-primary);font-family:'Pretendard',sans-serif;outline:none;transition:border-color .18s;}
 .filter-date-range input:focus{border-color:var(--accent);}
@@ -667,10 +671,17 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
           <span>~</span>
           <input type="date" id="filterDateTo">
         </div>
-        <div class="search-wrap">
-          <input class="search-inp" type="text" id="filterChildName" placeholder="원아명 검색" onkeydown="if(event.key==='Enter')applyFilters()">
+        <div class="search-wrap search-selectable">
+          <div class="fsel-wrap search-field-sel">
+            <select class="fsel" id="sentSearchField">
+              <option value="childName">원아명</option>
+              <option value="parentName">학부모명</option>
+            </select>
+          </div>
+          <input class="search-inp" type="text" id="sentSearchInput" placeholder="검색어 입력"
+                 onkeydown="if(event.key==='Enter') applyFilters()">
+          <button class="search-btn" onclick="applyFilters()">검색</button>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="applyFilters()">검색</button>
         <button class="btn-reset" onclick="resetSentFilters()">초기화</button>
       </div>
     </div>
@@ -694,8 +705,16 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="read">읽음</option>
           </select>
         </div>
-        <div class="search-wrap">
-          <input class="search-inp" type="text" id="receivedChildName" placeholder="원아명 검색" oninput="applyFilters()">
+        <div class="search-wrap search-selectable">
+          <div class="fsel-wrap search-field-sel">
+            <select class="fsel" id="receivedSearchField">
+              <option value="childName">원아명</option>
+              <option value="parentName">학부모명</option>
+            </select>
+          </div>
+          <input class="search-inp" type="text" id="receivedSearchInput" placeholder="검색어 입력"
+                 onkeydown="if(event.key==='Enter') applyFilters()">
+          <button class="search-btn" onclick="applyFilters()">검색</button>
         </div>
         <button class="btn-reset" onclick="resetSentFilters()">초기화</button>
       </div>
@@ -1348,7 +1367,8 @@ function renderList(tab) {
 function renderSentList(area) {
   const classVal  = (document.getElementById('classFilter') || {}).value || '';
   const statusVal = (document.getElementById('filterStatus') || {}).value || '';
-  const childVal  = ((document.getElementById('filterChildName') || {}).value || '').trim().toLowerCase();
+  const sentField = (document.getElementById('sentSearchField') || {}).value || 'childName';
+  const searchVal = ((document.getElementById('sentSearchInput') || {}).value || '').trim().toLowerCase();
   const dateFrom  = (document.getElementById('filterDateFrom') || {}).value || '';
   const dateTo    = (document.getElementById('filterDateTo') || {}).value || '';
   const classMap  = { CLS001:'햇님반', CLS002:'달님반', CLS003:'별빛반', CLS004:'꽃님반' };
@@ -1356,7 +1376,10 @@ function renderSentList(area) {
   let data = MOCK_SENT.filter(n => {
     if (classVal  && n.class !== classMap[classVal]) return false;
     if (statusVal && n.status !== statusVal) return false;
-    if (childVal  && !n.children.some(c => c.name.toLowerCase().includes(childVal))) return false;
+    if (searchVal) {
+      if (sentField === 'childName'  && !n.children.some(c => c.name.toLowerCase().includes(searchVal))) return false;
+      if (sentField === 'parentName' && !n.children.some(c => getChildParentName(c).toLowerCase().includes(searchVal))) return false;
+    }
     if (dateFrom  && n.date < dateFrom) return false;
     if (dateTo    && n.date > dateTo) return false;
     return true;
@@ -1470,13 +1493,17 @@ function statusDotColor(s) {
 function renderReceivedList(area) {
   const catVal   = (document.getElementById('receivedCategory') || {}).value || '';
   const readVal  = (document.getElementById('receivedReadStatus') || {}).value || '';
-  const childVal = ((document.getElementById('receivedChildName') || {}).value || '').trim().toLowerCase();
+  const recField  = (document.getElementById('receivedSearchField') || {}).value || 'childName';
+  const searchVal = ((document.getElementById('receivedSearchInput') || {}).value || '').trim().toLowerCase();
 
   const data = MOCK_RECEIVED.filter(r => {
     if (catVal  && r.category !== catVal) return false;
     if (readVal === 'unread' && r.isRead) return false;
     if (readVal === 'read'   && !r.isRead) return false;
-    if (childVal && !r.child.toLowerCase().includes(childVal)) return false;
+    if (searchVal) {
+      if (recField === 'childName'  && !r.child.toLowerCase().includes(searchVal)) return false;
+      if (recField === 'parentName' && !(r.parent||'').toLowerCase().includes(searchVal)) return false;
+    }
     return true;
   });
 
@@ -2769,12 +2796,22 @@ function applyFilters() {
   renderList(currentTab);
 }
 
+function getChildParentName(child) {
+  const pc = (child.comments || []).find(c => c.type === 'parent');
+  return pc ? pc.author.replace(/\s*(엄마|아빠|조부모|보호자)$/, '').trim() : '';
+}
+
 function resetSentFilters() {
-  ['classFilter','filterStatus','filterChildName','filterDateFrom','filterDateTo',
-   'receivedCategory','receivedReadStatus','receivedChildName'].forEach(id => {
+  ['classFilter','filterStatus','filterDateFrom','filterDateTo',
+   'receivedCategory','receivedReadStatus',
+   'sentSearchInput','receivedSearchInput'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  const sf = document.getElementById('sentSearchField');
+  const rf = document.getElementById('receivedSearchField');
+  if (sf) sf.value = 'childName';
+  if (rf) rf.value = 'childName';
   applyFilters();
 }
 

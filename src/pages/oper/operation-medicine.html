@@ -87,6 +87,8 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:180px;}
 .btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .btn-reset:hover{background:var(--border-light);}
+.search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;cursor:pointer;transition:.18s;}
+.search-btn:hover{background:#2f4dd4;}
 .action-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
 .action-left{display:flex;align-items:center;gap:8px;}
 .action-right{display:flex;align-items:center;gap:8px;}
@@ -340,7 +342,9 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             </select>
           </div>
           <div class="search-wrap">
-            <input class="search-inp" id="searchInput" placeholder="원아명 검색" oninput="applyFilter()">
+            <input class="search-inp" id="searchInput" placeholder="원아명 검색"
+                   onkeydown="if(event.key==='Enter') applyFilter()">
+            <button class="search-btn" onclick="applyFilter()">검색</button>
           </div>
           <button class="btn-reset" onclick="resetFilter()">초기화</button>
         </div>

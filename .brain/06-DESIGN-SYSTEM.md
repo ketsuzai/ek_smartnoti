@@ -163,6 +163,64 @@
 </div>
 ```
 
+### 6.3-A 표준 필터바 (Standard Filter Bar)
+
+> 운영관리 섹션 전체 공통 규칙. `docs/superpowers/specs/2026-04-09-unified-filter-search-design.md` 참조.
+
+```html
+<div class="filter-bar">
+  <div class="filter-group">
+    <div class="fsel-wrap">
+      <select class="fsel" id="classFilter" onchange="applyFilter()">
+        <option value="">전체 반</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <input class="search-inp" id="searchInput" placeholder="검색어 입력"
+             onkeydown="if(event.key==='Enter') applyFilter()">
+      <button class="search-btn" onclick="applyFilter()">검색</button>
+    </div>
+    <button class="btn-reset" onclick="resetFilter()">초기화</button>
+  </div>
+</div>
+```
+
+**규칙:**
+- 드롭다운 `onchange` → 즉시 `applyFilter()` (허용)
+- 텍스트 검색 → 버튼 클릭 or Enter만 (`oninput` 금지 — static query)
+- 함수명 고정: `applyFilter()` / `resetFilter()`
+- 초기화: 항상 `.btn-reset`
+
+### 6.3-B Selectable Search
+
+다중 필드 검색이 필요한 페이지에서 드롭다운으로 검색 대상 필드를 선택.
+
+```html
+<div class="search-wrap search-selectable">
+  <div class="fsel-wrap search-field-sel">
+    <select class="fsel" id="searchField">
+      <option value="childName">원아명</option>
+      <option value="parentName">학부모명</option>
+    </select>
+  </div>
+  <input class="search-inp" id="searchInput" placeholder="검색어 입력"
+         onkeydown="if(event.key==='Enter') applyFilter()">
+  <button class="search-btn" onclick="applyFilter()">검색</button>
+</div>
+```
+
+- 선택한 필드 1개만 검색 (OR 아님)
+- 적용 페이지: `operation-notice-board.html`(원아명/학부모명), `operation-member.html`(교사명/원아명/전화번호)
+
+### 6.3-C 칩 필터 (Chip Filter)
+
+동적 필터 — 리스트 내 반 선택 등. 클릭 즉시 반영.
+
+```html
+<div class="chip-filter-row" id="classChipRow"></div>
+<!-- JS 렌더: <button class="filter-chip [active]" onclick="selectClassChip(name)">햇님반</button> -->
+```
+
 ### 6.4 토스트 알림
 ```javascript
 function showToast(msg) { /* 하단 우측, 2.6초 자동 소멸 */ }

@@ -188,11 +188,7 @@ tbody tr:hover{background:#F8FBFF;}
 .filter-bar{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:12px 16px;margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;box-shadow:var(--shadow-sm);}
 .filter-group{display:flex;align-items:center;gap:5px;}
 .filter-label{font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap;}
-.filter-select{height:32px;padding:0 10px;border:1.5px solid var(--border-light);border-radius:var(--r-md);font-size:13px;color:var(--text-primary);background:#fff;font-family:'Pretendard',sans-serif;outline:none;appearance:none;}
-.filter-select:focus{border-color:var(--accent);}
 .filter-divider{width:1px;height:20px;background:var(--border-light);}
-.filter-reset-btn{height:32px;padding:0 12px;border:1.5px solid var(--border-light);border-radius:var(--r-md);background:#fff;font-size:13px;font-family:'Pretendard',sans-serif;cursor:pointer;color:var(--text-secondary);}
-.filter-reset-btn:hover{background:var(--bg-base);}
 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;display:none;align-items:center;justify-content:center;}
@@ -400,30 +396,28 @@ tbody tr:hover{background:#F8FBFF;}
     <!-- ── TAB: 초대 이력 ── -->
     <div id="tabHistory" class="tab-content">
       <div class="filter-bar">
-        <div class="filter-group">
-          <label class="filter-label">상태</label>
-          <select class="filter-select" id="histFilterStatus" onchange="renderHistoryTable()">
-            <option value="">전체</option>
+        <div class="fsel-wrap">
+          <select class="fsel" id="histFilterStatus" onchange="renderHistoryTable()">
+            <option value="">전체 상태</option>
             <option value="active">활성</option>
             <option value="stopped">중지</option>
             <option value="used">사용완료</option>
             <option value="expired">만료</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label class="filter-label">유형</label>
-          <select class="filter-select" id="histFilterType" onchange="renderHistoryTable()">
-            <option value="">전체</option>
+        <div class="fsel-wrap">
+          <select class="fsel" id="histFilterType" onchange="renderHistoryTable()">
+            <option value="">전체 유형</option>
             <option value="parent">학부모</option>
             <option value="teacher">교직원</option>
           </select>
         </div>
-        <div class="filter-divider"></div>
-        <div class="search-wrap" style="height:32px">
-          <input class="search-inp" id="histFilterSearch" placeholder="이름, 반 검색" oninput="renderHistoryTable()" style="width:140px">
-          <button class="search-btn">🔍</button>
+        <div class="search-wrap">
+          <input class="search-inp" id="histFilterSearch" placeholder="이름, 반 검색"
+                 onkeydown="if(event.key==='Enter') renderHistoryTable()">
+          <button class="search-btn" onclick="renderHistoryTable()">검색</button>
         </div>
-        <button class="filter-reset-btn" onclick="resetHistFilter()">초기화</button>
+        <button class="btn-reset" onclick="resetHistFilter()">초기화</button>
       </div>
       <div class="table-card">
         <div class="table-wrap">
