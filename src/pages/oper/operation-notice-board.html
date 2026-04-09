@@ -360,6 +360,13 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .comment-textarea:focus{border-color:var(--accent);}
 .comment-send-btn{height:60px;width:44px;border-radius:var(--radius-md);background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;transition:.18s;flex-shrink:0;}
 .comment-send-btn:hover{background:var(--accent-dark);}
+.reply-btn{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:600;padding:2px 0;margin-top:4px;font-family:'Pretendard',sans-serif;display:inline-block;}
+.reply-btn:hover{text-decoration:underline;}
+.reply-input-row{display:flex;gap:6px;margin-top:6px;}
+.reply-input{flex:1;height:32px;padding:0 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;outline:none;transition:.18s;color:var(--text-primary);}
+.reply-input:focus{border-color:var(--accent);}
+.reply-submit-btn{height:32px;padding:0 10px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Pretendard',sans-serif;}
+.comment-reply-wrap{padding-left:34px;margin-top:8px;display:flex;flex-direction:column;gap:8px;}
 .panel-footer{padding:12px 20px;border-top:1px solid var(--border-light);flex-shrink:0;display:flex;gap:8px;justify-content:flex-end;background:#FAFCFF;}
 
 /* ━━━ 작성 패널 (760px) ━━━ */
@@ -868,16 +875,16 @@ const MOCK_SENT = [
     children:[
       { id:'C001', name:'김도현', color:'#3B82F6', isRead:true, commentCount:2,
         comments:[
-          { id:'nb_c1', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'집에서도 블록 얘기를 하더라고요! 감사합니다 선생님 😊', time:'15:22' },
-          { id:'nb_c2', author:'박교사', type:'teacher', color:'#3B82F6', relation:'교사', text:'네, 오늘 정말 집중해서 잘 했어요 😊', time:'15:45' }
+          { id:'nb_c1', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'집에서도 블록 얘기를 하더라고요! 감사합니다 선생님 😊', time:'15:22', replies:[] },
+          { id:'nb_c2', author:'박교사', type:'teacher', color:'#3B82F6', relation:'교사', text:'네, 오늘 정말 집중해서 잘 했어요 😊', time:'15:45', replies:[] }
         ]},
       { id:'C002', name:'이서연', color:'#10B981', isRead:true, commentCount:2,
         comments:[
-          { id:'nb_c3', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10' },
-          { id:'nb_c4', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11' }
+          { id:'nb_c3', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10', replies:[] },
+          { id:'nb_c4', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11', replies:[] }
         ]},
       { id:'C003', name:'박준서', color:'#F59E0B', isRead:false, commentCount:1,
-        comments:[{ id:'nb_c5', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00' }]}
+        comments:[{ id:'nb_c5', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00', replies:[] }]}
     ]
   },
   // ─ 단일·발행·사진·종합평가
@@ -908,16 +915,16 @@ const MOCK_SENT = [
     children:[
       { id:'C004', name:'최유진', color:'#8B5CF6', isRead:false, commentCount:2,
         comments:[
-          { id:'nb_c6', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10' },
-          { id:'nb_c7', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12' }
+          { id:'nb_c6', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10', replies:[] },
+          { id:'nb_c7', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12', replies:[] }
         ]},
       { id:'C005', name:'정민호', color:'#F97316', isRead:true, commentCount:1,
-        comments:[{ id:'nb_c8', author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30' }]},
+        comments:[{ id:'nb_c8', author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30', replies:[] }]},
       { id:'C006', name:'강지아', color:'#EC4899', isRead:true, commentCount:0, comments:[]},
       { id:'C007', name:'윤서준', color:'#14B8A6', isRead:false, commentCount:1,
-        comments:[{ id:'nb_c9', author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00' }]},
+        comments:[{ id:'nb_c9', author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00', replies:[] }]},
       { id:'C008', name:'임하린', color:'#6366F1', isRead:true, commentCount:1,
-        comments:[{ id:'nb_c10', author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20' }]},
+        comments:[{ id:'nb_c10', author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20', replies:[] }]},
       { id:'C009', name:'송채원', color:'#F43F5E', isRead:false, commentCount:0, comments:[]},
       { id:'C010', name:'조한결', color:'#0EA5E9', isRead:true, commentCount:0, comments:[]}
     ]
@@ -1075,7 +1082,7 @@ const MOCK_RECEIVED = [
     content:'선생님, 오늘 준서가 하원 후 피아노 학원 일정이 있어서 3시에 하원하겠습니다. 준비 부탁드려요.',
     isRead:true, commentCount:1, createdAt:'08:15 · 2026-03-23',
     comments:[
-      { author:'김선생', type:'teacher', color:'#0EA5E9', text:'네, 확인했습니다! 3시에 준비시켜 놓겠습니다 😊', time:'08:30' }
+      { id:'rnb_c1', author:'김선생', type:'teacher', color:'#0EA5E9', text:'네, 확인했습니다! 3시에 준비시켜 놓겠습니다 😊', time:'08:30', replies:[] }
     ]
   },
   {
@@ -1086,7 +1093,7 @@ const MOCK_RECEIVED = [
     content:'선생님, 오늘 지아가 몸이 좋지 않아 결석합니다. 열이 38도까지 올라서 병원에 다녀오려고요.',
     isRead:true, commentCount:1, createdAt:'07:55 · 2026-03-22',
     comments:[
-      { author:'박선생', type:'teacher', color:'#0EA5E9', text:'알겠습니다. 지아가 빨리 나았으면 좋겠어요. 쾌유를 빕니다 💚', time:'08:05' }
+      { id:'rnb_c2', author:'박선생', type:'teacher', color:'#0EA5E9', text:'알겠습니다. 지아가 빨리 나았으면 좋겠어요. 쾌유를 빕니다 💚', time:'08:05', replies:[] }
     ]
   },
   {
@@ -1097,7 +1104,7 @@ const MOCK_RECEIVED = [
     content:'선생님, 서연이 가방에 선생님께 드리는 작은 선물을 넣어두었어요. 부담 갖지 마시고 받아 주세요!',
     isRead:true, commentCount:1, createdAt:'07:30 · 2026-03-22',
     comments:[
-      { author:'김선생', type:'teacher', color:'#0EA5E9', text:'감사합니다! 정말 감동이에요 🥰', time:'09:20' }
+      { id:'rnb_c3', author:'김선생', type:'teacher', color:'#0EA5E9', text:'감사합니다! 정말 감동이에요 🥰', time:'09:20', replies:[] }
     ]
   }
 ];
@@ -1594,6 +1601,23 @@ function renderSentDetailSingle(notice) {
     const comments = child.comments.map(cm => {
       const isTeacher = cm.type === 'teacher';
       const canDel = isTeacher && cm.author === NB_ME;
+      const repliesHTML = (cm.replies||[]).length ? `<div class="comment-reply-wrap">
+        ${(cm.replies||[]).map(rp => {
+          const canDelR = rp.type === 'teacher' && rp.author === NB_ME;
+          return `<div class="comment-item" id="nbcitem-${rp.id}">
+            <div class="comment-avatar teacher">${rp.author[0]}</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-author">${rp.author}</span>
+                <span class="comment-role-badge crb-teacher">교사</span>
+                <span class="comment-time">${rp.time}</span>
+                ${canDelR ? `<button class="comment-delete-btn" onclick="deleteNbReply('${child.id}','${cm.id}','${rp.id}')">삭제</button>` : ''}
+              </div>
+              <div class="comment-text">${rp.text}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>` : '';
       return `<div class="comment-item" id="nbcitem-${cm.id}">
         <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
         <div class="comment-body">
@@ -1604,6 +1628,12 @@ function renderSentDetailSingle(notice) {
             ${canDel ? `<button class="comment-delete-btn" onclick="deleteNbComment('${child.id}','${cm.id}')">삭제</button>` : ''}
           </div>
           <div class="comment-text">${cm.text}</div>
+          <button class="reply-btn" onclick="toggleNbReplyInput('${cm.id}')">답변</button>
+          <div id="nb-reply-row-${cm.id}" style="display:none;" class="reply-input-row">
+            <input class="reply-input" id="nb-reply-text-${cm.id}" placeholder="답변을 입력하세요">
+            <button class="reply-submit-btn" onclick="submitNbReply('${child.id}','${cm.id}')">전송</button>
+          </div>
+          ${repliesHTML}
         </div>
       </div>`;
     }).join('');
@@ -1768,6 +1798,23 @@ function renderSentDetailChild(notice, child) {
   const comments = child.comments.map(cm => {
     const isTeacher = cm.type === 'teacher';
     const canDel = isTeacher && cm.author === NB_ME2;
+    const repliesHTML2 = (cm.replies||[]).length ? `<div class="comment-reply-wrap">
+      ${(cm.replies||[]).map(rp => {
+        const canDelR = rp.type === 'teacher' && rp.author === NB_ME2;
+        return `<div class="comment-item" id="nbcitem-${rp.id}">
+          <div class="comment-avatar teacher">${rp.author[0]}</div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="comment-author">${rp.author}</span>
+              <span class="comment-role-badge crb-teacher">교사</span>
+              <span class="comment-time">${rp.time}</span>
+              ${canDelR ? `<button class="comment-delete-btn" onclick="deleteNbReply('${child.id}','${cm.id}','${rp.id}')">삭제</button>` : ''}
+            </div>
+            <div class="comment-text">${rp.text}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
     return `<div class="comment-item" id="nbcitem-${cm.id}">
       <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
       <div class="comment-body">
@@ -1778,6 +1825,12 @@ function renderSentDetailChild(notice, child) {
           ${canDel ? `<button class="comment-delete-btn" onclick="deleteNbComment('${child.id}','${cm.id}')">삭제</button>` : ''}
         </div>
         <div class="comment-text">${cm.text}</div>
+        <button class="reply-btn" onclick="toggleNbReplyInput('${cm.id}')">답변</button>
+        <div id="nb-reply-row-${cm.id}" style="display:none;" class="reply-input-row">
+          <input class="reply-input" id="nb-reply-text-${cm.id}" placeholder="답변을 입력하세요">
+          <button class="reply-submit-btn" onclick="submitNbReply('${child.id}','${cm.id}')">전송</button>
+        </div>
+        ${repliesHTML2}
       </div>
     </div>`;
   }).join('');
@@ -1811,8 +1864,27 @@ function openReceivedDetail(id) {
   r.isRead = true;
   document.getElementById('rdpTitle').textContent = r.subLabel;
   const cs = CAT_STYLE[r.category];
+  const RD_ME = sessionStorage.getItem('userName') || '박교사';
   const comments = r.comments.map(cm => {
     const isTeacher = cm.type === 'teacher';
+    const canDel = isTeacher && cm.author === RD_ME;
+    const rdRepliesHTML = (cm.replies||[]).length ? `<div class="comment-reply-wrap">
+      ${(cm.replies||[]).map(rp => {
+        const canDelR = rp.type === 'teacher' && rp.author === RD_ME;
+        return `<div class="comment-item" id="nbcitem-${rp.id}">
+          <div class="comment-avatar teacher">${rp.author[0]}</div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="comment-author">${rp.author}</span>
+              <span class="comment-role-badge crb-teacher">교사</span>
+              <span class="comment-time">${rp.time}</span>
+              ${canDelR ? `<button class="comment-delete-btn" onclick="deleteNbReply('${r.id}','${cm.id}','${rp.id}')">삭제</button>` : ''}
+            </div>
+            <div class="comment-text">${rp.text}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
     return `<div class="comment-item" id="nbcitem-${cm.id}">
       <div class="comment-avatar${isTeacher?' teacher':''}" style="${isTeacher?'':'background:'+cm.color}">${cm.author[0]}</div>
       <div class="comment-body">
@@ -1820,8 +1892,15 @@ function openReceivedDetail(id) {
           <span class="comment-author">${cm.author}</span>
           <span class="comment-role-badge ${isTeacher?'crb-teacher':'crb-parent'}">${isTeacher?'교사':'학부모'}</span>
           <span class="comment-time">${cm.time}</span>
+          ${canDel ? `<button class="comment-delete-btn" onclick="deleteNbComment('${r.id}','${cm.id}')">삭제</button>` : ''}
         </div>
         <div class="comment-text">${cm.text}</div>
+        <button class="reply-btn" onclick="toggleNbReplyInput('${cm.id}')">답변</button>
+        <div id="nb-reply-row-${cm.id}" style="display:none;" class="reply-input-row">
+          <input class="reply-input" id="nb-reply-text-${cm.id}" placeholder="답변을 입력하세요">
+          <button class="reply-submit-btn" onclick="submitNbReply('${r.id}','${cm.id}')">전송</button>
+        </div>
+        ${rdRepliesHTML}
       </div>
     </div>`;
   }).join('');
@@ -2844,6 +2923,11 @@ function submitNbComment(childId) {
               <button class="comment-delete-btn" onclick="deleteNbComment('${childId}','${newId}')">삭제</button>
             </div>
             <div class="comment-text">${text}</div>
+            <button class="reply-btn" onclick="toggleNbReplyInput('${newId}')">답변</button>
+            <div id="nb-reply-row-${newId}" style="display:none;" class="reply-input-row">
+              <input class="reply-input" id="nb-reply-text-${newId}" placeholder="답변을 입력하세요">
+              <button class="reply-submit-btn" onclick="submitNbReply('${childId}','${newId}')">전송</button>
+            </div>
           </div>`;
         list.appendChild(el);
       }
@@ -2870,6 +2954,89 @@ function deleteNbComment(childId, commentId) {
       return;
     }
   }
+}
+
+function toggleNbReplyInput(commentId) {
+  const row = document.getElementById('nb-reply-row-' + commentId);
+  if (!row) return;
+  const visible = row.style.display !== 'none';
+  row.style.display = visible ? 'none' : 'flex';
+  if (!visible) {
+    const inp = document.getElementById('nb-reply-text-' + commentId);
+    if (inp) inp.focus();
+  }
+}
+
+function submitNbReply(contextId, commentId) {
+  const inp = document.getElementById('nb-reply-text-' + commentId);
+  const text = inp ? inp.value.trim() : '';
+  if (!text) { showToast('답변 내용을 입력하세요', 'warning'); return; }
+  const ME = sessionStorage.getItem('userName') || '박교사';
+  const newId = 'nb_r' + Date.now();
+  const now = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+
+  // 데이터 업데이트
+  const allItems = [
+    ...MOCK_SENT.flatMap(n => n.children || []),
+    ...MOCK_RECEIVED
+  ];
+  let targetComment = null;
+  for (const item of allItems) {
+    const c = (item.comments || []).find(c => c.id === commentId);
+    if (c) { targetComment = c; break; }
+  }
+  if (!targetComment) return;
+  if (!targetComment.replies) targetComment.replies = [];
+  targetComment.replies.push({id:newId, author:ME, type:'teacher', text, time:now});
+
+  // DOM에 즉시 추가
+  const commentEl = document.getElementById('nbcitem-' + commentId);
+  if (commentEl) {
+    let wrap = commentEl.querySelector('.comment-reply-wrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'comment-reply-wrap';
+      commentEl.querySelector('.comment-body').appendChild(wrap);
+    }
+    const el = document.createElement('div');
+    el.className = 'comment-item';
+    el.id = 'nbcitem-' + newId;
+    el.innerHTML = `
+      <div class="comment-avatar teacher">${ME[0]}</div>
+      <div class="comment-body">
+        <div class="comment-header">
+          <span class="comment-author">${ME}</span>
+          <span class="comment-role-badge crb-teacher">교사</span>
+          <span class="comment-time">${now}</span>
+          <button class="comment-delete-btn" onclick="deleteNbReply('${contextId}','${commentId}','${newId}')">삭제</button>
+        </div>
+        <div class="comment-text">${text}</div>
+      </div>`;
+    wrap.appendChild(el);
+  }
+  if (inp) inp.value = '';
+  const row = document.getElementById('nb-reply-row-' + commentId);
+  if (row) row.style.display = 'none';
+  showToast('답변이 등록되었습니다', 'success');
+}
+
+function deleteNbReply(contextId, commentId, replyId) {
+  if (!confirm('답변을 삭제하시겠습니까?')) return;
+  const allItems = [
+    ...MOCK_SENT.flatMap(n => n.children || []),
+    ...MOCK_RECEIVED
+  ];
+  for (const item of allItems) {
+    const c = (item.comments || []).find(c => c.id === commentId);
+    if (c) {
+      const idx = (c.replies || []).findIndex(r => r.id === replyId);
+      if (idx !== -1) c.replies.splice(idx, 1);
+      break;
+    }
+  }
+  const el = document.getElementById('nbcitem-' + replyId);
+  if (el) el.remove();
+  showToast('답변이 삭제되었습니다', 'success');
 }
 
 document.addEventListener('keydown', e => {
