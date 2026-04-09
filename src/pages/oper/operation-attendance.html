@@ -41,22 +41,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color: var(--text-primary); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-/* ━━━ ROLE BAR ━━━ */
-.role-bar {
-  background: #1A2744; color: #8BA3C7;
-  font-size: 12px; padding: 5px 16px;
-  display: flex; align-items: center; gap: 10px;
-  flex-shrink: 0; z-index: 200;
-}
-.role-bar-label { color: #5A7FAD; font-weight: 600; }
-.role-btn {
-  padding: 2px 10px; border-radius: 20px; border: 1px solid #3A5A8A;
-  background: transparent; color: #8BA3C7; font-size: 11px; cursor: pointer;
-  font-family: 'Pretendard', sans-serif; transition: 0.15s;
-}
-.role-btn:hover { background: rgba(14,165,233,0.12); color: #7DC6F0; }
-.role-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 700; }
-
 /* ━━━ BODY LAYOUT ━━━ */
 .body-wrap { display: flex; flex: 1; overflow: hidden; }
 .main-wrap { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -456,15 +440,8 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 </head>
 <body>
 
-<!-- 역할 전환 바 (프로토타입) -->
-<div class="role-bar">
-  <span class="role-bar-label">테스트 역할:</span>
-  <button class="role-btn" id="roleBtn_org_admin" onclick="switchRole('org_admin')">기관관리자</button>
-  <button class="role-btn" id="roleBtn_teacher" onclick="switchRole('teacher')">교사 (이하늘 · 햇님반, 별빛반)</button>
-</div>
-
 <div class="body-wrap">
-  <!-- sidebar injected by operation-sidebar.js -->
+  <aside id="appSidebar"></aside>
 
   <div class="main-wrap">
     <!-- TOPBAR -->
@@ -494,7 +471,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
       <!-- 반 선택 필터 (대시보드 동일 디자인) -->
       <div class="class-filter-bar" id="classFilterBar">
         <div class="class-filter-wrap">
-          <span class="class-filter-label">📌 반 선택</span>
+          <span class="class-filter-label">반 선택</span>
           <div class="class-filter-divider"></div>
           <div class="class-select-wrap">
             <select class="class-select" id="classFilterSelect" onchange="onClassChange(this.value)">
@@ -601,11 +578,11 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const ALL_CLASSES = [
-  { id:'CLS001', name:'햇님반', icon:'🌸', age:'만5세', color:'#EC4899', teacher:'이하늘' },
-  { id:'CLS002', name:'새싹반', icon:'🌿', age:'만4세', color:'#10B981', teacher:'박민지' },
-  { id:'CLS003', name:'별빛반', icon:'⭐', age:'만3세', color:'#F59E0B', teacher:'최서연' },
-  { id:'CLS004', name:'무지개반', icon:'🌈', age:'만2세', color:'#3B82F6', teacher:'강지수' },
-  { id:'CLS005', name:'나비반', icon:'🦋', age:'만1세', color:'#8B5CF6', teacher:'정다온' },
+  { id:'CLS001', name:'햇님반', age:'만5세', teacher:'이하늘' },
+  { id:'CLS002', name:'새싹반', age:'만4세', teacher:'박민지' },
+  { id:'CLS003', name:'별빛반', age:'만3세', teacher:'최서연' },
+  { id:'CLS004', name:'무지개반', age:'만2세', teacher:'강지수' },
+  { id:'CLS005', name:'나비반', age:'만1세', teacher:'정다온' },
 ];
 
 // 교사 담당 반
@@ -808,34 +785,14 @@ let drawerDateStr = null;
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 window.addEventListener('DOMContentLoaded', () => {
   setHeaderDate();
-  applyRole(currentRole, false);
+  renderClassFilter();
+  renderAll();
 });
 
 function setHeaderDate() {
   const now = new Date('2026-04-09');
   document.getElementById('headerDate').textContent =
     now.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
-}
-
-// ━━━ 역할 전환 ━━━
-function switchRole(role) {
-  currentRole = role;
-  sessionStorage.setItem('userRole', role);
-  applyRole(role, true);
-}
-
-function applyRole(role, rerender) {
-  isTeacher = role === 'teacher';
-
-  // 역할 버튼 활성화
-  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById(`roleBtn_${role}`);
-  if (btn) btn.classList.add('active');
-
-  // 반 필터 렌더링 및 currentClass 결정
-  renderClassFilter();
-
-  if (rerender) renderAll();
 }
 
 // ━━━ 반 필터 렌더링 ━━━
@@ -849,7 +806,7 @@ function renderClassFilter() {
     ALL_CLASSES.forEach(cls => {
       const isAssigned = TEACHER_ASSIGNED.includes(cls.id);
       if (isAssigned) {
-        html += `<option value="${cls.id}">${cls.icon} ${cls.name} (${cls.age})</option>`;
+        html += `<option value="${cls.id}">${cls.name} (${cls.age})</option>`;
       } else {
         html += `<option value="${cls.id}" disabled class="disabled-opt">${cls.name} (${cls.age}) — 비담당</option>`;
       }
@@ -860,9 +817,9 @@ function renderClassFilter() {
     bar.style.display = 'block';
   } else {
     // 기관관리자: 전체 + 모든 반 선택 가능
-    html += '<option value="all">📋 전체 반</option>';
+    html += '<option value="all">전체 반</option>';
     ALL_CLASSES.forEach(cls => {
-      html += `<option value="${cls.id}">${cls.icon} ${cls.name} (${cls.age})</option>`;
+      html += `<option value="${cls.id}">${cls.name} (${cls.age})</option>`;
     });
     sel.innerHTML = html;
     sel.value = currentClass || 'all';
@@ -1025,7 +982,7 @@ function renderDailyTable() {
     const departedTxt = rec?.departed ? `<span class="time-departed">${rec.departed_at || '--:--'}</span>` : `<span class="time-none">—</span>`;
     const reason = rec?.absence_reason || rec?.note || '';
     const clsTag = showCls
-      ? `<td><span class="td-class-tag" style="background:${hexLight(cls.color)};color:${cls.color}">${cls.icon} ${cls.name}</span></td>`
+      ? `<td><span class="td-class-tag">${cls.name}</span></td>`
       : '';
     return `
       <tr>
@@ -1054,11 +1011,6 @@ function statusBadge(status) {
     case 'approved': return `<span class="badge badge-approved"><span class="badge-dot"></span>인정결석</span>`;
     default:         return `<span class="badge badge-none">미기록</span>`;
   }
-}
-
-function hexLight(hex) {
-  // hex → 투명 배경색 (CSS hex8)
-  return hex + '1A';
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1112,7 +1064,7 @@ function renderMonthlyGrid() {
         <div style="font-size:13px;font-weight:800;color:var(--text-primary);
           margin:16px 0 8px;padding:6px 0;border-bottom:2px solid var(--border-light);
           display:flex;align-items:center;gap:6px;">
-          <span style="font-size:16px">${cls.icon}</span> ${cls.name}
+          ${cls.name}
           <span style="font-size:12px;color:var(--text-muted);font-weight:500">(${cls.age})</span>
         </div>`;
     }
@@ -1222,7 +1174,7 @@ function openDrawer(clsId, childId, dateStr) {
       <div class="child-avatar" style="background:${child.color};width:40px;height:40px;font-size:18px">${child.name[0]}</div>
       <div>
         <div class="drawer-child-name">${child.name}</div>
-        <div class="drawer-child-meta">${cls.icon} ${cls.name} · ${child.gender} · ${dateLabel}</div>
+        <div class="drawer-child-meta">${cls.name} · ${child.gender} · ${dateLabel}</div>
       </div>
     </div>
 

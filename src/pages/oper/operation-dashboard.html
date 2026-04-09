@@ -636,7 +636,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
     <!-- 반 선택바 -->
     <div class="class-filter-bar">
       <div class="class-filter-wrap">
-        <span class="class-filter-label">📌 반 선택</span>
+        <span class="class-filter-label">반 선택</span>
         <div class="class-filter-divider"></div>
         <div class="class-select-wrap">
           <select class="class-select" id="classFilterSelect" onchange="onClassChange(this)">
@@ -650,7 +650,6 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
     <!-- 교사 전용: 담당 반 히어로 카드 -->
     <div class="class-hero" id="classHero">
       <div class="hero-left">
-        <div class="hero-icon" id="heroIcon">🌸</div>
         <div>
           <div class="hero-class-name" id="heroClassName">햇님반 (만3세)</div>
           <div class="hero-class-info">
@@ -877,15 +876,15 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 // 목업 데이터
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const ALL_CLASSES = [
-  { id:'CLS001', name:'🌸 햇님반',    plain:'햇님반',    age:'만5세', teacher:'이하늘', assistant:'김보라', icon:'🌸' },
-  { id:'CLS002', name:'🌿 새싹반',    plain:'새싹반',    age:'만5세', teacher:'박민지', assistant:'정다온', icon:'🌿' },
-  { id:'CLS003', name:'⭐ 별빛반',    plain:'별빛반',    age:'만5세', teacher:'최서연', assistant:'김보라', icon:'⭐' },
-  { id:'CLS004', name:'🌈 무지개반',  plain:'무지개반',  age:'만5세', teacher:'강지수', assistant:'이은지', icon:'🌈' },
-  { id:'CLS005', name:'🦋 나비반',    plain:'나비반',    age:'만5세', teacher:'정다온', assistant:'박민지', icon:'🦋' },
-  { id:'CLS006', name:'🌻 해바라기반', plain:'해바라기반', age:'만5세', teacher:'오민준', assistant:'서지아', icon:'🌻' },
-  { id:'CLS007', name:'🐇 토끼반',    plain:'토끼반',    age:'만5세', teacher:'서지아', assistant:'한채린', icon:'🐇' },
-  { id:'CLS008', name:'🌙 달빛반',    plain:'달빛반',    age:'만5세', teacher:'한채린', assistant:'임하늘', icon:'🌙' },
-  { id:'CLS009', name:'🐥 병아리반',  plain:'병아리반',  age:'만5세', teacher:'임하늘', assistant:'오민준', icon:'🐥' },
+  { id:'CLS001', name:'햇님반',    age:'만5세', teacher:'이하늘', assistant:'김보라' },
+  { id:'CLS002', name:'새싹반',    age:'만5세', teacher:'박민지', assistant:'정다온' },
+  { id:'CLS003', name:'별빛반',    age:'만5세', teacher:'최서연', assistant:'김보라' },
+  { id:'CLS004', name:'무지개반',  age:'만5세', teacher:'강지수', assistant:'이은지' },
+  { id:'CLS005', name:'나비반',    age:'만5세', teacher:'정다온', assistant:'박민지' },
+  { id:'CLS006', name:'해바라기반', age:'만5세', teacher:'오민준', assistant:'서지아' },
+  { id:'CLS007', name:'토끼반',    age:'만5세', teacher:'서지아', assistant:'한채린' },
+  { id:'CLS008', name:'달빛반',    age:'만5세', teacher:'한채린', assistant:'임하늘' },
+  { id:'CLS009', name:'병아리반',  age:'만5세', teacher:'임하늘', assistant:'오민준' },
 ];
 
 // 교사의 담당 반 (테스트: CLS001, CLS003 담당)
@@ -1263,9 +1262,9 @@ function renderClassFilter() {
     ALL_CLASSES.forEach(cls => {
       const isAssigned = assignedClasses && assignedClasses.includes(cls.id);
       if (isAssigned) {
-        html += `<option value="${cls.id}">${cls.plain} (${cls.age})</option>`;
+        html += `<option value="${cls.id}">${cls.name} (${cls.age})</option>`;
       } else {
-        html += `<option value="${cls.id}" disabled class="disabled-opt" style="color:#C0C0C0">${cls.plain} (${cls.age}) — 비담당</option>`;
+        html += `<option value="${cls.id}" disabled class="disabled-opt" style="color:#C0C0C0">${cls.name} (${cls.age}) — 비담당</option>`;
       }
     });
     sel.innerHTML = html;
@@ -1318,8 +1317,7 @@ function updateTeacherHero(cls) {
   const ch = CHILDREN_DATA[cls.id] || [];
   const attend = ch.filter(c => c.attend === '출석').length;
   const notice = ch.filter(c => c.noticeWritten).length;
-  document.getElementById('heroIcon').textContent      = cls.icon;
-  document.getElementById('heroClassName').textContent = `${cls.plain} (${cls.age})`;
+  document.getElementById('heroClassName').textContent = `${cls.name} (${cls.age})`;
   document.getElementById('heroTotal').textContent     = ch.length;
   document.getElementById('heroAttend').textContent    = attend;
   document.getElementById('heroNotice').textContent    = notice;
@@ -1431,11 +1429,11 @@ function renderMainCard() {
           const attend   = ch.filter(c => c.attend === '출석').length;
           const medCount = ch.filter(c => c.medicine).length;
           return `
-            <div class="cls-card" onclick="openClassAttendanceModal('${cls.id}','${cls.plain}')"
+            <div class="cls-card" onclick="openClassAttendanceModal('${cls.id}','${cls.name}')"
               style="padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px">
               <div>
                 <div style="font-size:15px;font-weight:800;color:var(--text-primary);margin-bottom:4px;line-height:1.2">
-                  ${cls.plain}<span style="font-size:13px;color:var(--text-secondary);font-weight:400;margin-left:5px">${cls.age}</span>
+                  ${cls.name}<span style="font-size:13px;color:var(--text-secondary);font-weight:400;margin-left:5px">${cls.age}</span>
                 </div>
                 <div style="font-size:13px;color:var(--text-secondary);font-weight:500">담임 ${cls.teacher}&ensp;보조 ${cls.assistant}</div>
               </div>
@@ -1821,7 +1819,7 @@ function openAttendanceModal() {
   if (!_modalOverrideClass) {
     const cur = sessionStorage.getItem('currentClass') || (assignedClasses ? assignedClasses[0] : 'CLS001');
     const cls = ALL_CLASSES.find(c => c.id === cur);
-    document.getElementById('attModalSub').textContent = cls ? `${cls.plain} · 오늘` : '오늘';
+    document.getElementById('attModalSub').textContent = cls ? `${cls.name} · 오늘` : '오늘';
   }
   document.getElementById('attOverlay').classList.add('show');
 }
