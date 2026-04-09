@@ -153,7 +153,7 @@
       { section: '콘텐츠' },
       { icon:'📋', label:'알림장',                               href:'operation-notice-board.html',
                    badge: noticeBadge,                           noClassBlock: true                                    },
-      { icon:'📅', label:'출석부',                               href:'operation-attendance.html', comingSoon: true    },
+      { icon:'📅', label:'출석부',                               href:'operation-attendance.html'                       },
       { icon:'🍱', label:'식단표',                               href:'operation-meal.html'                             },
       { icon:'📢', label:'공지사항',                             href:'operation-announcement.html', noClassBlock: true},
       { icon:'🖼️', label:'앨범',                                 href:'operation-album.html',        noClassBlock: true},
