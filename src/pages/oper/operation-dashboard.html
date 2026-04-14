@@ -610,6 +610,13 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .qcoming-soon-ico   { font-size:36px; margin-bottom:12px; opacity:.5; }
 .qcoming-soon-title { font-size:15px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; }
 .qcoming-soon-sub   { font-size:13px; color:var(--text-muted); }
+/* 진급/졸업 배너 */
+.graduation-banner { background:var(--amber-bg); border:1.5px solid var(--amber); border-radius:var(--radius-lg); padding:14px 18px; margin-bottom:20px; }
+.banner-content { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.banner-text { font-size:14px; font-weight:600; color:var(--amber-text); line-height:1.6; flex:1; }
+.banner-icon { font-size:16px; margin-right:6px; }
+.banner-btn { background:var(--amber); color:#fff; border:none; border-radius:var(--radius-md); padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:0.18s; }
+.banner-btn:hover { background:var(--amber-text); }
 
 </style>
 </head>
@@ -677,6 +684,18 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
         <div class="hero-stat"><div class="hero-stat-num" style="color:#6EE7B7" id="heroAttend">16</div><div class="hero-stat-lbl">오늘 출석</div></div>
         <div class="hero-stat"><div class="hero-stat-num" style="color:#FCD34D" id="heroNotice">14</div><div class="hero-stat-lbl">알림장 완료</div></div>
         <div class="hero-stat"><div class="hero-stat-num" style="color:#FCA5A5" id="heroMissing">4</div><div class="hero-stat-lbl">미작성</div></div>
+      </div>
+    </div>
+
+    <!-- 진급/졸업 배너 -->
+    <div class="graduation-banner" id="graduationBanner" style="display:none;">
+      <div class="banner-content">
+        <div class="banner-text">
+          <span class="banner-icon">🎓</span>
+          <strong>2026학년도 진급/졸업 처리</strong>가 필요합니다.<br>
+          미확정 <span id="bannerUnconfirmed">0</span>명 · 보류 <span id="bannerHeld">0</span>명
+        </div>
+        <button class="banner-btn" onclick="location.href='operation-graduation.html'">지금 처리하기 →</button>
       </div>
     </div>
 
@@ -1247,6 +1266,7 @@ const UPCOMING_SCHED = [
 
   renderClassFilter();
   renderKPI();
+  showGraduationBanner();
   renderMainCard();
   renderTodo();
   document.getElementById('todoPeriodTabs').addEventListener('click', e => {
@@ -1360,6 +1380,30 @@ function updateNoticeStats(written, missing) {
   if (window._noticeChart) {
     window._noticeChart.data.datasets[0].data = [written, missing];
     window._noticeChart.update();
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 진급/졸업 배너
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function showGraduationBanner() {
+  if (effectiveRole !== 'org_admin' && effectiveRole !== 'super') {
+    document.getElementById('graduationBanner').style.display = 'none';
+    return;
+  }
+
+  const grad = JSON.parse(localStorage.getItem('graduation_confirmed') || '{"ids":[]}');
+  // Mock: 전체 원아 수 기준 미확정 계산
+  const allChildren = 7; // 모킹 데이터 기준
+  const unconfirmed = allChildren - grad.ids.length;
+  const held = 1; // 모킹 데이터 기준
+
+  if (unconfirmed > 0) {
+    document.getElementById('bannerUnconfirmed').textContent = unconfirmed;
+    document.getElementById('bannerHeld').textContent = held;
+    document.getElementById('graduationBanner').style.display = 'block';
+  } else {
+    document.getElementById('graduationBanner').style.display = 'none';
   }
 }
 
