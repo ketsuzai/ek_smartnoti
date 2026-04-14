@@ -20,7 +20,17 @@
       "Bash(node -e \":*)",
       "Bash(cd /tmp)",
       "Bash(npm init:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git push:*)",
+      "Bash(wc -l /c/Users/2AP2020-004/Desktop/myrp/src/pages/oper/*.html)",
+      "Skill(mempalace)",
+      "mcp__mempalace__mempalace_search",
+      "mcp__plugin_figma_figma__get_design_context",
+      "Bash(python:*)",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__get_metadata",
+      "mcp__plugin_figma_figma__use_figma"
     ]
-  }
+  },
+  "spinnerTipsEnabled": true
 }

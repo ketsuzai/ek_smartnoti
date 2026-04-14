@@ -163,9 +163,9 @@
       { section: '기관 관리' },
       { icon:'🏢', label: isTeacher ? '기관정보 조회' : '기관정보 관리',
                    href: 'operation-org-info.html'                                                                     },
-      { icon:'👥', label:'멤버/승인',                            href:'operation-member.html',      comingSoon: true   },
+      { icon:'👥', label:'멤버/승인',                            href:'operation-member.html'                          },
       { icon:'🏫', label:'반 관리',                              href:'operation-class.html',        noClassBlock: true},
-      { icon:'🎓', label:'진급/졸업',                            href:'operation-graduation.html',  comingSoon: true   },
+      { icon:'🎓', label:'진급/졸업',                            href:'operation-graduation.html'                       },
       { icon:'📨', label:'초대장 관리',                          href:'operation-invitation.html',
                    badge: inviteBadge, badgeClass:'sky',          noClassBlock: true                                   },
     ];

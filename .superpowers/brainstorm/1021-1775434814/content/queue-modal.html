@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>처리 큐 모달 목업</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Pretendard', -apple-system, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px; }
+
+  h2 { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; text-align: center; }
+  .subtitle { font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 24px; }
+
+  /* ── Modal backdrop ── */
+  .modal-wrap { position: relative; width: 100%; max-width: 680px; background: #1e2130; border-radius: 16px; border: 1px solid #2d3148; box-shadow: 0 24px 64px rgba(0,0,0,0.6); overflow: hidden; }
+
+  /* ── Modal header ── */
+  .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 0; }
+  .modal-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
+  .modal-close { width: 28px; height: 28px; border-radius: 50%; background: #2d3148; border: none; color: #94a3b8; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+  /* ── Tabs ── */
+  .tab-bar { display: flex; gap: 0; padding: 14px 20px 0; border-bottom: 1px solid #2d3148; }
+  .tab { padding: 8px 14px; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  .tab:hover { color: #94a3b8; }
+  .tab.active { color: #6366f1; border-bottom-color: #6366f1; }
+  .tab .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; font-size: 11px; font-weight: 700; }
+  .tab.t-notice .badge { background: #dbeafe; color: #1e40af; }
+  .tab.t-comment .badge { background: #ccfbf1; color: #0d9488; }
+  .tab.t-medicine .badge { background: #fef3c7; color: #92400e; }
+  .tab.t-consult .badge { background: #f3e8ff; color: #6b21a8; }
+  .tab.active.t-notice { color: #3b82f6; border-bottom-color: #3b82f6; }
+  .tab.active.t-comment { color: #14b8a6; border-bottom-color: #14b8a6; }
+  .tab.active.t-medicine { color: #f59e0b; border-bottom-color: #f59e0b; }
+  .tab.active.t-consult { color: #a855f7; border-bottom-color: #a855f7; }
+
+  /* ── Tab content panels ── */
+  .tab-content { padding: 16px 20px; max-height: 480px; overflow-y: auto; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── 새 글(알림장) 탭 ── */
+  .notice-item { background: #161827; border: 1px solid #2d3148; border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.15s; }
+  .notice-item:hover { border-color: #3b82f6; background: #1a1f36; }
+  .notice-item-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+  .notice-meta { flex: 1; }
+  .notice-author { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .notice-date { font-size: 11px; color: #64748b; }
+  .notice-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 5px; }
+  .notice-body { font-size: 12px; color: #94a3b8; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .notice-footer { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2d3148; }
+  .notice-check { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+  .check-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .notice-comment-cnt { font-size: 11px; color: #64748b; margin-left: auto; }
+  .new-badge { background: #dbeafe; color: #1e40af; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+  /* ── 새 글 상세 (펼침) ── */
+  .notice-detail { background: #161827; border: 1px solid #3b82f6; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
+  .notice-detail-title { font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+  .notice-detail-meta { font-size: 11px; color: #64748b; margin-bottom: 12px; }
+  .notice-detail-body { font-size: 13px; color: #cbd5e1; line-height: 1.7; margin-bottom: 12px; }
+  .checks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+  .check-item { background: #1e2130; border: 1px solid #2d3148; border-radius: 7px; padding: 8px 10px; text-align: center; }
+  .check-label { font-size: 10px; color: #64748b; margin-bottom: 3px; }
+  .check-val { font-size: 12px; font-weight: 700; }
+  .check-val.ok { color: #22c55e; }
+  .check-val.na { color: #475569; }
+  /* Comments */
+  .comments-section { border-top: 1px solid #2d3148; padding-top: 12px; }
+  .comments-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .comment-item { display: flex; gap: 8px; margin-bottom: 10px; }
+  .comment-body { flex: 1; background: #1e2130; border-radius: 8px; padding: 9px 11px; }
+  .comment-author { font-size: 11px; font-weight: 700; color: #93c5fd; margin-bottom: 3px; }
+  .comment-text { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+  .comment-time { font-size: 10px; color: #475569; margin-top: 3px; }
+  .comment-actions { display: flex; gap: 6px; margin-top: 4px; }
+  .comment-action-btn { font-size: 10px; color: #64748b; cursor: pointer; background: none; border: none; padding: 0; }
+  .comment-action-btn:hover { color: #94a3b8; }
+  /* Comment input */
+  .comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
+  .comment-input { flex: 1; background: #1e2130; border: 1px solid #2d3148; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #e2e8f0; outline: none; resize: none; font-family: inherit; }
+  .comment-input:focus { border-color: #3b82f6; }
+  .comment-submit { background: #3b82f6; color: white; border: none; border-radius: 8px; padding: 0 14px; font-size: 12px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+  .comment-submit:hover { background: #2563eb; }
+
+  /* ── 댓글 탭 ── */
+  .comment-feed-item { background: #161827; border: 1px solid #2d3148; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; transition: 0.15s; }
+  .comment-feed-item:hover { border-color: #14b8a6; background: #151f20; }
+  .cfeed-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .type-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+  .type-notice { background: #dbeafe; color: #1e40af; }
+  .type-announce { background: #f0fdf4; color: #166534; }
+  .type-album { background: #fdf4ff; color: #7e22ce; }
+  .type-consult { background: #f3e8ff; color: #6b21a8; }
+  .cfeed-author { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+  .cfeed-time { font-size: 11px; color: #475569; margin-left: auto; }
+  .cfeed-original { font-size: 11px; color: #64748b; background: #1e2130; border-left: 2px solid #2d3148; padding: 5px 8px; border-radius: 0 5px 5px 0; margin-bottom: 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cfeed-comment { font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px; }
+  .cfeed-actions { display: flex; gap: 8px; align-items: center; }
+  .cfeed-reply-input { flex: 1; background: #1e2130; border: 1px solid #2d3148; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #e2e8f0; outline: none; font-family: inherit; }
+  .cfeed-reply-input:focus { border-color: #14b8a6; }
+  .cfeed-reply-btn { background: #14b8a6; color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+  .cfeed-view-btn { font-size: 11px; color: #64748b; background: none; border: 1px solid #2d3148; border-radius: 6px; padding: 5px 10px; cursor: pointer; margin-left: auto; }
+  .cfeed-view-btn:hover { color: #94a3b8; border-color: #475569; }
+
+  /* ── 투약 탭 ── */
+  .med-item { background: #161827; border: 1px solid #2d3148; border-radius: 10px; padding: 14px; margin-bottom: 10px; transition: 0.15s; }
+  .med-item:hover { border-color: #f59e0b; }
+  .med-item.done { opacity: 0.4; }
+  .med-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .med-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fef3c7; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #92400e; flex-shrink: 0; }
+  .med-info-name { font-size: 14px; font-weight: 700; color: #e2e8f0; }
+  .med-info-sub { font-size: 11px; color: #64748b; }
+  .med-status-badge { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 5px; }
+  .med-status-wait { background: #fef3c7; color: #92400e; }
+  .med-status-done { background: #f0fdf4; color: #166534; }
+  .med-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+  .med-field { background: #1e2130; border-radius: 7px; padding: 9px 11px; }
+  .med-field-label { font-size: 10px; color: #64748b; margin-bottom: 3px; }
+  .med-field-val { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+  .med-note { background: #1e2130; border-radius: 7px; padding: 9px 11px; margin-bottom: 12px; font-size: 12px; color: #94a3b8; line-height: 1.5; }
+  .med-note-label { font-size: 10px; color: #64748b; margin-bottom: 3px; font-weight: 600; }
+  .med-btn-row { display: flex; gap: 8px; }
+  .med-btn-confirm { flex: 1; background: #f59e0b; color: #1c0a00; border: none; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .med-btn-confirm:hover { background: #d97706; }
+  .med-btn-detail { background: #1e2130; color: #94a3b8; border: 1px solid #2d3148; border-radius: 8px; padding: 9px 14px; font-size: 12px; cursor: pointer; }
+
+  /* ── 상담 탭 ── */
+  .consult-item { background: #161827; border: 1px solid #2d3148; border-radius: 10px; padding: 14px; margin-bottom: 10px; transition: 0.15s; }
+  .consult-item:hover { border-color: #a855f7; }
+  .consult-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .consult-avatar { width: 34px; height: 34px; border-radius: 50%; background: #f3e8ff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #6b21a8; flex-shrink: 0; }
+  .consult-meta { flex: 1; }
+  .consult-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .consult-sub { font-size: 11px; color: #64748b; }
+  .consult-type-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: #f3e8ff; color: #6b21a8; margin-left: auto; }
+  .consult-status-new { background: #fce7f3; color: #9d174d; }
+  .consult-title { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 5px; }
+  .consult-preview { font-size: 12px; color: #94a3b8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+  .consult-foot { display: flex; align-items: center; gap: 8px; }
+  .consult-date { font-size: 11px; color: #475569; }
+  .consult-reply-btn { margin-left: auto; background: #a855f7; color: white; border: none; border-radius: 7px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .consult-reply-btn:hover { background: #9333ea; }
+  .consult-pending-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: #fce7f3; color: #9d174d; }
+
+  /* scrollbar */
+  .tab-content::-webkit-scrollbar { width: 4px; }
+  .tab-content::-webkit-scrollbar-track { background: transparent; }
+  .tab-content::-webkit-scrollbar-thumb { background: #2d3148; border-radius: 2px; }
+
+  /* note */
+  .design-note { font-size: 12px; color: #64748b; text-align: center; margin-top: 16px; line-height: 1.6; }
+
+  /* toggle helper */
+  .toggle-hint { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .toggle-hint-btn { background: #1e2130; border: 1px solid #2d3148; color: #94a3b8; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; transition: 0.15s; }
+  .toggle-hint-btn:hover, .toggle-hint-btn.active { background: #2d3148; color: #e2e8f0; border-color: #475569; }
+</style>
+</head>
+<body>
+
+<h2>✅ 처리 큐 — 모달 구조 목업</h2>
+<p class="subtitle">탭 버튼을 클릭해서 각 탭 내용을 확인하세요</p>
+
+<div class="toggle-hint">
+  <button class="toggle-hint-btn active" onclick="switchTab('notice')">📝 새 글</button>
+  <button class="toggle-hint-btn" onclick="switchTab('comment')">💬 댓글</button>
+  <button class="toggle-hint-btn" onclick="switchTab('medicine')">💊 투약</button>
+  <button class="toggle-hint-btn" onclick="switchTab('consult')">🗣 상담</button>
+</div>
+
+<div class="modal-wrap">
+  <!-- Header -->
+  <div class="modal-header">
+    <span class="modal-title">✅ 처리 큐</span>
+    <button class="modal-close">✕</button>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <div class="tab t-notice active" id="tab-notice" onclick="switchTab('notice')">
+      📝 새 글 <span class="badge">3</span>
+    </div>
+    <div class="tab t-comment" id="tab-comment" onclick="switchTab('comment')">
+      💬 댓글 <span class="badge">5</span>
+    </div>
+    <div class="tab t-medicine" id="tab-medicine" onclick="switchTab('medicine')">
+      💊 투약 <span class="badge">3</span>
+    </div>
+    <div class="tab t-consult" id="tab-consult" onclick="switchTab('consult')">
+      🗣 상담 <span class="badge">2</span>
+    </div>
+  </div>
+
+  <!-- Tab contents -->
+  <div class="tab-content">
+
+    <!-- ── 새 글 탭 ── -->
+    <div class="tab-panel active" id="panel-notice">
+      <!-- 펼친 상태 (클릭 시 이렇게 됨) -->
+      <div class="notice-detail">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div class="avatar" style="background:#dbeafe;color:#1e40af">김</div>
+          <div>
+            <div class="notice-author">김지우 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반 · 2026.04.06</span></div>
+            <div style="font-size:11px;color:#64748b">작성: 박선생님</div>
+          </div>
+          <span class="new-badge" style="margin-left:auto">NEW</span>
+        </div>
+        <div class="notice-detail-title">오늘의 활동 일지</div>
+        <div class="notice-detail-meta">2026.04.06 오전 9:30</div>
+        <div class="notice-detail-body">오늘 지우는 미술 시간에 봄꽃 그림을 열심히 그렸습니다. 점심도 잘 먹었고 낮잠도 잘 잤어요. 오후에 바깥놀이 시간에는 친구들과 사이좋게 어울렸습니다. 내일은 체육 활동이 있으니 편한 옷을 입혀 보내주세요.</div>
+        <div class="checks-grid">
+          <div class="check-item"><div class="check-label">식사</div><div class="check-val ok">잘 먹음</div></div>
+          <div class="check-item"><div class="check-label">낮잠</div><div class="check-val ok">잘 잠</div></div>
+          <div class="check-item"><div class="check-label">배변</div><div class="check-val ok">정상</div></div>
+          <div class="check-item"><div class="check-label">투약</div><div class="check-val na">—</div></div>
+          <div class="check-item"><div class="check-label">특이사항</div><div class="check-val na">없음</div></div>
+          <div class="check-item"><div class="check-label">기분</div><div class="check-val ok">밝음 😊</div></div>
+        </div>
+        <div class="comments-section">
+          <div class="comments-title">댓글 2개</div>
+          <div class="comment-item">
+            <div class="avatar" style="background:#fce7f3;color:#9d174d;width:28px;height:28px;font-size:11px">이</div>
+            <div class="comment-body">
+              <div class="comment-author">이지우 엄마 <span style="font-size:10px;color:#475569;font-weight:400">보호자</span></div>
+              <div class="comment-text">감사합니다! 내일 편한 옷으로 보낼게요 😊</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="comment-time">오전 11:24</span>
+                <button class="comment-action-btn">수정</button>
+                <button class="comment-action-btn">삭제</button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-item">
+            <div class="avatar" style="background:#dbeafe;color:#1e40af;width:28px;height:28px;font-size:11px">박</div>
+            <div class="comment-body">
+              <div class="comment-author">박선생님 <span style="font-size:10px;color:#475569;font-weight:400">교사</span></div>
+              <div class="comment-text">네, 지우가 요즘 많이 밝아졌어요!</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="comment-time">오전 11:30</span>
+                <button class="comment-action-btn">수정</button>
+                <button class="comment-action-btn">삭제</button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-input-row">
+            <textarea class="comment-input" rows="1" placeholder="댓글 입력..."></textarea>
+            <button class="comment-submit">등록</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 목록 항목 (닫힌 상태) -->
+      <div class="notice-item">
+        <div class="notice-item-head">
+          <div class="avatar" style="background:#f0fdf4;color:#166534">이</div>
+          <div class="notice-meta">
+            <div class="notice-author">이서준 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="notice-date">2026.04.06 오전 10:15</div>
+          </div>
+          <span class="new-badge">NEW</span>
+        </div>
+        <div class="notice-title">오늘의 활동 일지</div>
+        <div class="notice-body">오늘 서준이는 블록 쌓기를 매우 즐겼습니다. 오후에 조금 피곤해 했는데 충분히 쉬고 나서 다시 활동에...</div>
+        <div class="notice-footer">
+          <span class="notice-check"><span class="check-dot" style="background:#22c55e"></span><span style="font-size:11px;color:#64748b">식사 잘함</span></span>
+          <span class="notice-check"><span class="check-dot" style="background:#f59e0b"></span><span style="font-size:11px;color:#64748b">낮잠 미흡</span></span>
+          <span class="notice-comment-cnt">💬 0</span>
+        </div>
+      </div>
+
+      <div class="notice-item">
+        <div class="notice-item-head">
+          <div class="avatar" style="background:#fdf4ff;color:#7e22ce">박</div>
+          <div class="notice-meta">
+            <div class="notice-author">박하은 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="notice-date">2026.04.06 오전 9:50</div>
+          </div>
+          <span class="new-badge">NEW</span>
+        </div>
+        <div class="notice-title">오늘의 활동 일지</div>
+        <div class="notice-body">하은이는 오늘 결석했습니다. 건강 회복 후 등원 부탁드립니다.</div>
+        <div class="notice-footer">
+          <span style="font-size:11px;color:#ef4444;font-weight:600">🏠 결석</span>
+          <span class="notice-comment-cnt">💬 1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 댓글 탭 ── -->
+    <div class="tab-panel" id="panel-comment">
+      <div class="comment-feed-item">
+        <div class="cfeed-head">
+          <span class="type-tag type-notice">알림장</span>
+          <div class="avatar" style="background:#fce7f3;color:#9d174d;width:26px;height:26px;font-size:11px;flex-shrink:0">이</div>
+          <span class="cfeed-author">이지우 엄마</span>
+          <span style="font-size:10px;color:#64748b;margin-left:2px">보호자</span>
+          <span class="cfeed-time">5분 전</span>
+        </div>
+        <div class="cfeed-original">📝 [알림장] 오늘의 활동 일지 — 김지우 · 박선생님 작성</div>
+        <div class="cfeed-comment">"감사합니다! 내일 편한 옷으로 보낼게요 😊"</div>
+        <div class="cfeed-actions">
+          <input class="cfeed-reply-input" placeholder="답글 달기...">
+          <button class="cfeed-reply-btn">답글</button>
+          <button class="cfeed-view-btn">본문 보기 →</button>
+        </div>
+      </div>
+
+      <div class="comment-feed-item">
+        <div class="cfeed-head">
+          <span class="type-tag type-announce">공지</span>
+          <div class="avatar" style="background:#f0fdf4;color:#166534;width:26px;height:26px;font-size:11px;flex-shrink:0">최</div>
+          <span class="cfeed-author">최서연 엄마</span>
+          <span style="font-size:10px;color:#64748b;margin-left:2px">보호자</span>
+          <span class="cfeed-time">23분 전</span>
+        </div>
+        <div class="cfeed-original">📢 [공지] 4월 체험학습 안내 및 동의서 제출 요청</div>
+        <div class="cfeed-comment">"동의서 제출 방법이 어떻게 되나요? 앱에서 하면 되나요?"</div>
+        <div class="cfeed-actions">
+          <input class="cfeed-reply-input" placeholder="답글 달기...">
+          <button class="cfeed-reply-btn">답글</button>
+          <button class="cfeed-view-btn">본문 보기 →</button>
+        </div>
+      </div>
+
+      <div class="comment-feed-item">
+        <div class="cfeed-head">
+          <span class="type-tag type-album">앨범</span>
+          <div class="avatar" style="background:#fdf4ff;color:#7e22ce;width:26px;height:26px;font-size:11px;flex-shrink:0">강</div>
+          <span class="cfeed-author">강민준 아빠</span>
+          <span style="font-size:10px;color:#64748b;margin-left:2px">보호자</span>
+          <span class="cfeed-time">1시간 전</span>
+        </div>
+        <div class="cfeed-original">🖼 [앨범] 봄 소풍 — 사진 14장 · 박선생님</div>
+        <div class="cfeed-comment">"우리 아이 표정이 너무 행복해 보여요 ❤️ 사진 잘 찍어주셔서 감사합니다!"</div>
+        <div class="cfeed-actions">
+          <input class="cfeed-reply-input" placeholder="답글 달기...">
+          <button class="cfeed-reply-btn">답글</button>
+          <button class="cfeed-view-btn">본문 보기 →</button>
+        </div>
+      </div>
+
+      <div class="comment-feed-item">
+        <div class="cfeed-head">
+          <span class="type-tag type-notice">알림장</span>
+          <div class="avatar" style="background:#fef3c7;color:#92400e;width:26px;height:26px;font-size:11px;flex-shrink:0">박</div>
+          <span class="cfeed-author">박지민 엄마</span>
+          <span style="font-size:10px;color:#64748b;margin-left:2px">보호자</span>
+          <span class="cfeed-time">2시간 전</span>
+        </div>
+        <div class="cfeed-original">📝 [알림장] 오늘의 활동 일지 — 박하은 · 박선생님 작성</div>
+        <div class="cfeed-comment">"하은이 많이 아픈건지 걱정되네요. 빠른 쾌유 바랍니다."</div>
+        <div class="cfeed-actions">
+          <input class="cfeed-reply-input" placeholder="답글 달기...">
+          <button class="cfeed-reply-btn">답글</button>
+          <button class="cfeed-view-btn">본문 보기 →</button>
+        </div>
+      </div>
+
+      <div class="comment-feed-item">
+        <div class="cfeed-head">
+          <span class="type-tag type-consult">상담</span>
+          <div class="avatar" style="background:#f3e8ff;color:#6b21a8;width:26px;height:26px;font-size:11px;flex-shrink:0">윤</div>
+          <span class="cfeed-author">윤채원 엄마</span>
+          <span style="font-size:10px;color:#64748b;margin-left:2px">보호자</span>
+          <span class="cfeed-time">3시간 전</span>
+        </div>
+        <div class="cfeed-original">🗣 [상담] 입학 관련 상담 요청 — 2026.04.10 예약</div>
+        <div class="cfeed-comment">"상담 날짜 변경 가능한지 여쭤봐도 될까요?"</div>
+        <div class="cfeed-actions">
+          <input class="cfeed-reply-input" placeholder="답글 달기...">
+          <button class="cfeed-reply-btn">답글</button>
+          <button class="cfeed-view-btn">본문 보기 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 투약 탭 ── -->
+    <div class="tab-panel" id="panel-medicine">
+      <div class="med-item">
+        <div class="med-head">
+          <div class="med-avatar">이</div>
+          <div>
+            <div class="med-info-name">이서준 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="med-info-sub">보호자: 이지우 엄마 · 오늘 오전 8:20 제출</div>
+          </div>
+          <span class="med-status-badge med-status-wait">대기</span>
+        </div>
+        <div class="med-grid">
+          <div class="med-field"><div class="med-field-label">약품명</div><div class="med-field-val">타이레놀 시럽</div></div>
+          <div class="med-field"><div class="med-field-label">투약 횟수</div><div class="med-field-val">3회</div></div>
+          <div class="med-field"><div class="med-field-label">1회 용량</div><div class="med-field-val">5ml</div></div>
+          <div class="med-field"><div class="med-field-label">투약 시간</div><div class="med-field-val">오전 10시, 오후 1시, 오후 4시</div></div>
+        </div>
+        <div class="med-note">
+          <div class="med-note-label">보호자 메모</div>
+          감기 증상으로 소아과에서 처방받은 약입니다. 식후 30분에 투약 부탁드려요. 알러지는 없습니다.
+        </div>
+        <div class="med-btn-row">
+          <button class="med-btn-confirm">💊 투약 완료 처리</button>
+          <button class="med-btn-detail">상세 보기</button>
+        </div>
+      </div>
+
+      <div class="med-item">
+        <div class="med-head">
+          <div class="med-avatar" style="background:#f0fdf4;color:#166534">김</div>
+          <div>
+            <div class="med-info-name">김지우 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="med-info-sub">보호자: 김하나 엄마 · 오늘 오전 8:45 제출</div>
+          </div>
+          <span class="med-status-badge med-status-wait">대기</span>
+        </div>
+        <div class="med-grid">
+          <div class="med-field"><div class="med-field-label">약품명</div><div class="med-field-val">알레르기 약 (씩씩정)</div></div>
+          <div class="med-field"><div class="med-field-label">투약 횟수</div><div class="med-field-val">1회</div></div>
+          <div class="med-field"><div class="med-field-label">1회 용량</div><div class="med-field-val">1정</div></div>
+          <div class="med-field"><div class="med-field-label">투약 시간</div><div class="med-field-val">점심 식사 후</div></div>
+        </div>
+        <div class="med-note">
+          <div class="med-note-label">보호자 메모</div>
+          봄철 알러지 예방약입니다. 졸릴 수 있으니 낮잠 전에 투약해 주셔도 됩니다.
+        </div>
+        <div class="med-btn-row">
+          <button class="med-btn-confirm">💊 투약 완료 처리</button>
+          <button class="med-btn-detail">상세 보기</button>
+        </div>
+      </div>
+
+      <div class="med-item done">
+        <div class="med-head">
+          <div class="med-avatar" style="background:#f1f5f9;color:#475569">최</div>
+          <div>
+            <div class="med-info-name">최민서 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="med-info-sub">보호자: 최수진 엄마 · 오늘 오전 8:10 제출</div>
+          </div>
+          <span class="med-status-badge med-status-done">처리완료</span>
+        </div>
+        <div class="med-grid">
+          <div class="med-field"><div class="med-field-label">약품명</div><div class="med-field-val">비타민C 시럽</div></div>
+          <div class="med-field"><div class="med-field-label">투약 시간</div><div class="med-field-val">오전 10시 ✓</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 상담 탭 ── -->
+    <div class="tab-panel" id="panel-consult">
+      <div class="consult-item">
+        <div class="consult-head">
+          <div class="consult-avatar">윤</div>
+          <div class="consult-meta">
+            <div class="consult-name">윤채원 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="consult-sub">보호자: 윤채원 엄마 · 요청일 2026.04.05</div>
+          </div>
+          <span class="consult-type-badge consult-status-new">미답변</span>
+        </div>
+        <div class="consult-title">입학 관련 상담 요청</div>
+        <div class="consult-preview">아이가 새 환경에 적응을 못해서 걱정이 됩니다. 선생님과 직접 상담을 하고 싶은데 가능할까요? 주로 오후 시간이 편합니다.</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:4px;font-weight:600">📅 희망일: 2026.04.10 오후</span>
+          <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:4px;font-weight:600">💬 대면 상담</span>
+        </div>
+        <div class="consult-foot">
+          <span class="consult-date">2일 전</span>
+          <button class="consult-reply-btn">답변하기</button>
+        </div>
+      </div>
+
+      <div class="consult-item">
+        <div class="consult-head">
+          <div class="consult-avatar" style="background:#fef3c7;color:#92400e">한</div>
+          <div class="consult-meta">
+            <div class="consult-name">한도윤 <span style="font-size:11px;color:#64748b;font-weight:400">햇님반</span></div>
+            <div class="consult-sub">보호자: 한미영 엄마 · 요청일 2026.04.04</div>
+          </div>
+          <span class="consult-type-badge consult-status-new">미답변</span>
+        </div>
+        <div class="consult-title">식습관 관련 상담</div>
+        <div class="consult-preview">도윤이가 편식이 너무 심해서요. 집에서도 마찬가지인데 어린이집에서도 비슷한 상황인지, 그리고 개선 방법이 있을지 여쭤보고 싶어요.</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:4px;font-weight:600">📅 희망일: 미정</span>
+          <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:4px;font-weight:600">📱 비대면 상담</span>
+        </div>
+        <div class="consult-foot">
+          <span class="consult-date">3일 전</span>
+          <button class="consult-reply-btn">답변하기</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-content -->
+</div>
+
+<p class="design-note">
+  클릭으로 탭 전환 가능 · 각 탭은 독립된 데이터 · 새 글은 클릭 시 인라인 펼침<br>
+  모달 크기: max-width 680px · max-height ~560px
+</p>
+
+<script>
+function switchTab(name) {
+  ['notice','comment','medicine','consult'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+    document.getElementById('panel-'+t).classList.toggle('active', t===name);
+  });
+  document.querySelectorAll('.toggle-hint-btn').forEach((btn,i) => {
+    const names = ['notice','comment','medicine','consult'];
+    btn.classList.toggle('active', names[i]===name);
+  });
+}
+</script>
+</body>
+</html>

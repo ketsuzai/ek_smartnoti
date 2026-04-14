@@ -1,0 +1,25 @@
+wing: myrp
+rooms:
+- name: documentation
+  description: Files from docs/
+  keywords:
+  - documentation
+  - docs
+- name: refer
+  description: Files from refer/
+  keywords:
+  - refer
+  - refer
+- name: src
+  description: Files from src/
+  keywords:
+  - src
+  - src
+- name: frontend
+  description: Files from pages/
+  keywords:
+  - frontend
+  - pages
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []

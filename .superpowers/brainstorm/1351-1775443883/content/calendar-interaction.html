@@ -1,0 +1,264 @@
+<h2>월간 ↔ 주간 접힘 + 상세 패널 인터랙션 확인</h2>
+<p class="subtitle">좌: 초기 월간 뷰 / 우: 날짜 클릭 후 상태. 확인 후 터미널에 피드백 주세요.</p>
+
+<div class="split">
+
+  <!-- LEFT: 월간 뷰 -->
+  <div class="mockup">
+    <div class="mockup-header">① 초기 상태 — 월간 캘린더</div>
+    <div class="mockup-body" style="padding:12px;font-size:11px">
+
+      <!-- 월 네비게이션 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <button style="background:#0C2D48;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px">◀</button>
+        <span style="font-weight:700;color:#0C2D48;font-size:13px">2026년 4월</span>
+        <button style="background:#0C2D48;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px">▶</button>
+      </div>
+
+      <!-- 요일 헤더 -->
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;text-align:center;font-size:10px;font-weight:700">
+        <div style="color:#0EA5E9">월</div><div style="color:#0EA5E9">화</div><div style="color:#0EA5E9">수</div>
+        <div style="color:#0EA5E9">목</div><div style="color:#0EA5E9">금</div>
+        <div style="color:#94A3B8">토</div><div style="color:#94A3B8">일</div>
+      </div>
+
+      <!-- 달력 그리드 -->
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+
+        <!-- 빈칸 -->
+        <div></div>
+        <!-- 4/1 화 — 전체 등록 -->
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">1</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DCFCE7;color:#166534;font-size:8px;padding:1px 3px;border-radius:2px;white-space:nowrap">아침</span>
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px;white-space:nowrap">점심</span>
+            <span style="background:#FEF9C3;color:#854D0E;font-size:8px;padding:1px 3px;border-radius:2px;white-space:nowrap">오후</span>
+            <span style="background:#EDE9FE;color:#5B21B6;font-size:8px;padding:1px 3px;border-radius:2px;white-space:nowrap">석식</span>
+          </div>
+        </div>
+        <!-- 4/2 수 — 일부 등록 -->
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">2</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+            <span style="background:#FEF9C3;color:#854D0E;font-size:8px;padding:1px 3px;border-radius:2px">오후</span>
+          </div>
+        </div>
+        <!-- 4/3 목 — 전체 -->
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">3</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DCFCE7;color:#166534;font-size:8px;padding:1px 3px;border-radius:2px">아침</span>
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+            <span style="background:#FEF9C3;color:#854D0E;font-size:8px;padding:1px 3px;border-radius:2px">오후</span>
+          </div>
+        </div>
+        <!-- 4/4 금 — 점심만 -->
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">4</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+          </div>
+        </div>
+        <!-- 토/일 빈 -->
+        <div style="background:#F8FAFC;border:1px solid #F1F5F9;border-radius:5px;padding:4px 3px;min-height:52px;opacity:0.5">
+          <div style="font-size:10px;color:#94A3B8">5</div>
+        </div>
+        <div style="background:#F8FAFC;border:1px solid #F1F5F9;border-radius:5px;padding:4px 3px;min-height:52px;opacity:0.5">
+          <div style="font-size:10px;color:#94A3B8">6</div>
+        </div>
+        <!-- 4/7 ~ 4/11 -->
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">7</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DCFCE7;color:#166534;font-size:8px;padding:1px 3px;border-radius:2px">아침</span>
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+            <span style="background:#FEF9C3;color:#854D0E;font-size:8px;padding:1px 3px;border-radius:2px">오후</span>
+            <span style="background:#EDE9FE;color:#5B21B6;font-size:8px;padding:1px 3px;border-radius:2px">석식</span>
+          </div>
+        </div>
+        <!-- 비어있는 날 -->
+        <div style="background:#FFF7F7;border:1px dashed #FCA5A5;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:4px">8</div>
+          <div style="font-size:9px;color:#FCA5A5">미등록</div>
+        </div>
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">9</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+            <span style="background:#FEF9C3;color:#854D0E;font-size:8px;padding:1px 3px;border-radius:2px">오후</span>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">10</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DCFCE7;color:#166534;font-size:8px;padding:1px 3px;border-radius:2px">아침</span>
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #DBEAFE;border-radius:5px;padding:4px 3px;min-height:52px;cursor:pointer">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:4px">11</div>
+          <div style="display:flex;flex-wrap:wrap;gap:2px">
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:8px;padding:1px 3px;border-radius:2px">점심</span>
+            <span style="background:#EDE9FE;color:#5B21B6;font-size:8px;padding:1px 3px;border-radius:2px">석식</span>
+          </div>
+        </div>
+        <div style="background:#F8FAFC;border:1px solid #F1F5F9;border-radius:5px;padding:4px 3px;min-height:52px;opacity:0.5">
+          <div style="font-size:10px;color:#94A3B8">12</div>
+        </div>
+        <div style="background:#F8FAFC;border:1px solid #F1F5F9;border-radius:5px;padding:4px 3px;min-height:52px;opacity:0.5">
+          <div style="font-size:10px;color:#94A3B8">13</div>
+        </div>
+      </div>
+
+      <!-- 범례 -->
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;font-size:9px">
+        <span style="color:#6B7280">범례:</span>
+        <span style="background:#DCFCE7;color:#166534;padding:1px 4px;border-radius:2px">아침간식</span>
+        <span style="background:#DBEAFE;color:#1E40AF;padding:1px 4px;border-radius:2px">점심</span>
+        <span style="background:#FEF9C3;color:#854D0E;padding:1px 4px;border-radius:2px">오후간식</span>
+        <span style="background:#EDE9FE;color:#5B21B6;padding:1px 4px;border-radius:2px">석식</span>
+        <span style="background:#FFF7F7;color:#DC2626;border:1px dashed #FCA5A5;padding:1px 4px;border-radius:2px">미등록</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: 날짜 클릭 후 -->
+  <div class="mockup">
+    <div class="mockup-header">② 4월 1일 클릭 후 — 주간 접힘 + 상세 패널</div>
+    <div class="mockup-body" style="padding:12px;font-size:11px">
+
+      <!-- 월→주간 전환 버튼 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;gap:4px;align-items:center">
+          <button style="background:#0C2D48;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px">◀</button>
+          <span style="font-weight:700;color:#0C2D48;font-size:13px">2026년 4월 1주</span>
+          <button style="background:#0C2D48;color:white;border:none;border-radius:5px;padding:4px 10px;font-size:11px">▶</button>
+        </div>
+        <button style="background:#E0F2FE;color:#0369A1;border:none;border-radius:5px;padding:4px 10px;font-size:10px;cursor:pointer">📅 월간으로</button>
+      </div>
+
+      <!-- 주간 캘린더 (접힌 상태) -->
+      <div style="background:#F0F7FF;border:1px solid #BFDBFE;border-radius:8px;padding:8px;margin-bottom:10px">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">
+          <!-- 월~금 5일만 -->
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:4px 3px;text-align:center">
+            <div style="font-size:10px;color:#64748B;margin-bottom:2px">월</div>
+            <div style="font-size:10px;color:#94A3B8">3/31</div>
+            <div style="height:4px;background:#E2E8F0;border-radius:2px;margin-top:3px"></div>
+          </div>
+          <!-- 선택된 날 (4/1) -->
+          <div style="background:#0C2D48;border-radius:5px;padding:4px 3px;text-align:center;box-shadow:0 2px 8px rgba(12,45,72,0.3)">
+            <div style="font-size:10px;color:#B8D9F0;margin-bottom:2px">화</div>
+            <div style="font-size:11px;font-weight:700;color:white">4/1</div>
+            <div style="display:flex;justify-content:center;gap:2px;margin-top:3px">
+              <div style="width:5px;height:5px;background:#4ADE80;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#60A5FA;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#FCD34D;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#C4B5FD;border-radius:50%"></div>
+            </div>
+          </div>
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:4px 3px;text-align:center">
+            <div style="font-size:10px;color:#64748B;margin-bottom:2px">수</div>
+            <div style="font-size:10px;color:#374151">4/2</div>
+            <div style="display:flex;justify-content:center;gap:2px;margin-top:3px">
+              <div style="width:5px;height:5px;background:#60A5FA;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#FCD34D;border-radius:50%"></div>
+            </div>
+          </div>
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:4px 3px;text-align:center">
+            <div style="font-size:10px;color:#64748B;margin-bottom:2px">목</div>
+            <div style="font-size:10px;color:#374151">4/3</div>
+            <div style="display:flex;justify-content:center;gap:2px;margin-top:3px">
+              <div style="width:5px;height:5px;background:#4ADE80;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#60A5FA;border-radius:50%"></div>
+              <div style="width:5px;height:5px;background:#FCD34D;border-radius:50%"></div>
+            </div>
+          </div>
+          <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:4px 3px;text-align:center">
+            <div style="font-size:10px;color:#64748B;margin-bottom:2px">금</div>
+            <div style="font-size:10px;color:#374151">4/4</div>
+            <div style="display:flex;justify-content:center;gap:2px;margin-top:3px">
+              <div style="width:5px;height:5px;background:#60A5FA;border-radius:50%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 상세 패널 -->
+      <div style="border:1px solid #DBEAFE;border-radius:8px;overflow:hidden">
+        <!-- 패널 헤더 -->
+        <div style="background:#0C2D48;color:white;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700;font-size:12px">📅 2026년 4월 1일 (화) 식단</span>
+          <button style="background:#0EA5E9;color:white;border:none;border-radius:4px;padding:3px 10px;font-size:10px">+ 추가</button>
+        </div>
+        <!-- 식단 내용 -->
+        <div style="padding:8px;display:flex;flex-direction:column;gap:6px">
+
+          <div style="display:grid;grid-template-columns:64px 1fr 60px;gap:6px;align-items:start">
+            <div style="background:#DCFCE7;color:#166534;font-weight:700;padding:5px 4px;border-radius:5px;text-align:center;font-size:10px">아침간식</div>
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:5px 8px;font-size:10px;color:#374151;line-height:1.5">
+              바나나, 우유
+              <span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px;margin-left:4px">② 우유</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">🗑 삭제</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:64px 1fr 60px;gap:6px;align-items:start">
+            <div style="background:#DBEAFE;color:#1E40AF;font-weight:700;padding:5px 4px;border-radius:5px;text-align:center;font-size:10px">점심</div>
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:5px 8px;font-size:10px;color:#374151;line-height:1.5">
+              잡곡밥, 미역국, 돈까스, 깍두기, 배추김치
+              <span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px;margin-left:4px">⑥ 밀</span>
+              <span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px;margin-left:2px">⑩ 돼지</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">🗑 삭제</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:64px 1fr 60px;gap:6px;align-items:start">
+            <div style="background:#FEF9C3;color:#854D0E;font-weight:700;padding:5px 4px;border-radius:5px;text-align:center;font-size:10px">오후간식</div>
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:5px 8px;font-size:10px;color:#374151;line-height:1.5">
+              귤, 플레인요거트
+              <span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px;margin-left:4px">② 우유</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">🗑 삭제</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:64px 1fr 60px;gap:6px;align-items:start">
+            <div style="background:#EDE9FE;color:#5B21B6;font-weight:700;padding:5px 4px;border-radius:5px;text-align:center;font-size:10px">석식</div>
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:5px 8px;font-size:10px;color:#374151;line-height:1.5">
+              현미밥, 동태찌개, 제육볶음, 나물무침
+              <span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px;margin-left:4px">⑨ 고등어류</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:3px;padding:3px 0;font-size:9px;width:100%">🗑 삭제</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:20px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:14px">
+  <h3 style="color:#92400E;margin:0 0 8px 0">확인이 필요한 사항</h3>
+  <p class="subtitle" style="margin:0">아래 질문들을 터미널에 답변해 주세요:</p>
+  <ol style="color:#374151;font-size:13px;margin:8px 0 0 0;padding-left:20px;line-height:2">
+    <li>월간 뷰에서 <strong>식사 종류 태그(아침/점심/오후/석식)</strong> 표시 방식이 맞나요, 아니면 점(dot)으로 단순화할까요?</li>
+    <li>주간 캘린더는 <strong>월~금 5일</strong>만 표시할까요, 아니면 토·일도 포함하나요?</li>
+    <li>상세 패널의 알레르기 표시: <strong>번호(①②…) 방식</strong>으로 확정인가요?</li>
+  </ol>
+</div>

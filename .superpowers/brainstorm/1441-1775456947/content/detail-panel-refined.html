@@ -1,0 +1,214 @@
+<h2>상세 패널 UI 개선안 — 디자인시스템 적용</h2>
+<p class="subtitle">폰트 최소 11px / 본문 13px / 버튼 패딩 정상화 / 토글 위치 조정</p>
+
+<div class="split">
+
+  <!-- LEFT: 토글 OFF -->
+  <div class="mockup">
+    <div class="mockup-header">상세 패널 — 기본 (토글 OFF)</div>
+    <div class="mockup-body" style="padding:0;font-family:'Pretendard',sans-serif">
+
+      <div style="border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+        <!-- 패널 헤더 -->
+        <div style="background:#0C2D48;padding:12px 16px">
+          <div style="font-size:14px;font-weight:700;color:white">📅 2026년 4월 1일 (화)</div>
+          <div style="font-size:12px;color:#B8D9F0;margin-top:2px">식단 관리</div>
+        </div>
+
+        <!-- 아침간식 -->
+        <div style="background:white;border-bottom:1px solid #E5E7EB">
+          <!-- 행 헤더 -->
+          <div style="padding:12px 16px 8px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">아침간식</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none">
+              <span style="font-size:12px;color:#9CA3AF">반별 입력</span>
+              <div style="width:34px;height:18px;background:#D1D5DB;border-radius:9px;position:relative;flex-shrink:0">
+                <div style="width:14px;height:14px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>
+              </div>
+            </label>
+          </div>
+          <!-- 내용 -->
+          <div style="padding:0 16px 10px 16px">
+            <div style="font-size:13px;color:#1A1D2E;margin-bottom:6px">바나나, 우유</div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
+              <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">우유</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:500">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:500">🗑 삭제</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 점심 -->
+        <div style="background:white;border-bottom:1px solid #E5E7EB">
+          <div style="padding:12px 16px 8px 16px;display:flex;justify-content:space-between;align-items:center">
+            <span style="background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">점심</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+              <span style="font-size:12px;color:#9CA3AF">반별 입력</span>
+              <div style="width:34px;height:18px;background:#D1D5DB;border-radius:9px;position:relative;flex-shrink:0">
+                <div style="width:14px;height:14px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>
+              </div>
+            </label>
+          </div>
+          <div style="padding:0 16px 10px 16px">
+            <div style="font-size:13px;color:#1A1D2E;margin-bottom:6px">잡곡밥, 미역국, 돈까스, 깍두기, 배추김치</div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">
+              <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">밀</span>
+              <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">돼지고기</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:500">✏️ 수정</button>
+              <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:500">🗑 삭제</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오후간식 미등록 -->
+        <div style="background:#F9FAFB;border-bottom:1px solid #E5E7EB;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">오후간식</span>
+            <span style="font-size:12px;color:#9CA3AF">미등록</span>
+          </div>
+          <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+        </div>
+
+        <!-- 석식 미등록 -->
+        <div style="background:#F9FAFB;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="background:#EDE9FE;color:#5B21B6;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">석식</span>
+            <span style="font-size:12px;color:#9CA3AF">미등록</span>
+          </div>
+          <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: 점심 토글 ON (반별 확장) -->
+  <div class="mockup">
+    <div class="mockup-header">점심 토글 ON — 반별 입력 확장</div>
+    <div class="mockup-body" style="padding:0;font-family:'Pretendard',sans-serif">
+
+      <div style="border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08)">
+        <!-- 패널 헤더 -->
+        <div style="background:#0C2D48;padding:12px 16px">
+          <div style="font-size:14px;font-weight:700;color:white">📅 2026년 4월 1일 (화)</div>
+          <div style="font-size:12px;color:#B8D9F0;margin-top:2px">식단 관리</div>
+        </div>
+
+        <!-- 아침간식 축약 -->
+        <div style="background:white;border-bottom:1px solid #E5E7EB;padding:12px 16px;display:flex;align-items:center;gap:10px;opacity:0.65">
+          <span style="background:#D1FAE5;color:#065F46;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">아침간식</span>
+          <span style="font-size:13px;color:#6B7280">바나나, 우유</span>
+        </div>
+
+        <!-- 점심 - 토글 ON, 확장 -->
+        <div style="background:#F0F9FF;border-bottom:1px solid #BAE6FD;border-top:2px solid #0EA5E9">
+          <!-- 점심 행 헤더 -->
+          <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="background:#DBEAFE;color:#1E40AF;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">점심</span>
+              <span style="font-size:12px;color:#0EA5E9;font-weight:600">반별 입력 중</span>
+            </div>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+              <span style="font-size:12px;color:#0EA5E9;font-weight:600">반별 입력</span>
+              <!-- 토글 ON -->
+              <div style="width:34px;height:18px;background:#0EA5E9;border-radius:9px;position:relative;flex-shrink:0">
+                <div style="width:14px;height:14px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 1px 3px rgba(0,0,0,0.25)"></div>
+              </div>
+            </label>
+          </div>
+
+          <!-- 반별 서브 목록 -->
+          <div style="padding:0 16px 14px 16px;display:flex;flex-direction:column;gap:8px">
+
+            <!-- 햇님반 등록됨 -->
+            <div style="background:white;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-size:13px;font-weight:700;color:#0C2D48">🌞 햇님반</span>
+                <div style="display:flex;gap:6px">
+                  <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:500">✏️ 수정</button>
+                  <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:500">🗑 삭제</button>
+                </div>
+              </div>
+              <div style="font-size:13px;color:#1A1D2E;margin-bottom:5px">잡곡밥, 미역국, 돈까스, 깍두기</div>
+              <div style="display:flex;gap:5px">
+                <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">밀</span>
+                <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">돼지고기</span>
+              </div>
+            </div>
+
+            <!-- 달님반 등록됨 -->
+            <div style="background:white;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-size:13px;font-weight:700;color:#0C2D48">🌙 달님반</span>
+                <div style="display:flex;gap:6px">
+                  <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:500">✏️ 수정</button>
+                  <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:500">🗑 삭제</button>
+                </div>
+              </div>
+              <div style="font-size:13px;color:#1A1D2E;margin-bottom:5px">현미밥, 콩나물국, 닭볶음탕</div>
+              <div style="display:flex;gap:5px">
+                <span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:3px 8px;border-radius:6px">닭고기</span>
+              </div>
+            </div>
+
+            <!-- 별님반 미등록 -->
+            <div style="background:#F8FAFC;border:1.5px dashed #CBD5E1;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:13px;color:#9CA3AF">⭐ 별님반</span>
+              <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+            </div>
+
+            <!-- 꽃님반 미등록 -->
+            <div style="background:#F8FAFC;border:1.5px dashed #CBD5E1;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:13px;color:#9CA3AF">🌸 꽃님반</span>
+              <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 오후간식 미등록 축약 -->
+        <div style="background:#F9FAFB;border-bottom:1px solid #E5E7EB;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;opacity:0.7">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">오후간식</span>
+            <span style="font-size:12px;color:#9CA3AF">미등록</span>
+          </div>
+          <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+        </div>
+
+        <!-- 석식 미등록 축약 -->
+        <div style="background:#F9FAFB;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;opacity:0.7">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="background:#EDE9FE;color:#5B21B6;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px">석식</span>
+            <span style="font-size:12px;color:#9CA3AF">미등록</span>
+          </div>
+          <button style="background:#0EA5E9;color:white;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">+ 등록</button>
+        </div>
+
+      </div>
+
+      <!-- 경고 메시지 -->
+      <div style="margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400E">
+        ⚠️ 반별 입력을 끄면 등록된 반별 데이터가 모두 삭제됩니다.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:20px;background:#F0F7FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px">
+  <h3 style="color:#0C2D48;margin:0 0 6px 0">적용된 디자인시스템 수정 내역</h3>
+  <ul style="font-size:13px;color:#374151;margin:0;padding-left:18px;line-height:2">
+    <li>폰트 8~10px → 최소 <strong>11px</strong>(태그), <strong>12px</strong>(보조), <strong>13px</strong>(본문), <strong>14px</strong>(헤더)</li>
+    <li>버튼 패딩 2~3px → <strong>5~7px 10~14px</strong>으로 확대</li>
+    <li>버튼 border-radius → <strong>6px</strong> (radius-sm 기준)</li>
+    <li>토글 라벨 오른쪽 정렬 — 식사구분 라벨과 분리</li>
+    <li>토글 ON 시 해당 식사구분 섹션 상단 <strong>2px 액센트 보더</strong> + 배경색 강조</li>
+    <li>+ 등록 버튼 → <strong>#0EA5E9 solid</strong> (운영관리 액센트 적용)</li>
+    <li>카드 radius → <strong>12px</strong> (radius-lg), 반 서브카드 → 8px</li>
+  </ul>
+</div>

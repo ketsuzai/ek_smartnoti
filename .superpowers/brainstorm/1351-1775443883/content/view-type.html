@@ -1,0 +1,153 @@
+<h2>식단표 메인 뷰 — 어떤 형태가 맞을까요?</h2>
+<p class="subtitle">관리자가 가장 자주 쓸 화면입니다. 세 가지 방향을 제안합니다.</p>
+
+<div class="cards">
+
+  <!-- Option A: 월간 캘린더 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;font-size:11px">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">
+          <div style="text-align:center;font-weight:700;color:#0EA5E9;padding:4px;font-size:10px">월</div>
+          <div style="text-align:center;font-weight:700;color:#0EA5E9;padding:4px;font-size:10px">화</div>
+          <div style="text-align:center;font-weight:700;color:#0EA5E9;padding:4px;font-size:10px">수</div>
+          <div style="text-align:center;font-weight:700;color:#0EA5E9;padding:4px;font-size:10px">목</div>
+          <div style="text-align:center;font-weight:700;color:#0EA5E9;padding:4px;font-size:10px">금</div>
+          <div style="text-align:center;font-weight:700;color:#6B7280;padding:4px;font-size:10px">토</div>
+          <div style="text-align:center;font-weight:700;color:#6B7280;padding:4px;font-size:10px">일</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px;min-height:56px">
+            <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px">1</div>
+            <div style="font-size:9px;color:#6B7280;line-height:1.3">쌀밥<br>된장국<br>계란말이</div>
+            <div style="margin-top:2px"><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">⑤</span></div>
+          </div>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px;min-height:56px">
+            <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px">2</div>
+            <div style="font-size:9px;color:#6B7280;line-height:1.3">잡곡밥<br>미역국<br>돈까스</div>
+            <div style="margin-top:2px"><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">①⑥</span></div>
+          </div>
+          <div style="background:#EFF6FF;border:1px dashed #93C5FD;border-radius:4px;padding:4px;min-height:56px;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:16px;color:#93C5FD">+</span>
+          </div>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px;min-height:56px">
+            <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px">4</div>
+            <div style="font-size:9px;color:#6B7280">현미밥<br>순두부찌개</div>
+          </div>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px;min-height:56px">
+            <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px">5</div>
+            <div style="font-size:9px;color:#6B7280">오므라이스<br>감자수프</div>
+          </div>
+          <div style="background:#f8fafc;border:1px solid #E5E7EB;border-radius:4px;padding:4px;min-height:56px;opacity:0.4">
+            <div style="font-size:10px;font-weight:700;color:#9CA3AF;margin-bottom:3px">6</div>
+          </div>
+          <div style="background:#f8fafc;border:1px solid #E5E7EB;border-radius:4px;padding:4px;min-height:56px;opacity:0.4">
+            <div style="font-size:10px;font-weight:700;color:#9CA3AF;margin-bottom:3px">7</div>
+          </div>
+        </div>
+        <div style="margin-top:6px;font-size:9px;color:#9CA3AF;text-align:center">… 이하 5주 전체 표시</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 월간 캘린더 뷰</h3>
+      <p>한 달 전체를 달력 그리드로 조망. 날짜 클릭 → 모달로 식단 입력. 비어있는 날은 + 표시.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>장점</h4><ul><li>한눈에 월간 현황 파악</li><li>학부모 앱 뷰와 동일감</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>셀이 작아 메뉴 내용 축약</li><li>알레르기 정보 공간 부족</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: 주간 테이블 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;font-size:11px">
+        <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
+          <button style="background:#0C2D48;color:white;border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer">◀</button>
+          <span style="font-size:11px;font-weight:700;color:#0C2D48">2026년 4월 1주</span>
+          <button style="background:#0C2D48;color:white;border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer">▶</button>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:10px">
+          <thead>
+            <tr style="background:#0C2D48;color:white">
+              <th style="padding:5px;width:50px;text-align:center">구분</th>
+              <th style="padding:5px;text-align:center">월 (3/31)</th>
+              <th style="padding:5px;text-align:center">화 (4/1)</th>
+              <th style="padding:5px;text-align:center">수 (4/2)</th>
+              <th style="padding:5px;text-align:center">목 (4/3)</th>
+              <th style="padding:5px;text-align:center">금 (4/4)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:5px;background:#E0F2FE;font-weight:700;color:#0C2D48;text-align:center;font-size:10px">점심</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center;line-height:1.4">쌀밥<br>된장국<br>계란말이<br><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">①⑤</span></td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center;line-height:1.4">잡곡밥<br>미역국<br>돈까스<br><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">⑥</span></td>
+              <td style="padding:5px;border:1px dashed #93C5FD;text-align:center;color:#93C5FD;cursor:pointer">+ 추가</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center;line-height:1.4">현미밥<br>순두부</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center;line-height:1.4">오므라이스<br>수프</td>
+            </tr>
+            <tr>
+              <td style="padding:5px;background:#FEF9C3;font-weight:700;color:#92400E;text-align:center;font-size:10px">간식</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center">바나나<br>우유<br><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">②</span></td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center">귤<br>요거트</td>
+              <td style="padding:5px;border:1px dashed #93C5FD;text-align:center;color:#93C5FD;cursor:pointer">+ 추가</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center">사과<br>두유</td>
+              <td style="padding:5px;border:1px solid #e2e8f0;text-align:center">딸기<br>쌀과자</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 주간 테이블 뷰</h3>
+      <p>1주 단위 행·열 테이블. 행=식사구분(점심/간식), 열=요일. 주 단위 네비게이션.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>장점</h4><ul><li>메뉴·알레르기 정보 충분히 표시</li><li>입력·수정이 직관적</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>월간 전체 흐름 파악 어려움</li><li>주 이동이 잦아질 수 있음</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C: 하이브리드 -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:12px;font-size:11px">
+        <!-- 상단: 미니 월간 달력 -->
+        <div style="background:#0C2D48;color:white;border-radius:6px;padding:8px;margin-bottom:8px">
+          <div style="font-size:10px;font-weight:700;margin-bottom:4px;text-align:center">2026년 4월</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:9px">
+            <div style="color:#B8D9F0">월</div><div style="color:#B8D9F0">화</div><div style="color:#B8D9F0">수</div><div style="color:#B8D9F0">목</div><div style="color:#B8D9F0">금</div><div style="color:#6B7280">토</div><div style="color:#6B7280">일</div>
+            <div style="color:#6B7280"></div><div style="background:#0EA5E9;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;margin:auto">1</div><div>2</div><div>3</div><div>4</div><div style="color:#6B7280">5</div><div style="color:#6B7280">6</div>
+            <div>7</div><div>8</div><div>9</div><div style="border:1px solid #0EA5E9;border-radius:2px">10</div><div>11</div><div style="color:#6B7280">12</div><div style="color:#6B7280">13</div>
+          </div>
+        </div>
+        <!-- 하단: 선택 날짜 상세 -->
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:8px">
+          <div style="font-size:10px;font-weight:700;color:#0C2D48;margin-bottom:6px">📅 4월 1일 (화) 식단</div>
+          <div style="display:grid;grid-template-columns:60px 1fr;gap:4px;font-size:10px">
+            <div style="background:#E0F2FE;color:#0369A1;font-weight:700;padding:4px;border-radius:3px;text-align:center">점심</div>
+            <div style="background:#f8fafc;padding:4px;border-radius:3px">잡곡밥, 미역국, 돈까스, 깍두기<br><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">⑥ 밀</span></div>
+            <div style="background:#FEF9C3;color:#92400E;font-weight:700;padding:4px;border-radius:3px;text-align:center">간식</div>
+            <div style="background:#f8fafc;padding:4px;border-radius:3px">귤, 플레인요거트<br><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:1px 3px;border-radius:2px">② 우유</span></div>
+          </div>
+          <div style="margin-top:6px;display:flex;gap:4px;justify-content:flex-end">
+            <button style="background:#EFF6FF;color:#1D4ED8;border:none;border-radius:4px;padding:3px 8px;font-size:9px">✏️ 수정</button>
+            <button style="background:#FEF2F2;color:#DC2626;border:none;border-radius:4px;padding:3px 8px;font-size:9px">🗑 삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 하이브리드 (미니 캘린더 + 상세 패널)</h3>
+      <p>상단에 미니 월 달력(날짜 선택용), 하단에 선택된 날짜의 상세 식단 패널. 두 정보를 한 화면에.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>장점</h4><ul><li>월 전체 조망 + 일별 상세 동시에</li><li>메뉴 텍스트 넉넉히 표시 가능</li></ul></div>
+        <div class="cons"><h4>단점</h4><ul><li>레이아웃 복잡도 높음</li><li>한 번에 하루만 볼 수 있음</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">클릭으로 선호하는 안을 골라주세요. 터미널에 이유도 함께 적어주시면 좋습니다.</p>
