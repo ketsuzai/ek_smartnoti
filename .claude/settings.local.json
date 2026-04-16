@@ -29,7 +29,9 @@
       "Bash(python:*)",
       "mcp__plugin_figma_figma__get_screenshot",
       "mcp__plugin_figma_figma__get_metadata",
-      "mcp__plugin_figma_figma__use_figma"
+      "mcp__plugin_figma_figma__use_figma",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(gh pr create --repo ketsuzai/ek_smartnoti --title 'style: 운영관리 페이지 콘텐츠 너비 1080px 통일' --body ':*)"
     ]
   },
   "spinnerTipsEnabled": true
