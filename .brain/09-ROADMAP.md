@@ -1,6 +1,6 @@
 # 🧠 프로젝트 브레인: 작업 로드맵
 
-> **최종 업데이트**: 2026-03-18  
+> **최종 업데이트**: 2026-04-16  
 > **작업 범위**: 운영관리 기획 및 구현 전체 로드맵
 
 ---
@@ -33,9 +33,9 @@ Phase 5. 기관·교사 전용 UI  → 하늘색 테마 사이드바 분기
 
 | 작업 | 파일 | 내용 | 상태 |
 |------|------|------|------|
-| 기관 선택 팝업 | `src/pages/operation-org-selector.html` | SearchableSelector, 기관 카드 그리드 | 🔲 대기 |
-| 운영관리 공통 레이아웃 | 각 operation-*.html 공통 구조 | 사이드바 + 상단바 (컨텍스트 배너 포함) | 🔲 대기 |
-| 컨텍스트 전환 로직 | JS 공통 모듈 | sessionStorage 기반 기관 컨텍스트 저장/조회 | 🔲 대기 |
+| 기관 선택 팝업 | `src/pages/oper/operation-org-selector.html` | SearchableSelector, 기관 카드 그리드, 이중 진입 | ✅ 완료 |
+| 운영관리 공통 레이아웃 | 각 operation-*.html 공통 구조 | 사이드바 + 상단바 (컨텍스트 배너 포함) | ✅ 완료 |
+| 컨텍스트 전환 로직 | `operation-sidebar.js` | sessionStorage 기반 기관 컨텍스트 저장/조회, effectiveRole 패턴 | ✅ 완료 |
 
 ---
 
@@ -43,15 +43,20 @@ Phase 5. 기관·교사 전용 UI  → 하늘색 테마 사이드바 분기
 
 | 순서 | 메뉴 | 파일 | 우선순위 | 상태 |
 |------|------|------|---------|------|
-| 1 | 기관정보 관리 | `operation-org-info.html` | 🔴 높음 | 🔲 대기 |
-| 2 | 반 관리 | `operation-class.html` | 🔴 높음 | 🔲 대기 |
-| 3 | 원아 관리 | `operation-child.html` | 🔴 높음 | 🔲 대기 |
-| 4 | 알림장 | `operation-notice-board.html` | 🟡 중간 | 🔲 대기 |
-| 5 | 공지사항 | `operation-announcement.html` | 🟡 중간 | 🔲 대기 |
-| 6 | 앨범 | `operation-album.html` | 🟡 중간 | 🔲 대기 |
-| 7 | 일정 관리 | `operation-schedule.html` | 🟢 낮음 | 🔲 대기 |
-| 8 | 상담 관리 | `operation-consulting.html` | 🟢 낮음 | 🔲 대기 |
-| 9 | 투약의뢰서 관리 | `operation-medicine.html` | 🟢 낮음 | 🔲 대기 |
+| 1 | 기관정보 관리 | `operation-org-info.html` | 🔴 높음 | ✅ 완료 |
+| 2 | 반 관리 | `operation-class.html` | 🔴 높음 | ✅ 완료 |
+| 3 | 원아 관리 | `operation-child.html` | 🔴 높음 | ✅ 완료 |
+| 4 | 알림장 | `operation-notice-board.html` | 🟡 중간 | ✅ 완료 |
+| 5 | 공지사항 | `operation-announcement.html` | 🟡 중간 | ✅ 완료 (v2 전면 개선) |
+| 6 | 앨범 | `operation-album.html` | 🟡 중간 | ✅ 완료 |
+| 7 | 투약의뢰서 관리 | `operation-medicine.html` | 🟡 중간 | ✅ 완료 |
+| 8 | 식단표 | `operation-meal.html` | 🟡 중간 | ✅ 완료 |
+| 9 | 멤버/승인 | `operation-member.html` | 🟡 중간 | ✅ 완료 |
+| 10 | 진급/졸업 | `operation-graduation.html` | 🟡 중간 | ✅ 완료 |
+| 11 | 운영관리 대시보드 | `operation-dashboard.html` | 🔴 높음 | ✅ 완료 |
+| 12 | 일정 관리 | `operation-schedule.html` | 🟢 낮음 | 🔲 미시작 |
+| 13 | 상담 관리 | `operation-consulting.html` | 🟢 낮음 | 🔲 미시작 |
+| 14 | 출석부 | `operation-attendance.html` | 🟢 낮음 | 🔲 미시작 |
 
 ---
 

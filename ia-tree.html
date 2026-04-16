@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키드키즈 운영관리 IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0F1A;
+  --s1: #161929;
+  --s2: #1C2035;
+  --border: rgba(255,255,255,0.06);
+  --text: #CBD5E1;
+  --dim: #475569;
+  --white: #F1F5F9;
+  --sky: #38BDF8;
+  --teal: #2DD4BF;
+  --purple: #A78BFA;
+  --green: #4ADE80;
+  --amber: #FCD34D;
+  --pink: #F9A8D4;
+  --red: #F87171;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ── 레이아웃 ── */
+.wrap {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  gap: 0;
+}
+
+/* ── 헤더 행 ── */
+.col-header {
+  padding: 16px 14px 12px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+}
+.col-header.root { border-right: 1px solid var(--border); }
+.col-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+.col-sub { font-size: 10px; color: #334155; }
+
+/* ── 컬럼 ── */
+.col {
+  border-right: 1px solid var(--border);
+  padding: 12px 10px;
+  overflow-y: auto;
+}
+.col:last-child { border-right: none; }
+.col.root { background: var(--s1); }
+
+/* ── 시스템 루트 ── */
+.sys-root {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--s2);
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.sys-icon { font-size: 20px; }
+.sys-name { font-size: 13px; font-weight: 700; color: var(--white); }
+.sys-ver  { font-size: 10px; color: var(--dim); }
+
+/* ── 역할 뱃지 ── */
+.role-row { display: flex; flex-direction: column; gap: 5px; }
+.role-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 11px; font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+  border: 1px solid transparent;
+}
+.role-badge:hover { filter: brightness(1.15); }
+.role-badge.super  { background: rgba(167,139,250,0.12); color: #C4B5FD; border-color: rgba(167,139,250,0.2); }
+.role-badge.org    { background: rgba(56,189,248,0.10);  color: #7DD3FC; border-color: rgba(56,189,248,0.2); }
+.role-badge.teacher{ background: rgba(45,212,191,0.10);  color: #5EEAD4; border-color: rgba(45,212,191,0.2); }
+.role-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── 섹션 라벨 ── */
+.sec-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: #334155;
+  padding: 10px 4px 5px;
+}
+
+/* ── 페이지 노드 ── */
+.page-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: 0.15s;
+  border: 1px solid transparent;
+  position: relative;
+}
+.page-node:hover { background: var(--s2); border-color: var(--border); }
+.page-node.active { background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.2); }
+
+.page-node::before {
+  content: '';
+  position: absolute;
+  left: -10px; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 1px;
+  background: var(--border);
+}
+
+.pn-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.pn-right { flex: 1; min-width: 0; }
+.pn-name { font-size: 12px; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pn-file { font-size: 10px; color: #334155; font-family: monospace; }
+.pn-badges { display: flex; gap: 3px; margin-top: 3px; flex-wrap: wrap; }
+
+.st { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+.st.done { background: rgba(74,222,128,0.12); color: #4ADE80; }
+.st.todo { background: rgba(71,85,105,0.2); color: #475569; }
+.st.soon { background: rgba(71,85,105,0.12); color: #334155; border: 1px dashed #334155; }
+
+.rb { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+.rb.s { background: rgba(167,139,250,0.15); color: #A78BFA; }
+.rb.o { background: rgba(56,189,248,0.12);  color: #38BDF8; }
+.rb.t { background: rgba(45,212,191,0.12);  color: #2DD4BF; }
+
+/* ── 기능 칩 패널 ── */
+.feature-col {
+  padding: 12px 10px;
+  border-right: 1px solid var(--border);
+}
+.feature-col:last-child { border-right: none; }
+
+.f-section {
+  margin-bottom: 14px;
+  padding: 10px 11px;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.f-page-name {
+  font-size: 12px; font-weight: 700; color: var(--white);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.f-page-name span { font-size: 14px; }
+.f-rows { display: flex; flex-direction: column; gap: 5px; }
+.f-row { display: flex; gap: 5px; align-items: flex-start; }
+.f-cat {
+  font-size: 9px; font-weight: 700; color: #334155;
+  min-width: 44px; padding-top: 3px; flex-shrink: 0;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.f-chips { display: flex; flex-wrap: wrap; gap: 3px; }
+
+.chip {
+  font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 3px;
+  white-space: nowrap;
+}
+.chip.v { background: rgba(56,189,248,0.1);   color: #7DD3FC; border: 1px solid rgba(56,189,248,0.15); }
+.chip.a { background: rgba(74,222,128,0.1);   color: #4ADE80; border: 1px solid rgba(74,222,128,0.15); }
+.chip.m { background: rgba(167,139,250,0.1);  color: #C4B5FD; border: 1px solid rgba(167,139,250,0.15); }
+.chip.d { background: rgba(251,191,36,0.1);   color: #FCD34D; border: 1px solid rgba(251,191,36,0.15); }
+.chip.p { background: rgba(244,114,182,0.1);  color: #F9A8D4; border: 1px solid rgba(244,114,182,0.15); }
+.chip.f { background: rgba(100,116,139,0.12); color: #64748B; border: 1px solid rgba(100,116,139,0.2); }
+.chip.s { background: rgba(71,85,105,0.08);   color: #334155; border: 1px dashed #334155; }
+
+/* ── 범례 바 ── */
+.legend-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex; gap: 16px; align-items: center;
+  z-index: 20;
+}
+.legend-title { font-size: 10px; color: var(--dim); font-weight: 700; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--dim); }
+
+/* ── 커넥터 라인 ── */
+.tree-branch {
+  border-left: 1px solid var(--border);
+  margin-left: 8px;
+  padding-left: 10px;
+}
+
+/* ── 진입 흐름 ── */
+.entry-flow {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.entry-node {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--s2);
+  margin-bottom: 2px;
+}
+.entry-node .en-name { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.entry-node .en-chips { display: flex; flex-wrap: wrap; gap: 3px; }
+.flow-arrow { text-align: center; color: var(--dim); font-size: 11px; padding: 2px 0; }
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #1E2A3A; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ══ COL 0: 시스템 루트 / 역할 ══ -->
+  <div class="col-header root">
+    <div class="col-title">System</div>
+    <div class="col-sub">키드키즈 v2.4</div>
+  </div>
+  <div class="col-header">
+    <div class="col-title">통합관리자 전용</div>
+    <div class="col-sub">src/pages/</div>
+  </div>
+  <div class="col-header">
+    <div class="col-title">운영관리 · 콘텐츠</div>
+    <div class="col-sub">src/pages/oper/</div>
+  </div>
+  <div class="col-header">
+    <div class="col-title">운영관리 · 기관관리</div>
+    <div class="col-sub">src/pages/oper/</div>
+  </div>
+
+  <!-- ══ COL 0: 루트 ══ -->
+  <div class="col root" style="padding:14px 12px 80px;">
+
+    <div class="sys-root">
+      <span class="sys-icon">🧒</span>
+      <div>
+        <div class="sys-name">키드키즈 알림장</div>
+        <div class="sys-ver">운영관리 백오피스 v2.4</div>
+      </div>
+    </div>
+
+    <!-- 진입 흐름 -->
+    <div class="sec-label">진입점</div>
+    <div class="entry-flow">
+      <div class="entry-node">
+        <div class="en-name">🔐 로그인</div>
+        <div class="en-chips">
+          <span class="chip f">ID / PW 입력</span>
+          <span class="chip a">▶ 로그인</span>
+          <span class="chip f">userRole 세션 저장</span>
+        </div>
+      </div>
+      <div class="flow-arrow">↓ super만</div>
+      <div class="entry-node" style="border-color:rgba(167,139,250,0.25)">
+        <div class="en-name">🏢 기관선택 팝업</div>
+        <div class="en-chips">
+          <span class="chip p">Step1 기관 선택</span>
+          <span class="chip p">Step2 역할 선택</span>
+          <span class="chip f">기관명 검색</span>
+          <span class="chip f">상태·유형 필터</span>
+          <span class="chip a">▶ 진입</span>
+          <span class="chip f">operationContext 저장</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 역할 구분 -->
+    <div class="sec-label" style="margin-top:14px">관리자 역할</div>
+    <div class="role-row">
+      <div class="role-badge super">
+        <div class="role-dot" style="background:#A78BFA"></div>
+        🔑 통합관리자 (super)
+      </div>
+      <div class="role-badge org">
+        <div class="role-dot" style="background:#38BDF8"></div>
+        🏫 기관관리자 (org_admin)
+      </div>
+      <div class="role-badge teacher">
+        <div class="role-dot" style="background:#2DD4BF"></div>
+        📚 교사관리자 (teacher)
+      </div>
+    </div>
+
+    <!-- 공통 패턴 -->
+    <div class="sec-label" style="margin-top:14px">공통 패턴</div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div class="entry-node">
+        <div class="en-name" style="font-size:11px;margin-bottom:3px;">🧭 세션 & 권한</div>
+        <div class="en-chips">
+          <span class="chip f">effectiveRole</span>
+          <span class="chip f">assignedClasses</span>
+          <span class="chip a">기관변경 / 컨텍스트종료</span>
+        </div>
+      </div>
+      <div class="entry-node">
+        <div class="en-name" style="font-size:11px;margin-bottom:3px;">💬 댓글 시스템</div>
+        <div class="en-chips">
+          <span class="chip v">2단계 스레드</span>
+          <span class="chip v">formatCommentDate</span>
+          <span class="chip a">수정 인라인 · (수정됨)</span>
+        </div>
+      </div>
+      <div class="entry-node">
+        <div class="en-name" style="font-size:11px;margin-bottom:3px;">🔗 페이지간 연동</div>
+        <div class="en-chips">
+          <span class="chip f">noticePrefill</span>
+          <span class="chip f">medicinePrefill</span>
+          <span class="chip f">graduation_confirmed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COL 1: 통합관리자 전용 ══ -->
+  <div class="col" style="padding-bottom:80px;">
+
+    <!-- 대시보드 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>📊</span> 대시보드 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">KPI 카드 (DAU/MAU/기관수/회원수)</span>
+            <span class="chip v">DAU/MAU 라인차트</span>
+            <span class="chip v">기관 랭킹 TOP10</span>
+            <span class="chip v">디바이스 분포 도넛</span>
+            <span class="chip v">To-do 목록</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">기간 필터 7일/30일/90일</span>
+            <span class="chip a">▶ 운영관리 진입</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 통합회원 조회 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>👤</span> 통합회원 조회 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰/필터</div>
+          <div class="f-chips">
+            <span class="chip v">전체 회원 목록</span>
+            <span class="chip f">이름·이메일·전화 검색</span>
+            <span class="chip f">역할 · 상태 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 상세 조회</span>
+            <span class="chip a">엑셀 내보내기</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">드로어</div>
+          <div class="f-chips">
+            <span class="chip d">회원 상세 (기본정보/기관/활동이력)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 가입/승인 관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>✅</span> 가입/승인 관리 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">승인 대기 카드 목록</span>
+            <span class="chip f">역할 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 승인</span>
+            <span class="chip a">▶ 거부</span>
+            <span class="chip a">▶ 취소</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">모달</div>
+          <div class="f-chips">
+            <span class="chip m">거부 사유 입력</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 초대장 관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>📨</span> 초대장 관리 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">초대 이력 목록</span>
+            <span class="chip f">기관·역할·상태 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 초대 발송</span>
+            <span class="chip a">▶ 재발송</span>
+            <span class="chip a">▶ 취소</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 회원 상태 관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🔄</span> 회원 상태 관리 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip p">정상 탭</span>
+            <span class="chip p">휴면 탭</span>
+            <span class="chip p">탈퇴 탭</span>
+            <span class="chip f">검색 · 기간 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 상태 변경</span>
+            <span class="chip a">▶ 강제 탈퇴</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">모달</div>
+          <div class="f-chips">
+            <span class="chip m">상태 변경 확인</span>
+            <span class="chip m">탈퇴 사유 입력</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 기관관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🏛️</span> 기관관리 <span class="rb s">S</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">탭</div>
+          <div class="f-chips">
+            <span class="chip p">기관 목록</span>
+            <span class="chip p">승인 대기</span>
+            <span class="chip p">기관 상태</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">필터</div>
+          <div class="f-chips">
+            <span class="chip f">기관명·지역·유형</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 승인/반려</span>
+            <span class="chip a">▶ 상태 변경</span>
+            <span class="chip d">기관 상세 드로어</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COL 2: 운영관리 콘텐츠 ══ -->
+  <div class="col" style="padding-bottom:80px;">
+
+    <!-- 운영관리 대시보드 -->
+    <div class="f-section" style="border-color:rgba(56,189,248,0.2)">
+      <div class="f-page-name"><span>🏠</span> 운영관리 대시보드 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰·역할</div>
+          <div class="f-chips">
+            <span class="chip p">교사 · 오늘의 현황 (5명 미리보기)</span>
+            <span class="chip p">기관관리자 · KPI 카드 + 활동피드</span>
+            <span class="chip v">공지사항 사이드바</span>
+            <span class="chip v">진급처리 배너 (org_admin)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 전체보기</span>
+            <span class="chip a">▶ 지금 처리하기 → 진급/졸업</span>
+            <span class="chip a">댓글 답변·수정</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">모달</div>
+          <div class="f-chips">
+            <span class="chip m">출석현황 (attOverlay) · 4상태+필터테이블</span>
+            <span class="chip m">셀 클릭 → prefill 이동</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 알림장 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>📋</span> 알림장 <span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">탭</div>
+          <div class="f-chips">
+            <span class="chip p">발송 탭 (교사→학부모)</span>
+            <span class="chip p">수신 탭 (학부모→교사)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">반현황</div>
+          <div class="f-chips">
+            <span class="chip v">우리 반 현황 · 작성상태 카드</span>
+            <span class="chip v">완료=라임 / 미작성=회색</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">필터</div>
+          <div class="f-chips">
+            <span class="chip f">날짜 범위</span>
+            <span class="chip f">반 선택</span>
+            <span class="chip f">원아 이름 검색</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">작성하기</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 작성하기 (우측 슬라이드 패널)</span>
+            <span class="chip p">1:1 모드 · 기분/건강/식사/배변/참여도/교우</span>
+            <span class="chip p">1:N 모드 · 태그 6종 + 개별노트</span>
+            <span class="chip a">원아 선택</span>
+            <span class="chip a">사진/동영상 추가</span>
+            <span class="chip a">▶ 발행 / 예약발행</span>
+            <span class="chip d">임시보관함 모달</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">상세화면</div>
+          <div class="f-chips">
+            <span class="chip v">1:1 (탭없음) / 1:N (공통탭+원아별탭)</span>
+            <span class="chip v">댓글 스레드 2단계</span>
+            <span class="chip a">✏️ 수정 / 🗑️ 삭제</span>
+            <span class="chip a">댓글 답변·수정·삭제</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 출석부 -->
+    <div class="f-section" style="opacity:0.5">
+      <div class="f-page-name"><span>📅</span> 출석부 <span class="rb o">O</span><span class="rb t">T</span> <span class="st todo">🔲 미시작</span></div>
+      <div class="f-rows">
+        <div class="f-row"><div class="f-cat">예정</div>
+          <div class="f-chips">
+            <span class="chip s">월별 출석 캘린더</span>
+            <span class="chip s">원아별 출결 현황</span>
+            <span class="chip s">출석 상태 변경</span>
+            <span class="chip s">결석 사유 입력</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 식단표 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🍱</span> 식단표 <span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">월별 풀스크린 캘린더</span>
+            <span class="chip v">날짜선택 → 우측 콘텐츠 패널</span>
+            <span class="chip v">4종 색상 (오전간식/점심/오후간식/석식)</span>
+            <span class="chip v">알레르기 경고</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 식단 등록</span>
+            <span class="chip a">셀 호버 → + 등록하기</span>
+            <span class="chip a">✏️ 수정 / 🗑️ 삭제</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">모달</div>
+          <div class="f-chips">
+            <span class="chip m">식단 등록/수정 (4섹션 접힘형)</span>
+            <span class="chip m">삭제 확인</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 공지사항 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>📢</span> 공지사항 <span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">목록 테이블 10열</span>
+            <span class="chip v">인디케이터 📷📎💬N</span>
+            <span class="chip f">반 칩 필터</span>
+            <span class="chip f">카테고리 6종 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">작성하기</div>
+          <div class="f-chips">
+            <span class="chip a">▶ + 공지 작성 모달 (640px)</span>
+            <span class="chip p">카테고리 칩 선택</span>
+            <span class="chip p">예약발행 토글</span>
+            <span class="chip p">댓글 허용 토글</span>
+            <span class="chip p">사진/첨부 드롭존</span>
+            <span class="chip p">샘플 템플릿 패널</span>
+            <span class="chip p">지난 공지 펼침</span>
+            <span class="chip a">▶ 맞춤법 검사</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">상세화면</div>
+          <div class="f-chips">
+            <span class="chip d">상세 드로어 (콘텐츠↔읽음현황)</span>
+            <span class="chip a">📌 핀 고정</span>
+            <span class="chip a">👁️ 읽음현황 조회</span>
+            <span class="chip a">🔔 재전송 (미읽음)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">임시보관</div>
+          <div class="f-chips">
+            <span class="chip d">📂 임시보관함 모달</span>
+            <span class="chip a">불러오기 → 폼 pre-fill</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 앨범 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🖼️</span> 앨범 <span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">그리드 (월별 그룹)</span>
+            <span class="chip f">반 · 날짜 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 사진/동영상 업로드</span>
+            <span class="chip a">▶ 다운로드 / 삭제</span>
+            <span class="chip m">이미지 뷰어 라이트박스</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 스케줄 -->
+    <div class="f-section" style="opacity:0.45">
+      <div class="f-page-name"><span>🗓️</span> 스케줄 <span class="rb o">O</span><span class="rb t">T</span> <span class="st soon">준비중</span></div>
+      <div class="f-rows">
+        <div class="f-row"><div class="f-cat">예정</div>
+          <div class="f-chips">
+            <span class="chip s">월별/주별 캘린더</span>
+            <span class="chip s">일정 등록/수정/삭제</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 상담 -->
+    <div class="f-section" style="opacity:0.45">
+      <div class="f-page-name"><span>💬</span> 상담 관리 <span class="rb o">O</span><span class="rb t">T</span> <span class="st soon">준비중</span></div>
+      <div class="f-rows">
+        <div class="f-row"><div class="f-cat">예정</div>
+          <div class="f-chips">
+            <span class="chip s">상담 요청 목록</span>
+            <span class="chip s">일정 등록 · 결과 기록</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 투약의뢰서 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>💊</span> 투약의뢰서 <span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">목록 (날짜/원아/약이름/상태)</span>
+            <span class="chip f">반 · 날짜 · 상태 필터</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 투약 완료 처리</span>
+            <span class="chip d">상세 드로어 (원아/약정보/투약시간)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COL 3: 운영관리 기관관리 ══ -->
+  <div class="col" style="padding-bottom:80px;">
+
+    <!-- 기관정보 관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🏢</span> 기관정보 관리 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">기본정보 (이름/주소/전화/유형)</span>
+            <span class="chip v">원장 정보 · 운영 시간</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">권한분기</div>
+          <div class="f-chips">
+            <span class="chip a">S·O — ✏️ 수정 가능</span>
+            <span class="chip f">T — 조회 전용</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 정보 수정 저장</span>
+            <span class="chip a">▶ 로고 업로드</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 멤버/승인 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>👥</span> 멤버/승인 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">탭</div>
+          <div class="f-chips">
+            <span class="chip p">승인 탭 · 대기 카드 목록</span>
+            <span class="chip p">멤버 탭 · 교사 서브탭</span>
+            <span class="chip p">멤버 탭 · 원아 서브탭</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">KPI</div>
+          <div class="f-chips">
+            <span class="chip v">전체 / 승인대기 / 교직원 / 원아</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">승인탭</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 승인</span>
+            <span class="chip a">▶ 거부</span>
+            <span class="chip m">거부 사유 모달</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">멤버탭</div>
+          <div class="f-chips">
+            <span class="chip f">역할·상태·이름 검색</span>
+            <span class="chip a">▶ 멤버 수정</span>
+            <span class="chip a">▶ 상태 변경</span>
+            <span class="chip d">교사 드로어 (기본/담당반/이력)</span>
+            <span class="chip d">원아 드로어 (기본/보호자/건강/이력)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 반 관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🏫</span> 반 관리 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">반 카드 3열 그리드</span>
+            <span class="chip v">KPI 4종 · 상태 토글</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">반 관리</div>
+          <div class="f-chips">
+            <span class="chip a">▶ + 반 추가</span>
+            <span class="chip m">추가 모달 (이름/연령/혼합반)</span>
+            <span class="chip m">수정 모달</span>
+            <span class="chip m">삭제 확인</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">상세드로어</div>
+          <div class="f-chips">
+            <span class="chip d">반 상세 드로어 (교사관리+원아관리)</span>
+            <span class="chip a">▶ + 교사 추가 (다중)</span>
+            <span class="chip a">▶ 역할 변경 (담임/부담임)</span>
+            <span class="chip a">▶ + 원아 추가 (연령필터)</span>
+            <span class="chip a">▶ 원아 반이동 / 삭제</span>
+            <span class="chip m">담임 삭제 경고</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 원아관리 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🎒</span> 원아관리 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">원아 목록 테이블</span>
+            <span class="chip v">KPI (전체/재원/졸업·퇴원/미연결)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">필터</div>
+          <div class="f-chips">
+            <span class="chip f">반·상태·성별·연령·보호자·이름</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">액션</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 원아 등록</span>
+            <span class="chip a">엑셀 내보내기</span>
+            <span class="chip a">▶ 상태 변경</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">모달/드로어</div>
+          <div class="f-chips">
+            <span class="chip m">원아 등록 모달 (이름/생년월일/성별/반/보호자)</span>
+            <span class="chip d">원아 상세 드로어 (기본/보호자/건강/이력)</span>
+            <span class="chip m">보호자 연결 모달</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 진급/졸업 -->
+    <div class="f-section">
+      <div class="f-page-name"><span>🎓</span> 진급/졸업 <span class="rb s">S</span><span class="rb o">O</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">탭</div>
+          <div class="f-chips">
+            <span class="chip p">처리 탭 · 미확정 원아 + 자동제안</span>
+            <span class="chip p">완료 탭 · 확정 원아 (진급/졸업/보류)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">개별</div>
+          <div class="f-chips">
+            <span class="chip m">상태 변경 모달 (진급/졸업/보류)</span>
+            <span class="chip m">보류 사유 (서류미비/연령확인/반미개설/기타)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">일괄</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 선택 진급</span>
+            <span class="chip a">▶ 선택 졸업</span>
+            <span class="chip a">▶ 보류 처리</span>
+            <span class="chip a">▶ 변경 확정</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">완료플로우</div>
+          <div class="f-chips">
+            <span class="chip m">확정 확인 모달</span>
+            <span class="chip m">진행 오버레이 (스피너)</span>
+            <span class="chip m">완료 확인 → 반개설 / 원아배정</span>
+            <span class="chip m">이탈 경고</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 초대 관리 (운영) -->
+    <div class="f-section">
+      <div class="f-page-name"><span>📨</span> 초대 관리 <span class="rb s">S</span><span class="rb o">O</span><span class="rb t">T</span> <span class="st done">✅</span></div>
+      <div class="f-rows">
+        <div class="f-row">
+          <div class="f-cat">뷰</div>
+          <div class="f-chips">
+            <span class="chip v">초대 이력 테이블</span>
+            <span class="chip f">역할·상태·이름 검색</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">초대하기</div>
+          <div class="f-chips">
+            <span class="chip a">▶ 학부모 초대</span>
+            <span class="chip a">▶ 교직원 초대 (org_admin)</span>
+            <span class="chip a">▶ 재발송 / 취소</span>
+            <span class="chip m">초대 발송 모달 (이메일/역할/반)</span>
+          </div>
+        </div>
+        <div class="f-row">
+          <div class="f-cat">권한분기</div>
+          <div class="f-chips">
+            <span class="chip f">T — 담당반 학부모만</span>
+            <span class="chip f">O — 교직원 탭 추가</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 범례 바 ── -->
+<div class="legend-bar">
+  <span class="legend-title">범례</span>
+  <span class="legend-item"><span class="chip v" style="font-size:9px">V</span> 뷰/목록</span>
+  <span class="legend-item"><span class="chip a" style="font-size:9px">A</span> 액션/CTA</span>
+  <span class="legend-item"><span class="chip m" style="font-size:9px">M</span> 모달</span>
+  <span class="legend-item"><span class="chip d" style="font-size:9px">D</span> 드로어</span>
+  <span class="legend-item"><span class="chip p" style="font-size:9px">P</span> 패널/탭</span>
+  <span class="legend-item"><span class="chip f" style="font-size:9px">F</span> 필터/세션</span>
+  <span class="legend-item"><span class="chip s" style="font-size:9px">S</span> 준비중</span>
+  <span style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+    <span class="legend-item"><span class="rb s">S</span> 통합관리자</span>
+    <span class="legend-item"><span class="rb o">O</span> 기관관리자</span>
+    <span class="legend-item"><span class="rb t">T</span> 교사관리자</span>
+  </span>
+</div>
+
+</body>
+</html>

@@ -172,7 +172,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .grid-3col { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
-.card { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden; max-height:340px; min-height:200px; display: flex; flex-direction: column; }
+.card { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden; max-height:400px; min-height:200px; display: flex; flex-direction: column; }
 .card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
 .card-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); display:flex;align-items:center;gap:6px; }
 .card-action { font-size: 13px; color: var(--accent-dark); font-weight: 600; cursor: pointer; }
@@ -552,7 +552,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
 .comment-time{font-size:10px;color:var(--text-muted);}
 .comment-text{font-size:12px;color:var(--text-secondary);line-height:1.5;}
 .qcmt-input-row { display:flex; gap:8px; margin-top:10px; }
-.qcmt-input { flex:1; background:var(--bg-base); border:1px solid var(--border-light); border-radius:8px; padding:9px 12px; font-size:12px; color:var(--text-primary); outline:none; resize:none; font-family:inherit; }
+.qcmt-input { flex:1; border:1px solid var(--border-light); border-radius:8px; padding:9px 12px; font-size:12px; color:var(--text-primary); outline:none; resize:none; font-family:inherit; }
 .qcmt-input:focus { border-color:var(--accent); }
 .qcmt-submit { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:0 16px; font-size:12px; font-weight:600; cursor:pointer; flex-shrink:0; }
 .qcmt-submit:hover { background:var(--accent-dark); }
@@ -2078,7 +2078,7 @@ function _buildNoticeCard(n) {
     <div class="qcmt-label">댓글 <span id="${n.id}-cnt">0</span>개</div>
     <div id="${n.id}-list"></div>
     <div class="qcmt-input-row" id="${n.id}-irow">
-      <textarea class="qcmt-input" id="${n.id}-input" rows="1" placeholder="댓글을 등록하면 처리완료로 이동합니다..."></textarea>
+      <textarea class="qcmt-input" id="${n.id}-input" rows="1" placeholder="댓글 달기..."></textarea>
       <button class="qcmt-submit" onclick="_qNoticeSubmit('${n.id}')">등록</button>
     </div>
   </div>

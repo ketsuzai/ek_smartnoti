@@ -1,6 +1,6 @@
 # 🧠 프로젝트 브레인: 프로젝트 개요
 
-> **최종 업데이트**: 2026-03-20
+> **최종 업데이트**: 2026-04-16
 > **작성자**: AI 어시스턴트 (기획자 검토 필요)
 
 ---
@@ -89,6 +89,16 @@
 | 8 | `src/pages/oper/operation-notice-board.html` | 알림장 | 알림장 목록·상세·작성 패널 | ✅ 완료 |
 | 9 | `src/pages/oper/operation-invitation.html` | 초대 관리 | 학부모/교직원 초대 + 이력 (역할별 분기) | ✅ 완료 |
 | 10 | `src/pages/oper/operation-org-info.html` | 기관정보 관리 | 기관 기본정보 조회·수정 (canEdit 분기) | ✅ 완료 |
+| 11 | `src/pages/oper/operation-class.html` | 반 관리 | KPI 4개, 카드 그리드, 드로어, 원아관리 연동 | ✅ 완료 |
+| 12 | `src/pages/oper/operation-child.html` | 원아관리 | 반별 탭, 테이블, 드로어, 등록·상태변경 모달 | ✅ 완료 |
+| 13 | `src/pages/oper/operation-dashboard.html` | 운영관리 대시보드 | KPI, 출석현황, 알림장 발송현황, 역할별 뷰 | ✅ 완료 |
+| 14 | `src/pages/oper/operation-org-selector.html` | 기관 선택 팝업 | 기관 카드 그리드, 이중 진입, effectiveRole 패턴 | ✅ 완료 |
+| 15 | `src/pages/oper/operation-announcement.html` | 공지사항 | v2 개선: 칩 필터, 드로어 재설계, 읽음현황, 임시보관함 | ✅ 완료 |
+| 16 | `src/pages/oper/operation-album.html` | 앨범 | KPI 4개, 그리드/리스트 토글, 앨범 모달 | ✅ 완료 |
+| 17 | `src/pages/oper/operation-medicine.html` | 투약의뢰서 관리 | 테이블, 드로어, 처리·거절, 엑셀 내보내기 | ✅ 완료 |
+| 18 | `src/pages/oper/operation-meal.html` | 식단표 | 주간 캘린더, 인라인 패널 편집, 영양정보·알레르기 | ✅ 완료 |
+| 19 | `src/pages/oper/operation-member.html` | 멤버/승인 | 교사+원아 통합 탭, 승인 워크플로, localStorage 동기화 | ✅ 완료 |
+| 20 | `src/pages/oper/operation-graduation.html` | 진급/졸업 | 7열 테이블, 일괄 진급, 졸업 확정 모달, 권한 제어 | ✅ 완료 |
 
 ---
 

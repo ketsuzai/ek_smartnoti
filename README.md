@@ -41,13 +41,13 @@
 │           ├── 📄 operation-org-selector.html  ← 기관 선택 팝업 [✅ 완료]
 │           ├── 📄 operation-announcement.html  ← 공지사항 [✅ 완료]
 │           ├── 📄 operation-album.html         ← 앨범 [✅ 완료]
+│           ├── 📄 operation-medicine.html      ← 투약의뢰서 관리 [✅ 완료]
+│           ├── 📄 operation-meal.html          ← 식단표 [✅ 완료]
+│           ├── 📄 operation-member.html        ← 멤버/승인 (교사+원아 통합) [✅ 완료]
+│           ├── 📄 operation-graduation.html    ← 진급/졸업 [✅ 완료]
 │           ├── 📄 operation-schedule.html      ← 스케쥴 [🔲 미시작]
 │           ├── 📄 operation-consulting.html    ← 상담 관리 [🔲 미시작]
-│           ├── 📄 operation-medicine.html      ← 투약의뢰서 관리 [✅ 완료]
-│           ├── 📄 operation-attendance.html    ← 출석부 [🔲 미시작]
-│           ├── 📄 operation-meal.html          ← 식단표 [🔲 미시작]
-│           ├── 📄 operation-member.html        ← 멤버/승인 [🔲 미시작]
-│           └── 📄 operation-graduation.html    ← 진급/졸업 [🔲 미시작]
+│           └── 📄 operation-attendance.html    ← 출석부 [🔲 미시작]
 └── 📁 .brain/                                  ← 프로젝트 브레인 (지식베이스)
     ├── 📄 00-PROJECT-OVERVIEW.md               ← 프로젝트 개요
     ├── 📄 01-MEMBER-MANAGEMENT.md              ← 회원 관리 기능정의
@@ -102,12 +102,12 @@
 | `/src/pages/oper/operation-announcement.html` | 공지사항 | ✅ 완료 |
 | `/src/pages/oper/operation-album.html` | 앨범 | ✅ 완료 |
 | `/src/pages/oper/operation-medicine.html` | 투약의뢰서 관리 | ✅ 완료 |
+| `/src/pages/oper/operation-meal.html` | 식단표 | ✅ 완료 |
+| `/src/pages/oper/operation-member.html` | 멤버/승인 (교사+원아 통합) | ✅ 완료 |
+| `/src/pages/oper/operation-graduation.html` | 진급/졸업 | ✅ 완료 |
 | `/src/pages/oper/operation-schedule.html` | 스케쥴 | 🔲 미시작 |
 | `/src/pages/oper/operation-consulting.html` | 상담 관리 | 🔲 미시작 |
 | `/src/pages/oper/operation-attendance.html` | 출석부 | 🔲 미시작 |
-| `/src/pages/oper/operation-meal.html` | 식단표 | 🔲 미시작 |
-| `/src/pages/oper/operation-member.html` | 멤버/승인 | 🔲 미시작 |
-| `/src/pages/oper/operation-graduation.html` | 진급/졸업 | 🔲 미시작 |
 
 ---
 
@@ -202,6 +202,23 @@
 - 투약의뢰서 목록 테이블 (약명, 투약 시간, 상태)
 - 상세 드로어 (처리·거절·보호자 정보) / 엑셀 내보내기
 
+### 18. 식단표 (`operation-meal.html`)
+- 주간 식단 캘린더 뷰 / 반별·날짜 필터
+- 인라인 패널 편집 (클릭→편집 전환) / 식단 등록·수정·삭제
+- 영양 정보 표시 / 알레르기 태그 관리
+
+### 19. 멤버/승인 (`operation-member.html`)
+- 교사 + 원아 통합 멤버 관리 탭 구조
+- 가입 승인 대기 목록 / 승인·거절 액션
+- 역할별 권한 분기 (org_admin / teacher 뷰 차이)
+- `localStorage` 동기화 패턴 / `.child-avatar` `.class-badge` 등 공통 CSS
+
+### 20. 진급/졸업 (`operation-graduation.html`)
+- 진급(반 배정) / 졸업(수료 처리) 탭 분리
+- 7열 테이블 구조 (이름·기관·현재반·대상반·입소일·상태·액션)
+- 일괄 진급 처리 / 졸업 확정 모달
+- `localStorage` 원아 데이터 동기화 / 권한 제어 (org_admin만)
+
 ---
 
 ## 🚧 미구현 / 준비중 기능
@@ -211,9 +228,6 @@
 | 스케쥴 | 🔲 미시작 | `operation-schedule.html` |
 | 상담 관리 | 🔲 미시작 | `operation-consulting.html` |
 | 출석부 | 🔲 미시작 | `operation-attendance.html` |
-| 식단표 | 🔲 미시작 | `operation-meal.html` |
-| 멤버/승인 | 🔲 미시작 | `operation-member.html` (원아+교사 통합) |
-| 진급/졸업 | 🔲 미시작 | `operation-graduation.html` |
 | 서버 연동 | ❌ 미구현 | 현재 모든 데이터는 프론트엔드 하드코딩 |
 | 실제 인증 | ❌ 미구현 | 클라이언트 사이드 테스트 계정만 |
 | 반응형 모바일 | ⚠️ 부분 | 데스크탑 우선 설계 |
@@ -248,8 +262,9 @@
 - **14-OPERATION-DASHBOARD**: 운영관리 대시보드 교사 뷰, 출석현황 모달
 - **15-ATTENDANCE**: 출석부 스펙 (준비중)
 - **16-MEAL-PLAN**: 식단표 스펙 (준비중)
-- **17-MEMBER-APPROVAL**: 멤버/승인 스펙 — 교사+원아 통합 (준비중)
-- **18-GRADUATION**: 진급/졸업 스펙 (준비중)
+- **17-MEMBER-APPROVAL**: 멤버/승인 스펙 — 교사+원아 통합 멤버 관리
+- **18-GRADUATION**: 진급/졸업 스펙 — 진급/졸업 처리 화면
+- **19-ANNOUNCEMENT**: 공지사항 v2 전면 개선 — 칩 필터, 인디케이터, 드로어 재설계, 읽음현황, 임시보관함, 쓰기 모달 확장
 
 > AI 협업 시 `CLAUDE.md`를 기준으로 작업하며, `.brain/`에서 상세 기획을 참조합니다.
 

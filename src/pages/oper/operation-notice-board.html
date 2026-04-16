@@ -297,6 +297,20 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .panel-tab{flex-shrink:0;padding:10px 14px;text-align:center;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-bottom:2.5px solid transparent;transition:.18s;white-space:nowrap;}
 .panel-tab:hover{color:var(--accent-dark);}
 .panel-tab.active{color:var(--accent-dark);border-bottom-color:var(--accent);background:#fff;}
+/* ── 원아 아바타 그리드 피커 (다중 알림장 상세) ── */
+.child-picker{flex-shrink:0;border-bottom:1px solid var(--border-light);background:#FAFCFF;padding:12px 16px 10px;}
+.child-picker-common{width:100%;padding:7px 0;border-radius:var(--radius-md);border:1.5px solid var(--border-light);background:#fff;font-size:13px;font-weight:700;color:var(--text-secondary);cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;font-family:'Pretendard',sans-serif;}
+.child-picker-common:hover{border-color:var(--accent);color:var(--accent-dark);}
+.child-picker-common.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent-dark);}
+.child-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px;}
+.child-picker-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 4px 7px;border-radius:10px;border:1.5px solid transparent;transition:.18s;position:relative;background:#fff;}
+.child-picker-item:hover{background:#F0F4FF;border-color:#C7D7FD;}
+.child-picker-item.active{border-color:var(--accent);background:var(--accent-light);}
+.cpi-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;position:relative;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.cpi-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;}
+.cpi-unread-dot{position:absolute;top:-2px;right:-2px;width:15px;height:15px;background:var(--red);border-radius:50%;border:2px solid #FAFCFF;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:900;line-height:1;pointer-events:none;}
+.cpi-name{font-size:11px;font-weight:700;color:var(--text-primary);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px;}
+.cpi-comment-cnt{font-size:10px;color:var(--text-muted);font-weight:600;line-height:1;}
 .panel-body{flex:1;overflow-y:auto;padding:18px 20px;}
 .panel-body::-webkit-scrollbar{width:4px;}
 .panel-body::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:2px;}
@@ -916,17 +930,25 @@ const MOCK_SENT = [
     ],
     children:[
       { id:'C001', name:'김도현', color:'#3B82F6', isRead:true, commentCount:2,
+        thumb:'../../../refer/child_thumb/Ellipse 31-1.png',
+        tags:['활발했어요', '블록놀이', '잘먹음'],
+        individualMemo:'오늘 블록 활동에 특히 집중해서 멋진 건물을 완성했어요. 친구들에게 자랑도 하는 모습이 귀여웠어요.',
         comments:[
           { id:'nb_c1', author:'김민지 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'집에서도 블록 얘기를 하더라고요! 감사합니다 선생님 😊', time:'15:22', createdAt:'2026-04-12T15:22:00', editedAt:null, replies:[] },
           { id:'nb_c2', author:'박교사', type:'teacher', color:'#3B82F6', relation:'교사', text:'네, 오늘 정말 집중해서 잘 했어요 😊', time:'15:45', createdAt:'2026-04-13T15:45:00', editedAt:null, replies:[] }
         ]},
       { id:'C002', name:'이서연', color:'#10B981', isRead:true, commentCount:2,
+        thumb:'../../../refer/child_thumb/Ellipse 31-2.png',
+        tags:['기뻐했어요', '색칠하기', '조금먹음'],
+        individualMemo:'점심을 조금 먹었는데 오후 간식은 잘 먹었어요. 미술 활동 때 집중력이 좋았습니다.',
         comments:[
-          { id:'nb_c3', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10', replies:[] },
-          { id:'nb_c4', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11', replies:[] }
+          { id:'nb_c3', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'점심을 조금 먹었군요, 집에 와서도 입맛이 없더라고요.', time:'16:10', createdAt:'2026-04-12T16:10:00', editedAt:null, replies:[] },
+          { id:'nb_c4', author:'이지영 엄마', type:'parent', color:'#10B981', relation:'엄마', text:'내일은 잘 먹으면 좋겠어요 😊', time:'16:11', createdAt:'2026-04-12T16:11:00', editedAt:null, replies:[] }
         ]},
       { id:'C003', name:'박준서', color:'#F59E0B', isRead:false, commentCount:1,
-        comments:[{ id:'nb_c5', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00', replies:[] }]}
+        tags:['차분했어요', '독서', '잘먹음'],
+        individualMemo:'',
+        comments:[{ id:'nb_c5', author:'박민수 아빠', type:'parent', color:'#F59E0B', relation:'아빠', text:'오늘도 잘 지냈군요, 감사합니다.', time:'17:00', createdAt:'2026-04-12T17:00:00', editedAt:null, replies:[] }]}
     ]
   },
   // ─ 단일·발행·사진·종합평가
@@ -956,19 +978,39 @@ const MOCK_SENT = [
     photos:[],
     children:[
       { id:'C004', name:'최유진', color:'#8B5CF6', isRead:false, commentCount:2,
+        thumb:'../../../refer/child_thumb/Ellipse 437.png',
+        tags:['활발했어요', '퍼즐', '잘먹음'],
+        individualMemo:'종이접기 시간에 강아지를 만들었어요! 완성하고 너무 좋아했습니다.',
         comments:[
-          { id:'nb_c6', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10', replies:[] },
-          { id:'nb_c7', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12', replies:[] }
+          { id:'nb_c6', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'오늘 기분은 어떠나요?', time:'14:10', createdAt:'2026-03-29T14:10:00', editedAt:null, replies:[] },
+          { id:'nb_c7', author:'최현정 엄마', type:'parent', color:'#8B5CF6', relation:'엄마', text:'집에서 종이접기 계속 하고 싶다고 하네요 ㅎㅎ', time:'14:12', createdAt:'2026-03-29T14:12:00', editedAt:null, replies:[] }
         ]},
       { id:'C005', name:'정민호', color:'#F97316', isRead:true, commentCount:1,
-        comments:[{ id:'nb_c8', author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30', replies:[] }]},
-      { id:'C006', name:'강지아', color:'#EC4899', isRead:true, commentCount:0, comments:[]},
+        thumb:'../../../refer/child_thumb/Ellipse 439.png',
+        tags:['자신감있었어요', '그림그리기', '잘먹음'],
+        individualMemo:'',
+        comments:[{ id:'nb_c8', author:'정기철 아빠', type:'parent', color:'#F97316', relation:'아빠', text:'감사합니다!', time:'15:30', createdAt:'2026-03-29T15:30:00', editedAt:null, replies:[] }]},
+      { id:'C006', name:'강지아', color:'#EC4899', isRead:true, commentCount:0,
+        tags:['차분했어요', '독서'],
+        individualMemo:'그림책을 끝까지 집중해서 읽었어요.',
+        comments:[]},
       { id:'C007', name:'윤서준', color:'#14B8A6', isRead:false, commentCount:1,
-        comments:[{ id:'nb_c9', author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00', replies:[] }]},
+        thumb:'../../../refer/child_thumb/Ellipse 438.png',
+        tags:['기뻐했어요', '독서', '잘먹음'],
+        individualMemo:'그림책을 정말 좋아해요. 내일도 읽어달라고 했답니다.',
+        comments:[{ id:'nb_c9', author:'윤미나 엄마', type:'parent', color:'#14B8A6', relation:'엄마', text:'서준이가 그림책을 좋아하는군요!', time:'16:00', createdAt:'2026-03-29T16:00:00', editedAt:null, replies:[] }]},
       { id:'C008', name:'임하린', color:'#6366F1', isRead:true, commentCount:1,
-        comments:[{ id:'nb_c10', author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20', replies:[] }]},
-      { id:'C009', name:'송채원', color:'#F43F5E', isRead:false, commentCount:0, comments:[]},
-      { id:'C010', name:'조한결', color:'#0EA5E9', isRead:true, commentCount:0, comments:[]}
+        tags:['활발했어요', '율동', '잘먹음'],
+        individualMemo:'',
+        comments:[{ id:'nb_c10', author:'임수진 엄마', type:'parent', color:'#6366F1', relation:'엄마', text:'잘 지내고 있어서 다행이에요.', time:'16:20', createdAt:'2026-03-29T16:20:00', editedAt:null, replies:[] }]},
+      { id:'C009', name:'송채원', color:'#F43F5E', isRead:false, commentCount:0,
+        tags:['수줍어했어요'],
+        individualMemo:'오늘 처음 친구들과 어울려 활동했어요. 내일은 더 잘 어울릴 수 있을 것 같아요.',
+        comments:[]},
+      { id:'C010', name:'조한결', color:'#0EA5E9', isRead:true, commentCount:0,
+        tags:[],
+        individualMemo:'',
+        comments:[]}
     ]
   },
   // ─ 단일·발행·사진없음·미읽음(footer 위치 테스트)
@@ -993,8 +1035,14 @@ const MOCK_SENT = [
     content:'내일 봄 소풍 안내입니다. 도시락과 편한 옷을 준비해 주세요. 출발 시간은 오전 10시입니다.',
     photos:[{ url:'https://placehold.co/400x300/FEF9C3/EAB308?text=소풍예정', type:'photo', isRepresentative:true }],
     children:[
-      { id:'C011', name:'한서아', color:'#A855F7', isRead:false, commentCount:0, comments:[]},
-      { id:'C012', name:'배도윤', color:'#22C55E', isRead:false, commentCount:0, comments:[]}
+      { id:'C011', name:'한서아', color:'#A855F7', isRead:false, commentCount:0,
+        tags:['기뻐했어요', '야외산책'],
+        individualMemo:'소풍 간다고 정말 기대하고 있어요.',
+        comments:[]},
+      { id:'C012', name:'배도윤', color:'#22C55E', isRead:false, commentCount:0,
+        tags:['활발했어요', '야외산책'],
+        individualMemo:'',
+        comments:[]}
     ]
   },
   // ─ 다중·회수됨·빗금 배경 테스트
@@ -1005,10 +1053,10 @@ const MOCK_SENT = [
     publishedAt:'08:20', writeType:'multi', photos:[],
     content:'안녕하세요! 오늘은 봄맞이 체육 활동으로 달리기와 공놀이를 했습니다. 아이들이 활발하게 움직이며 즐거워했어요. 내일은 미술 활동이 예정되어 있습니다.',
     children:[
-      { id:'C013', name:'권나연', color:'#3B82F6', isRead:true, commentCount:0, comments:[]},
-      { id:'C014', name:'오재민', color:'#10B981', isRead:true, commentCount:0, comments:[]},
-      { id:'C015', name:'유하은', color:'#F59E0B', isRead:false, commentCount:0, comments:[]},
-      { id:'C016', name:'홍주원', color:'#8B5CF6', isRead:true, commentCount:0, comments:[]}
+      { id:'C013', name:'권나연', color:'#3B82F6', isRead:true, commentCount:0, tags:['활발했어요', '친구와놀이'], individualMemo:'', comments:[]},
+      { id:'C014', name:'오재민', color:'#10B981', isRead:true, commentCount:0, tags:['자신감있었어요', '율동'], individualMemo:'', comments:[]},
+      { id:'C015', name:'유하은', color:'#F59E0B', isRead:false, commentCount:0, tags:[], individualMemo:'', comments:[]},
+      { id:'C016', name:'홍주원', color:'#8B5CF6', isRead:true, commentCount:0, tags:['차분했어요'], individualMemo:'', comments:[]}
     ]
   },
   // ─ 단일·발행·비디오만·미읽은댓글
@@ -1569,6 +1617,7 @@ function renderReceivedList(area) {
 function openSentDetail(id) {
   const notice = MOCK_SENT.find(n => n.id === id);
   if (!notice) return;
+  currentOpenNoticeId = notice.id;
   document.getElementById('sdpTitle').textContent = notice.date + ' ' + notice.class;
 
   const tabs = document.getElementById('sdpChildTabs');
@@ -1576,19 +1625,37 @@ function openSentDetail(id) {
 
   if (isSingle) {
     // 1:1 알림장: 탭 없이 한 페이지에 모두 표시
+    tabs.className = 'panel-tabs';
     tabs.innerHTML = '';
     tabs.style.display = 'none';
     renderSentDetailSingle(notice);
   } else {
-    // 다중 알림장: 기존 탭 방식
+    // 다중 알림장: 아바타 그리드 피커
     tabs.style.display = '';
-    tabs.innerHTML = `<div class="panel-tab active" onclick="switchChildTab(this,0)">📋 공통</div>` +
-      notice.children.map((c,i) => {
-        const parentCnt = c.comments.filter(cm => cm.type === 'parent').length;
-        const unread = parentCnt > 0 && !isChildRead(notice.id, c.id);
-        const badge = parentCnt > 0 ? `<span class="panel-tab-badge${unread ? '' : ' read'}">${parentCnt}</span>` : '';
-        return `<div class="panel-tab" onclick="switchChildTab(this,${i+1})">${c.name}${badge}</div>`;
-      }).join('');
+    tabs.className = 'child-picker';
+
+    const gridItems = notice.children.map((c, i) => {
+      const parentCnt = c.comments.filter(cm => cm.type === 'parent').length;
+      const unread = parentCnt > 0 && !isChildRead(notice.id, c.id);
+      const avatarInner = c.thumb
+        ? `<img src="${c.thumb}" alt="${c.name}" onerror="this.parentElement.innerHTML='${c.name[0]}';this.parentElement.style.fontSize='15px';">`
+        : c.name[0];
+      const unreadDot = unread
+        ? `<span class="cpi-unread-dot">${parentCnt > 9 ? '9+' : parentCnt}</span>`
+        : '';
+      const commentLine = parentCnt > 0
+        ? `<span class="cpi-comment-cnt">💬 ${parentCnt}</span>`
+        : `<span class="cpi-comment-cnt" style="visibility:hidden;">-</span>`;
+      return `<div class="child-picker-item" onclick="switchChildPicker(this,${i+1})">
+        <div class="cpi-avatar" style="background:${c.color};">${avatarInner}${unreadDot}</div>
+        <span class="cpi-name">${c.name}</span>
+        ${commentLine}
+      </div>`;
+    }).join('');
+
+    tabs.innerHTML = `
+      <button class="child-picker-common active" onclick="switchChildPicker(this,0)">📋 공통 내용 보기</button>
+      <div class="child-picker-grid">${gridItems}</div>`;
     renderSentDetailCommon(notice);
   }
 
@@ -1742,8 +1809,7 @@ function renderSentDetailSingle(notice) {
 function switchChildTab(el, idx) {
   document.querySelectorAll('#sdpChildTabs .panel-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  const noticeId = document.querySelector('#sentDetailPanel .panel-title span').textContent;
-  const notice = MOCK_SENT.find(n => (n.date + ' ' + n.class) === noticeId);
+  const notice = MOCK_SENT.find(n => n.id === currentOpenNoticeId);
   if (!notice) return;
   if (idx === 0) {
     renderSentDetailCommon(notice);
@@ -1752,6 +1818,27 @@ function switchChildTab(el, idx) {
     markChildRead(notice.id, child.id);
     const badge = el.querySelector('.panel-tab-badge');
     if (badge) badge.classList.add('read');
+    renderSentDetailChild(notice, child);
+  }
+}
+
+function switchChildPicker(el, idx) {
+  // 모든 피커 아이템·공통 버튼에서 active 제거
+  document.querySelectorAll('#sdpChildTabs .child-picker-item, #sdpChildTabs .child-picker-common')
+    .forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  const notice = MOCK_SENT.find(n => n.id === currentOpenNoticeId);
+  if (!notice) return;
+
+  if (idx === 0) {
+    renderSentDetailCommon(notice);
+  } else {
+    const child = notice.children[idx - 1];
+    markChildRead(notice.id, child.id);
+    // 미읽음 닷 제거
+    const dot = el.querySelector('.cpi-unread-dot');
+    if (dot) dot.remove();
     renderSentDetailChild(notice, child);
   }
 }
@@ -1838,10 +1925,13 @@ function renderSentDetailChild(notice, child) {
 
   // 태그 (다중만)
   let tagsHTML = '';
-  if (!isSingle && child.tags && child.tags.length > 0) {
+  if (!isSingle) {
+    const tagChips = (child.tags && child.tags.length > 0)
+      ? child.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')
+      : `<span class="detail-tag" style="color:#9CA3AF;background:#F3F4F6;border-color:#E5E7EB;">태그 없음</span>`;
     tagsHTML = `<div class="psec">
       <div class="psec-title">🏷️ 태그</div>
-      <div class="detail-tags">${child.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}</div>
+      <div class="detail-tags">${tagChips}</div>
     </div>`;
   }
 
@@ -1971,6 +2061,7 @@ const CLASS_INFO = {
 
 let WRITE_CHILDREN = []; // 반 선택 시 동적 로딩
 
+let currentOpenNoticeId = null; // 현재 열린 보낸 알림장 ID
 let writeMode = 'single'; // 'single' | 'multi'
 let writeSelectedChildren = new Set();
 let writeSelectedWeather = '맑음';
