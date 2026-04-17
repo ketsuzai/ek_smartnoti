@@ -70,53 +70,79 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 
 /* FILTER BAR */
-.filter-bar{background:var(--bg-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .filter-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.filter-row{display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap;}
+.filter-row + .filter-row{padding-top:10px;border-top:1px solid var(--border-light);}
+.filter-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.filter-label{font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.2px;white-space:nowrap;}
+.filter-summary{font-size:13px;color:var(--text-secondary);}
+.filter-summary strong{color:var(--text-primary);font-weight:700;}
 .chip{display:inline-flex;align-items:center;padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);transition:0.18s;}
 .chip:hover{background:var(--accent-light);color:var(--accent-dark);}
 .chip.active{background:var(--accent);color:white;border-color:var(--accent);}
-.btn-group{display:flex;gap:8px;margin-left:auto;}
+.filter-select{padding:6px 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;background:white;color:var(--text-primary);cursor:pointer;font-family:inherit;height:34px;}
+.filter-select:focus{outline:none;border-color:var(--accent);}
+.filter-search{padding:6px 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:inherit;height:34px;min-width:180px;background:white;color:var(--text-primary);}
+.filter-search:focus{outline:none;border-color:var(--accent);}
+.filter-divider{width:1px;height:20px;background:var(--border-medium);}
 .btn{padding:8px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:0.18s;height:36px;display:flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--accent);color:white;}
 .btn-primary:hover{background:var(--accent-dark);}
-.btn-secondary{background:var(--border-light);color:var(--text-primary);}
-.btn-secondary:hover{background:var(--accent-light);}
+.btn-secondary{background:var(--bg-surface);color:var(--text-primary);border:1.5px solid var(--border-medium);}
+.btn-secondary:hover{background:var(--accent-light);border-color:var(--accent);}
+.btn-ghost{background:transparent;color:var(--text-secondary);border:1.5px solid transparent;}
+.btn-ghost:hover{background:var(--bg-base);color:var(--text-primary);border-color:var(--border-light);}
 .btn-sm{height:30px;padding:6px 10px;font-size:12px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;}
+
+/* ACTION BAR */
+.action-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.action-left{display:flex;align-items:center;gap:8px;}
+.action-right{display:flex;align-items:center;gap:8px;}
+.total-count{font-size:14px;color:var(--text-secondary);}
+.total-count strong{color:var(--text-primary);font-weight:700;}
+.sel-count{font-size:13px;color:var(--text-secondary);}
+.sel-count strong{color:var(--accent-dark);font-weight:700;}
+.divider-v{width:1px;height:16px;background:var(--border-medium);}
 
 /* TABLE */
-.table-wrap{background:var(--bg-surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);box-shadow:var(--shadow-sm);overflow:hidden;max-height:calc(100vh - 400px);display:flex;flex-direction:column;}
-.table-header{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
-.table-title{font-size:14px;font-weight:700;}
-.table-count{font-size:12px;color:var(--text-muted);font-weight:400;margin-left:4px;}
-.table-body{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border-medium) transparent;}
+.table-card{background:var(--bg-surface);border-radius:var(--radius-xl);border:1px solid var(--border-light);box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column;}
+.table-body{flex:1;}
 .data-table{width:100%;border-collapse:collapse;}
 .data-table th{font-size:12px;font-weight:700;color:var(--text-secondary);text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--border-light);background:var(--bg-base);white-space:nowrap;position:sticky;top:0;z-index:1;}
 .data-table td{font-size:13px;padding:11px 12px;border-bottom:1px solid var(--border-light);vertical-align:middle;}
 .data-table tr:last-child td{border-bottom:none;}
 .data-table tbody tr{cursor:pointer;transition:background 0.15s;}
 .data-table tbody tr:hover td{background:#F8FCFF;}
+.data-table tbody tr.row-checked td{background:#EFF8FF;}
+.data-table tbody tr.row-checked:hover td{background:#E0F2FE;}
 .data-table input[type="checkbox"]{width:14px;height:14px;cursor:pointer;accent-color:var(--accent);}
 .name-wrap{display:flex;align-items:center;gap:8px;}
-.child-avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+.child-avatar{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;}
+.child-avatar img{width:32px;height:32px;border-radius:50%;object-fit:cover;display:block;}
 .main-name{font-size:14px;font-weight:700;color:var(--text-primary);}
 .sub-name{font-size:12px;color:var(--text-muted);}
 .class-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:10px;font-size:12px;font-weight:600;background:var(--accent-light);color:var(--accent-dark);white-space:nowrap;}
 .enroll-date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-secondary);}
-.status-select{padding:4px 8px;border:1px solid var(--border-light);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;background:white;color:var(--text-primary);}
+.status-select{padding:6px 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;background:white;color:var(--text-primary);min-width:112px;}
 .status-badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:600;}
 .status-promoted{background:var(--blue-bg);color:var(--blue-text);}
 .status-graduated{background:var(--purple-bg);color:var(--purple-text);}
 .status-hold{background:var(--amber-bg);color:var(--amber-text);}
 .status-promoted-auto{background:var(--green-bg);color:var(--green-text);}
-.info-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--bg-base);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--accent);transition:0.18s;}
-.info-btn:hover{background:var(--accent-light);}
+.row-action{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+.row-action .btn{min-width:54px;justify-content:center;}
+.processed-by{font-size:12px;color:var(--text-secondary);}
+.processed-at{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);}
 
-/* BOTTOM BAR */
-.bottom-bar{position:fixed;bottom:0;left:var(--sidebar-width);right:0;height:60px;background:var(--bg-surface);border-top:1px solid var(--border-light);box-shadow:var(--shadow-lg);display:none;align-items:center;padding:0 24px;gap:16px;z-index:40;}
-.bottom-bar.show{display:flex;}
-.bottom-summary{font-size:13px;color:var(--text-secondary);}
-.bottom-summary strong{font-weight:600;color:var(--text-primary);}
-.bottom-actions{margin-left:auto;display:flex;gap:8px;}
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:4px;padding:14px 16px;border-top:1px solid var(--border-light);}
+.page-btn{min-width:32px;height:32px;padding:0 6px;border-radius:var(--radius-md);border:1.5px solid var(--border-light);background:var(--bg-surface);font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.15s;font-family:'Pretendard',sans-serif;}
+.page-btn:hover:not(:disabled){background:var(--accent-light);border-color:var(--accent);color:var(--accent-dark);}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.page-btn:disabled{opacity:.4;cursor:not-allowed;}
+.page-info{font-size:12px;color:var(--text-muted);margin-left:8px;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.18s ease;}
@@ -215,32 +241,70 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     <!-- PROCESSING TAB -->
     <div id="processingTab" class="tab-content">
       <!-- FILTER BAR -->
-      <div class="filter-bar">
-        <div class="filter-group" id="filterChips">
-          <!-- JS로 렌더링 -->
+      <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px;">
+        <!-- 칩 필터 행 -->
+        <div class="filter-row">
+          <span class="filter-label">상태</span>
+          <div id="filterChips" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
         </div>
-        <div class="btn-group" id="actionBtns">
-          <!-- JS로 렌더링 -->
+        <!-- 검색 필터 행 -->
+        <div class="filter-row">
+          <span class="filter-label">나이</span>
+          <select class="filter-select" id="processingAgeFilter" onchange="applyProcessingSearch()">
+            <option value="">전체</option>
+            <option value="1세">1세</option>
+            <option value="2세">2세</option>
+            <option value="3세">3세</option>
+            <option value="4세">4세</option>
+            <option value="5세">5세</option>
+            <option value="6세">6세</option>
+            <option value="7세">7세</option>
+          </select>
+          <div class="filter-divider"></div>
+          <span class="filter-label">반</span>
+          <select class="filter-select" id="processingClassFilter" onchange="applyProcessingSearch()">
+            <option value="">전체</option>
+            <option value="꽃잎반">꽃잎반</option>
+            <option value="나무반">나무반</option>
+            <option value="송이반">송이반</option>
+            <option value="해반">해반</option>
+            <option value="별반">별반</option>
+          </select>
+          <div class="filter-divider"></div>
+          <input type="text" class="filter-search" id="processingNameSearch" placeholder="원아 이름 검색" oninput="applyProcessingSearch()">
+        </div>
+      </div>
+
+      <!-- ACTION BAR -->
+      <div class="action-bar">
+        <div class="action-left">
+          <span class="total-count">총 <strong id="processingCount">0</strong>건</span>
+          <span class="divider-v"></span>
+          <span class="sel-count" id="selectionSummary">선택 <strong>0</strong>명</span>
+        </div>
+        <div class="action-right" style="margin: 20px 0;">
+          <button type="button" class="btn btn-outline btn-sm" id="selectAllBtn" onclick="toggleSelectAllVisible()">전체선택</button>
+          <button class="btn btn-outline btn-sm" id="promoteSelectedBtn" onclick="bulkAction('promoted')">선택진급</button>
+          <button class="btn btn-outline btn-sm" id="graduateSelectedBtn" onclick="bulkAction('graduated')">선택졸업</button>
+          <button class="btn btn-outline btn-sm" id="holdSelectedBtn" onclick="bulkAction('on_hold')">보류처리</button>
+          <button class="btn btn-primary btn-sm" id="applySuggestedBtn" onclick="applySuggestedStatuses()">자동제안 전체적용</button>
         </div>
       </div>
 
       <!-- TABLE -->
-      <div class="table-wrap">
-        <div class="table-header">
-          <div class="table-title">처리 대기 <span class="table-count" id="processingCount"></span></div>
-        </div>
+      <div class="table-card">
         <div class="table-body">
           <div style="overflow-x:auto">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:40px"><input type="checkbox" id="checkAllProcessing"></th>
-                  <th style="width:180px">원아</th>
+                  <th style="width:40px"></th>
+                  <th style="width:200px">원아</th>
                   <th style="width:70px">만나이</th>
                   <th style="width:100px">반</th>
                   <th style="width:120px">주보호자</th>
-                  <th style="width:100px">입소일</th>
-                  <th style="width:150px">자동제안결과</th>
+                  <th style="width:130px">입소일</th>
+                  <th style="text-align:right">자동제안결과</th>
                 </tr>
               </thead>
               <tbody id="processingTableBody">
@@ -249,35 +313,70 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             </table>
           </div>
         </div>
+        <div id="processingPagination" class="pagination" style="display:none;"></div>
       </div>
     </div>
 
     <!-- COMPLETED TAB -->
     <div id="completedTab" class="tab-content" style="display:none;">
       <!-- FILTER BAR -->
-      <div class="filter-bar">
-        <div class="filter-group" id="completedFilterChips">
-          <!-- JS로 렌더링 -->
+      <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px;">
+        <!-- 칩 필터 행 -->
+        <div class="filter-row">
+          <span class="filter-label">상태</span>
+          <div id="completedFilterChips" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
+        </div>
+        <!-- 검색 필터 행 -->
+        <div class="filter-row">
+          <span class="filter-label">나이</span>
+          <select class="filter-select" id="completedAgeFilter" onchange="applyCompletedSearch()">
+            <option value="">전체</option>
+            <option value="1세">1세</option>
+            <option value="2세">2세</option>
+            <option value="3세">3세</option>
+            <option value="4세">4세</option>
+            <option value="5세">5세</option>
+            <option value="6세">6세</option>
+            <option value="7세">7세</option>
+          </select>
+          <div class="filter-divider"></div>
+          <span class="filter-label">반</span>
+          <select class="filter-select" id="completedClassFilter" onchange="applyCompletedSearch()">
+            <option value="">전체</option>
+            <option value="꽃잎반">꽃잎반</option>
+            <option value="나무반">나무반</option>
+            <option value="송이반">송이반</option>
+            <option value="해반">해반</option>
+            <option value="별반">별반</option>
+          </select>
+          <div class="filter-divider"></div>
+          <input type="text" class="filter-search" id="completedNameSearch" placeholder="원아 이름 검색" oninput="applyCompletedSearch()">
+        </div>
+      </div>
+
+      <!-- ACTION BAR -->
+      <div class="action-bar" style="margin: 20px 0;">
+        <div class="action-left">
+          <span class="total-count">총 <strong id="completedCount">0</strong>건</span>
         </div>
       </div>
 
       <!-- TABLE -->
-      <div class="table-wrap">
-        <div class="table-header">
-          <div class="table-title">완료 <span class="table-count" id="completedCount"></span></div>
-        </div>
+      <div class="table-card">
         <div class="table-body">
           <div style="overflow-x:auto">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:40px"><input type="checkbox" id="checkAllCompleted"></th>
-                  <th style="width:180px">원아</th>
+                  <th style="width:40px"></th>
+                  <th style="width:200px">원아</th>
                   <th style="width:70px">만나이</th>
                   <th style="width:100px">반</th>
                   <th style="width:120px">주보호자</th>
-                  <th style="width:100px">입소일</th>
-                  <th style="width:150px">자동제안결과</th>
+                  <th style="width:130px">입소일</th>
+                  <th style="width:110px">처리결과</th>
+                  <th style="width:90px">처리자</th>
+                  <th style="width:130px">처리일시</th>
                 </tr>
               </thead>
               <tbody id="completedTableBody">
@@ -286,6 +385,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             </table>
           </div>
         </div>
+        <div id="completedPagination" class="pagination" style="display:none;"></div>
       </div>
     </div>
 
@@ -293,18 +393,6 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
   </div><!-- /content -->
 
 </div><!-- /main-wrap -->
-
-<!-- BOTTOM BAR -->
-<div class="bottom-bar" id="bottomBar">
-  <div class="bottom-summary">
-    선택 <strong id="selectedCount">0</strong>명
-    <span style="margin-left:16px;">진급 <strong id="promotedCount">0</strong> / 졸업 <strong id="graduatedCount">0</strong> / 보류 <strong id="holdCount">0</strong></span>
-  </div>
-  <div class="bottom-actions">
-    <button class="btn btn-secondary btn-sm" onclick="clearSelection()">취소</button>
-    <button class="btn btn-primary btn-sm" onclick="openStatusChangeModal()">변경/취소</button>
-  </div>
-</div>
 
 <!-- MODALS -->
 
@@ -366,46 +454,6 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
   </div>
 </div>
 
-<!-- 완료 컨펌창 A (반 없음) -->
-<div class="modal-overlay" id="completeModalA">
-  <div class="modal">
-    <div class="modal-header" style="border:none;padding:24px;flex-direction:column;align-items:center;text-align:center;">
-      <div style="font-size:48px;margin-bottom:12px;">✅</div>
-      <div class="modal-title">진급/졸업 처리가<br>완료 되었어요.</div>
-    </div>
-    <div class="modal-body" style="text-align:center;">
-      <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
-        새 학년도에 아직 반이 없어요.<br>
-        배정을 하려면 먼저 반을 만들어 주세요.
-      </p>
-    </div>
-    <div class="modal-footer" style="flex-direction:column;gap:8px;">
-      <button class="btn btn-secondary" style="width:100%;" onclick="location.href='operation-dashboard.html'">나중에하기</button>
-      <button class="btn btn-primary" style="width:100%;" onclick="location.href='operation-class.html'">반 개설하기</button>
-    </div>
-  </div>
-</div>
-
-<!-- 완료 컨펌창 B (반 있음) -->
-<div class="modal-overlay" id="completeModalB">
-  <div class="modal">
-    <div class="modal-header" style="border:none;padding:24px;flex-direction:column;align-items:center;text-align:center;">
-      <div style="font-size:48px;margin-bottom:12px;">✅</div>
-      <div class="modal-title">진급/졸업 처리가<br>완료 되었어요.</div>
-    </div>
-    <div class="modal-body" style="text-align:center;">
-      <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
-        새 학년도에 개설된 반으로 이제<br>
-        원아를 배정할 수 있어요.
-      </p>
-    </div>
-    <div class="modal-footer" style="flex-direction:column;gap:8px;">
-      <button class="btn btn-secondary" style="width:100%;" onclick="location.href='operation-dashboard.html'">나중에하기</button>
-      <button class="btn btn-primary" style="width:100%;" onclick="location.href='operation-member.html'">원아 배정하기</button>
-    </div>
-  </div>
-</div>
-
 <!-- PROGRESS OVERLAY -->
 <div class="progress-overlay" id="progressOverlay">
   <div class="progress-spinner">
@@ -417,14 +465,35 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
 <script>
 const effectiveRole = localStorage.getItem('effectiveRole') || 'org_admin';
+
+const THUMB = [
+  '../../../refer/child_thumb/Ellipse 31.png',
+  '../../../refer/child_thumb/Ellipse 31-1.png',
+  '../../../refer/child_thumb/Ellipse 31-2.png',
+  '../../../refer/child_thumb/Ellipse 437.png',
+  '../../../refer/child_thumb/Ellipse 438.png',
+  '../../../refer/child_thumb/Ellipse 439.png',
+];
+
 const MOCK_CHILDREN = [
-  { id:'CHD001', class_id:'CLS001', class_name:'꽃잎반', name:'강가영', birth:'240628', age:'2세', gender:'남', profile_color:'#4361EE', primary_parent_name:'강미라', enroll_date:'2023-03-01', status:'enrolled', graduation_status:'promoted', graduation_suggestion:'promoted', next_class:{ id:'CLS002', name:'나무반' } },
-  { id:'CHD002', class_id:'CLS001', class_name:'꽃잎반', name:'나가영', birth:'230412', age:'3세', gender:'여', profile_color:'#EC4899', primary_parent_name:'나상훈', enroll_date:'2022-02-15', status:'enrolled', graduation_status:'graduated', graduation_suggestion:'graduated', next_class:null },
-  { id:'CHD003', class_id:'CLS002', class_name:'나무반', name:'다가영', birth:'200828', age:'6세', gender:'여', profile_color:'#F59E0B', primary_parent_name:'다영희', enroll_date:'2021-09-01', status:'enrolled', graduation_status:'graduated', graduation_suggestion:'graduated', next_class:null },
-  { id:'CHD004', class_id:'CLS001', class_name:'꽃잎반', name:'라가영', birth:'220101', age:'4세', gender:'남', profile_color:'#10B981', primary_parent_name:'라철수', enroll_date:'2022-06-01', status:'enrolled', graduation_status:'on_hold', graduation_suggestion:'promoted', hold_reason:'반미개설', hold_memo:'', next_class:null },
-  { id:'CHD005', class_id:'CLS003', class_name:'송이반', name:'마가영', birth:'201023', age:'5세', gender:'여', profile_color:'#8B5CF6', primary_parent_name:'마은정', enroll_date:'2021-03-01', status:'enrolled', graduation_status:'promoted', graduation_suggestion:'promoted', next_class:{ id:'CLS004', name:'해반' } },
-  { id:'CHD006', class_id:'CLS002', class_name:'나무반', name:'바가영', birth:'240628', age:'2세', gender:'남', profile_color:'#14B8A6', primary_parent_name:'바준호', enroll_date:'2024-01-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
-  { id:'CHD007', class_id:'CLS001', class_name:'꽃잎반', name:'사가영', birth:'230101', age:'3세', gender:'여', profile_color:'#D97706', primary_parent_name:'사미숙', enroll_date:'2023-09-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  // ─── 처리 대기 (graduation_status: null) ───
+  { id:'CHD006', class_id:'CLS002', class_name:'나무반', name:'박하윤', birth:'240315', age:'2세', gender:'여', profile_color:'#14B8A6', thumb:THUMB[0], primary_parent_name:'박준호', enroll_date:'2024-01-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  { id:'CHD007', class_id:'CLS001', class_name:'꽃잎반', name:'최서준', birth:'230512', age:'3세', gender:'남', profile_color:'#D97706', thumb:null, primary_parent_name:'최미숙', enroll_date:'2023-09-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  { id:'CHD008', class_id:'CLS003', class_name:'송이반', name:'이지아', birth:'210220', age:'5세', gender:'여', profile_color:'#EC4899', thumb:THUMB[1], primary_parent_name:'이상훈', enroll_date:'2021-03-01', status:'enrolled', graduation_status:null, graduation_suggestion:'graduated', next_class:null },
+  { id:'CHD009', class_id:'CLS001', class_name:'꽃잎반', name:'김도윤', birth:'220809', age:'4세', gender:'남', profile_color:'#4361EE', thumb:null, primary_parent_name:'김영희', enroll_date:'2022-06-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  { id:'CHD010', class_id:'CLS004', class_name:'해반', name:'정수아', birth:'200102', age:'6세', gender:'여', profile_color:'#8B5CF6', thumb:THUMB[2], primary_parent_name:'정철수', enroll_date:'2020-03-01', status:'enrolled', graduation_status:null, graduation_suggestion:'graduated', next_class:null },
+  { id:'CHD011', class_id:'CLS002', class_name:'나무반', name:'오예준', birth:'230719', age:'3세', gender:'남', profile_color:'#10B981', thumb:null, primary_parent_name:'오민정', enroll_date:'2023-03-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  { id:'CHD012', class_id:'CLS005', class_name:'별반', name:'윤채원', birth:'240901', age:'2세', gender:'여', profile_color:'#F59E0B', thumb:THUMB[3], primary_parent_name:'윤재혁', enroll_date:'2024-09-01', status:'enrolled', graduation_status:null, graduation_suggestion:'promoted', next_class:null },
+  { id:'CHD013', class_id:'CLS003', class_name:'송이반', name:'장민준', birth:'190615', age:'7세', gender:'남', profile_color:'#EF4444', thumb:null, primary_parent_name:'장은주', enroll_date:'2019-03-01', status:'enrolled', graduation_status:null, graduation_suggestion:'graduated', next_class:null },
+
+  // ─── 처리 완료 (graduation_status 있음) ───
+  { id:'CHD001', class_id:'CLS001', class_name:'꽃잎반', name:'강가영', birth:'240628', age:'2세', gender:'남', profile_color:'#4361EE', thumb:THUMB[4], primary_parent_name:'강미라', enroll_date:'2023-03-01', status:'enrolled', graduation_status:'promoted', graduation_suggestion:'promoted', next_class:{ id:'CLS002', name:'나무반' }, processed_by:'박원장', processed_at:'2026-02-15 09:32' },
+  { id:'CHD002', class_id:'CLS001', class_name:'꽃잎반', name:'나소율', birth:'230412', age:'3세', gender:'여', profile_color:'#EC4899', thumb:null, primary_parent_name:'나상훈', enroll_date:'2022-02-15', status:'enrolled', graduation_status:'graduated', graduation_suggestion:'graduated', next_class:null, processed_by:'박원장', processed_at:'2026-02-15 09:35' },
+  { id:'CHD003', class_id:'CLS002', class_name:'나무반', name:'다은서', birth:'200828', age:'6세', gender:'여', profile_color:'#F59E0B', thumb:THUMB[5], primary_parent_name:'다영희', enroll_date:'2021-09-01', status:'enrolled', graduation_status:'graduated', graduation_suggestion:'graduated', next_class:null, processed_by:'김교사', processed_at:'2026-02-16 14:10' },
+  { id:'CHD004', class_id:'CLS001', class_name:'꽃잎반', name:'라시우', birth:'220101', age:'4세', gender:'남', profile_color:'#10B981', thumb:null, primary_parent_name:'라철수', enroll_date:'2022-06-01', status:'enrolled', graduation_status:'on_hold', graduation_suggestion:'promoted', hold_reason:'반미개설', hold_memo:'', next_class:null, processed_by:'박원장', processed_at:'2026-02-17 10:02' },
+  { id:'CHD005', class_id:'CLS003', class_name:'송이반', name:'마유진', birth:'201023', age:'5세', gender:'여', profile_color:'#8B5CF6', thumb:THUMB[0], primary_parent_name:'마은정', enroll_date:'2021-03-01', status:'enrolled', graduation_status:'promoted', graduation_suggestion:'promoted', next_class:{ id:'CLS004', name:'해반' }, processed_by:'이교사', processed_at:'2026-02-18 11:20' },
+  { id:'CHD014', class_id:'CLS004', class_name:'해반', name:'서태양', birth:'210305', age:'5세', gender:'남', profile_color:'#3B82F6', thumb:null, primary_parent_name:'서미라', enroll_date:'2021-03-01', status:'enrolled', graduation_status:'promoted_auto', graduation_suggestion:'promoted', next_class:{ id:'CLS005', name:'별반' }, processed_by:'시스템', processed_at:'2026-02-10 00:00' },
+  { id:'CHD015', class_id:'CLS002', class_name:'나무반', name:'한나은', birth:'190820', age:'7세', gender:'여', profile_color:'#D97706', thumb:THUMB[1], primary_parent_name:'한준혁', enroll_date:'2019-09-01', status:'enrolled', graduation_status:'graduated', graduation_suggestion:'graduated', next_class:null, processed_by:'박원장', processed_at:'2026-02-19 09:00' },
 ];
 
 const STATUS_COLORS = {
@@ -437,9 +506,14 @@ const STATUS_COLORS = {
 const HOLD_REASONS = ['서류미비', '연령확인필요', '반미개설', '기타'];
 
 let currentTab = 'processing';
+let currentProcessingFilter = 'all';
+let currentCompletedFilter = 'all';
 let selectedIds = new Set();
-let statusChanges = {}; // { childId: { status, reason, memo } }
+let statusChanges = {};
 let teacherClass = effectiveRole === 'teacher' ? 'CLS001' : null;
+let processingPage = 1;
+let completedPage = 1;
+const PAGE_SIZE = 15;
 
 // ═══════════════ INIT ═══════════════
 function init() {
@@ -454,7 +528,6 @@ function renderKPI() {
   const processing = MOCK_CHILDREN.filter(c => !c.graduation_status);
   const promoted = MOCK_CHILDREN.filter(c => c.graduation_status === 'promoted' || c.graduation_status === 'promoted_auto');
   const graduated = MOCK_CHILDREN.filter(c => c.graduation_status === 'graduated');
-  const held = MOCK_CHILDREN.filter(c => c.graduation_status === 'on_hold');
 
   document.getElementById('kpiGrid').innerHTML = `
     <div class="kpi-card">
@@ -488,37 +561,66 @@ function renderKPI() {
   `;
 }
 
+// ═══════════════ AVATAR HELPER ═══════════════
+function avatarHtml(c) {
+  if (c.thumb) {
+    return `<div class="child-avatar"><img src="${c.thumb}" alt="${c.name}" onerror="this.parentElement.innerHTML='<span style=line-height:32px>${c.name.charAt(0)}</span>';this.parentElement.style.background='${c.profile_color}';"></div>`;
+  }
+  return `<div class="child-avatar" style="background:${c.profile_color}">${c.name.charAt(0)}</div>`;
+}
+
 // ═══════════════ PROCESSING TAB ═══════════════
 function renderProcessingTab() {
-  const processing = MOCK_CHILDREN.filter(c => !c.graduation_status);
-
-  document.getElementById('processingCount').textContent = `(${processing.length})`;
+  const base = MOCK_CHILDREN.filter(c => !c.graduation_status);
   document.getElementById('filterChips').innerHTML = `
-    <div class="chip active" onclick="filterProcessing('all', this)">전체</div>
-    <div class="chip" onclick="filterProcessing('promoted', this)">진급대상(${processing.filter(c=>c.graduation_suggestion==='promoted').length})</div>
-    <div class="chip" onclick="filterProcessing('graduated', this)">졸업대상(${processing.filter(c=>c.graduation_suggestion==='graduated').length})</div>
+    <div class="chip ${currentProcessingFilter === 'all' ? 'active' : ''}" onclick="filterProcessing('all', this)">전체</div>
+    <div class="chip ${currentProcessingFilter === 'promoted' ? 'active' : ''}" onclick="filterProcessing('promoted', this)">진급대상(${base.filter(c=>c.graduation_suggestion==='promoted').length})</div>
+    <div class="chip ${currentProcessingFilter === 'graduated' ? 'active' : ''}" onclick="filterProcessing('graduated', this)">졸업대상(${base.filter(c=>c.graduation_suggestion==='graduated').length})</div>
   `;
-  document.getElementById('actionBtns').innerHTML = `
-    <button class="btn btn-secondary btn-sm" onclick="bulkAction('promoted')">선택진급</button>
-    <button class="btn btn-secondary btn-sm" onclick="bulkAction('graduated')">선택졸업</button>
-    <button class="btn btn-secondary btn-sm" onclick="bulkAction('hold')">보류처리</button>
-  `;
+  const data = getFilteredProcessingData();
+  document.getElementById('processingCount').textContent = data.length;
+  renderProcessingTable(data);
+  updateSelectionControls();
+}
 
-  renderProcessingTable(processing);
+function getFilteredProcessingData() {
+  let data = MOCK_CHILDREN.filter(c => !c.graduation_status);
+  if (currentProcessingFilter !== 'all') data = data.filter(c => c.graduation_suggestion === currentProcessingFilter);
+  const age = document.getElementById('processingAgeFilter')?.value || '';
+  const cls = document.getElementById('processingClassFilter')?.value || '';
+  const name = (document.getElementById('processingNameSearch')?.value || '').trim();
+  if (age) data = data.filter(c => c.age === age);
+  if (cls) data = data.filter(c => c.class_name === cls);
+  if (name) data = data.filter(c => c.name.includes(name));
+  return data;
+}
+
+function applyProcessingSearch() {
+  processingPage = 1;
+  const data = getFilteredProcessingData();
+  document.getElementById('processingCount').textContent = data.length;
+  renderProcessingTable(data);
+  updateSelectionControls();
 }
 
 function renderProcessingTable(data) {
   const tbody = document.getElementById('processingTableBody');
+  const paginationEl = document.getElementById('processingPagination');
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px 20px;"><div class="empty-text">조건에 맞는 원아가 없습니다</div></td></tr>';
+    paginationEl.style.display = 'none';
+    updateSelectionControls();
     return;
   }
-  tbody.innerHTML = data.map(c => `
-    <tr>
-      <td><input type="checkbox" data-id="${c.id}" onchange="toggleSelect('${c.id}')" ${selectedIds.has(c.id) ? 'checked' : ''}></td>
+  const totalPages = Math.ceil(data.length / PAGE_SIZE);
+  if (processingPage > totalPages) processingPage = totalPages;
+  const paged = data.slice((processingPage - 1) * PAGE_SIZE, processingPage * PAGE_SIZE);
+  tbody.innerHTML = paged.map(c => `
+    <tr class="${selectedIds.has(c.id) ? 'row-checked' : ''}" onclick="handleRowClick(event, '${c.id}')">
+      <td><input type="checkbox" data-id="${c.id}" onchange="toggleSelect('${c.id}', this.checked)" ${selectedIds.has(c.id) ? 'checked' : ''} onclick="event.stopPropagation()"></td>
       <td>
         <div class="name-wrap">
-          <div class="child-avatar" style="background:${c.profile_color}">${c.name.charAt(0)}</div>
+          ${avatarHtml(c)}
           <div>
             <div class="main-name">${c.name}</div>
             <div class="sub-name">${c.birth}</div>
@@ -530,43 +632,73 @@ function renderProcessingTable(data) {
       <td>${c.primary_parent_name || '-'}</td>
       <td class="enroll-date">${c.enroll_date || '-'}</td>
       <td>
-        <select class="status-select" value="${c.graduation_suggestion}" onchange="setStatusChange('${c.id}', this.value)">
-          <option value="promoted">진급</option>
-          <option value="graduated">졸업</option>
-          <option value="on_hold">보류</option>
-        </select>
+        <div class="row-action" onclick="event.stopPropagation()">
+          <select class="status-select" onchange="setStatusChange('${c.id}', this.value)">
+            <option value="promoted" ${(statusChanges[c.id]?.status || c.graduation_suggestion) === 'promoted' ? 'selected' : ''}>진급</option>
+            <option value="graduated" ${(statusChanges[c.id]?.status || c.graduation_suggestion) === 'graduated' ? 'selected' : ''}>졸업</option>
+            <option value="on_hold" ${(statusChanges[c.id]?.status || c.graduation_suggestion) === 'on_hold' ? 'selected' : ''}>보류</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="processSingleChild('${c.id}')">처리</button>
+        </div>
       </td>
     </tr>
   `).join('');
+  renderPagination('processingPagination', data.length, processingPage, 'goProcessingPage');
+  updateSelectionControls();
 }
 
 // ═══════════════ COMPLETED TAB ═══════════════
 function renderCompletedTab() {
-  const completed = MOCK_CHILDREN.filter(c => c.graduation_status);
-
-  document.getElementById('completedCount').textContent = `(${completed.length})`;
+  const base = MOCK_CHILDREN.filter(c => c.graduation_status);
   document.getElementById('completedFilterChips').innerHTML = `
-    <div class="chip active" onclick="filterCompleted('all', this)">전체</div>
-    <div class="chip" onclick="filterCompleted('promoted', this)">진급(${completed.filter(c=>c.graduation_status==='promoted'||c.graduation_status==='promoted_auto').length})</div>
-    <div class="chip" onclick="filterCompleted('graduated', this)">졸업(${completed.filter(c=>c.graduation_status==='graduated').length})</div>
-    <div class="chip" onclick="filterCompleted('hold', this)">확인필요(${completed.filter(c=>c.graduation_status==='on_hold').length})</div>
+    <div class="chip ${currentCompletedFilter === 'all' ? 'active' : ''}" onclick="filterCompleted('all', this)">전체</div>
+    <div class="chip ${currentCompletedFilter === 'promoted' ? 'active' : ''}" onclick="filterCompleted('promoted', this)">진급(${base.filter(c=>c.graduation_status==='promoted'||c.graduation_status==='promoted_auto').length})</div>
+    <div class="chip ${currentCompletedFilter === 'graduated' ? 'active' : ''}" onclick="filterCompleted('graduated', this)">졸업(${base.filter(c=>c.graduation_status==='graduated').length})</div>
+    <div class="chip ${currentCompletedFilter === 'hold' ? 'active' : ''}" onclick="filterCompleted('hold', this)">확인필요(${base.filter(c=>c.graduation_status==='on_hold').length})</div>
   `;
+  const data = getFilteredCompletedData();
+  document.getElementById('completedCount').textContent = data.length;
+  renderCompletedTable(data);
+}
 
-  renderCompletedTable(completed);
+function getFilteredCompletedData() {
+  let data = MOCK_CHILDREN.filter(c => c.graduation_status);
+  if (currentCompletedFilter === 'promoted') data = data.filter(c => c.graduation_status === 'promoted' || c.graduation_status === 'promoted_auto');
+  else if (currentCompletedFilter === 'graduated') data = data.filter(c => c.graduation_status === 'graduated');
+  else if (currentCompletedFilter === 'hold') data = data.filter(c => c.graduation_status === 'on_hold');
+  const age = document.getElementById('completedAgeFilter')?.value || '';
+  const cls = document.getElementById('completedClassFilter')?.value || '';
+  const name = (document.getElementById('completedNameSearch')?.value || '').trim();
+  if (age) data = data.filter(c => c.age === age);
+  if (cls) data = data.filter(c => c.class_name === cls);
+  if (name) data = data.filter(c => c.name.includes(name));
+  return data;
+}
+
+function applyCompletedSearch() {
+  completedPage = 1;
+  const data = getFilteredCompletedData();
+  document.getElementById('completedCount').textContent = data.length;
+  renderCompletedTable(data);
 }
 
 function renderCompletedTable(data) {
   const tbody = document.getElementById('completedTableBody');
+  const paginationEl = document.getElementById('completedPagination');
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px 20px;"><div class="empty-text">확정된 원아가 없습니다</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px 20px;"><div class="empty-text">확정된 원아가 없습니다</div></td></tr>';
+    paginationEl.style.display = 'none';
     return;
   }
-  tbody.innerHTML = data.map(c => `
+  const totalPages = Math.ceil(data.length / PAGE_SIZE);
+  if (completedPage > totalPages) completedPage = totalPages;
+  const paged = data.slice((completedPage - 1) * PAGE_SIZE, completedPage * PAGE_SIZE);
+  tbody.innerHTML = paged.map(c => `
     <tr>
-      <td><input type="checkbox"></td>
+      <td></td>
       <td>
         <div class="name-wrap">
-          <div class="child-avatar" style="background:${c.profile_color}">${c.name.charAt(0)}</div>
+          ${avatarHtml(c)}
           <div>
             <div class="main-name">${c.name}</div>
             <div class="sub-name">${c.birth}</div>
@@ -582,8 +714,11 @@ function renderCompletedTable(data) {
           ${STATUS_COLORS[c.graduation_status]?.label}
         </span>
       </td>
+      <td><span class="processed-by">${c.processed_by || '-'}</span></td>
+      <td><span class="processed-at">${c.processed_at || '-'}</span></td>
     </tr>
   `).join('');
+  renderPagination('completedPagination', data.length, completedPage, 'goCompletedPage');
 }
 
 // ═══════════════ INTERACTIONS ═══════════════
@@ -595,85 +730,144 @@ function switchTab(tab) {
   document.getElementById('completedTab').style.display = tab === 'completed' ? 'block' : 'none';
 }
 
-function toggleSelect(id) {
-  if (selectedIds.has(id)) {
-    selectedIds.delete(id);
-  } else {
-    selectedIds.add(id);
+function handleRowClick(e, id) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') return;
+  const child = MOCK_CHILDREN.find(c => c.id === id);
+  if (!child || child.graduation_status) return;
+  const checked = !selectedIds.has(id);
+  toggleSelect(id, checked);
+  const cb = document.querySelector(`input[data-id="${id}"]`);
+  if (cb) cb.checked = checked;
+  const row = cb?.closest('tr');
+  if (row) row.classList.toggle('row-checked', checked);
+}
+
+function getVisibleProcessingIds() {
+  const data = getFilteredProcessingData();
+  return data.slice((processingPage - 1) * PAGE_SIZE, processingPage * PAGE_SIZE).map(c => c.id);
+}
+
+function getSelectedPendingIds() {
+  return Array.from(selectedIds).filter(id => {
+    const child = MOCK_CHILDREN.find(c => c.id === id);
+    return child && !child.graduation_status;
+  });
+}
+
+function updateSelectionControls() {
+  const visibleIds = getVisibleProcessingIds();
+  const selectedVisibleCount = visibleIds.filter(id => selectedIds.has(id)).length;
+  const totalSelectedCount = getSelectedPendingIds().length;
+  const allVisibleSelected = visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
+  const hasSelection = totalSelectedCount > 0;
+  const hasVisibleItems = visibleIds.length > 0;
+
+  const selectAllBtn = document.getElementById('selectAllBtn');
+  const selectionSummary = document.getElementById('selectionSummary');
+  const promoteBtn = document.getElementById('promoteSelectedBtn');
+  const graduateBtn = document.getElementById('graduateSelectedBtn');
+  const holdBtn = document.getElementById('holdSelectedBtn');
+  const applySuggestedBtn = document.getElementById('applySuggestedBtn');
+
+  if (selectAllBtn) {
+    selectAllBtn.textContent = allVisibleSelected ? '전체해제' : '전체선택';
+    selectAllBtn.disabled = !hasVisibleItems;
   }
-  updateBottomBar();
+  if (selectionSummary) selectionSummary.innerHTML = `선택 <strong>${totalSelectedCount}</strong>명`;
+  [promoteBtn, graduateBtn, holdBtn].forEach(btn => { if (btn) btn.disabled = !hasSelection; });
+  if (applySuggestedBtn) applySuggestedBtn.disabled = !hasVisibleItems;
+}
+
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  updateSelectionControls();
+}
+
+function toggleSelectAllVisible() {
+  const visibleIds = getVisibleProcessingIds();
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every(id => selectedIds.has(id));
+  visibleIds.forEach(id => {
+    if (allVisibleSelected) selectedIds.delete(id);
+    else selectedIds.add(id);
+  });
+  renderProcessingTable(getFilteredProcessingData());
 }
 
 function clearSelection() {
   selectedIds.clear();
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-  updateBottomBar();
-}
-
-function updateBottomBar() {
-  const bar = document.getElementById('bottomBar');
-  if (selectedIds.size === 0) {
-    bar.classList.remove('show');
-  } else {
-    let promoted = 0, graduated = 0, hold = 0;
-    selectedIds.forEach(id => {
-      const status = statusChanges[id]?.status || 'none';
-      if (status === 'promoted') promoted++;
-      else if (status === 'graduated') graduated++;
-      else if (status === 'on_hold') hold++;
-    });
-    document.getElementById('selectedCount').textContent = selectedIds.size;
-    document.getElementById('promotedCount').textContent = promoted;
-    document.getElementById('graduatedCount').textContent = graduated;
-    document.getElementById('holdCount').textContent = hold;
-    bar.classList.add('show');
-  }
+  renderProcessingTable(getFilteredProcessingData());
 }
 
 function setStatusChange(id, status) {
   if (!status) {
     delete statusChanges[id];
   } else {
-    statusChanges[id] = { status, reason: '', memo: '' };
+    const prev = statusChanges[id] || {};
+    statusChanges[id] = {
+      status,
+      reason: status === 'on_hold' ? (prev.reason || '') : '',
+      memo: status === 'on_hold' ? (prev.memo || '') : ''
+    };
   }
-  updateBottomBar();
 }
 
 function bulkAction(status) {
-  selectedIds.clear();
-  MOCK_CHILDREN.forEach(c => {
-    if (!c.graduation_status && c.graduation_suggestion === status) {
-      selectedIds.add(c.id);
-    }
-  });
-  if (selectedIds.size === 0) {
-    showToast('해당하는 원아가 없습니다', 'info');
+  const targets = getSelectedPendingIds();
+  if (targets.length === 0) {
+    showToast('먼저 처리할 원아를 선택해 주세요', 'info');
     return;
   }
-  selectedIds.forEach(id => {
+  targets.forEach(id => {
     statusChanges[id] = { status, reason: '', memo: '' };
   });
-  updateBottomBar();
+  openStatusChangeModal();
+}
+
+function applySuggestedStatuses() {
+  const targets = getVisibleProcessingIds();
+  if (targets.length === 0) {
+    showToast('현재 목록에 적용할 원아가 없습니다', 'info');
+    return;
+  }
+  targets.forEach(id => {
+    const child = MOCK_CHILDREN.find(c => c.id === id);
+    if (!child) return;
+    statusChanges[id] = { status: child.graduation_suggestion, reason: '', memo: '' };
+  });
+  selectedIds = new Set(targets);
+  renderProcessingTable(getFilteredProcessingData());
+  openStatusChangeModal();
+}
+
+function processSingleChild(id) {
+  const child = MOCK_CHILDREN.find(c => c.id === id);
+  if (!child || child.graduation_status) return;
+  const current = statusChanges[id]?.status || child.graduation_suggestion;
+  statusChanges[id] = {
+    status: current,
+    reason: current === 'on_hold' ? (statusChanges[id]?.reason || '') : '',
+    memo: current === 'on_hold' ? (statusChanges[id]?.memo || '') : ''
+  };
+  selectedIds = new Set([id]);
+  renderProcessingTable(getFilteredProcessingData());
   openStatusChangeModal();
 }
 
 function filterProcessing(type, el) {
+  currentProcessingFilter = type;
+  processingPage = 1;
   document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  const data = MOCK_CHILDREN.filter(c => !c.graduation_status);
-  const filtered = type === 'all' ? data : data.filter(c => c.graduation_suggestion === type);
-  renderProcessingTable(filtered);
+  applyProcessingSearch();
 }
 
 function filterCompleted(type, el) {
+  currentCompletedFilter = type;
+  completedPage = 1;
   document.querySelectorAll('#completedFilterChips .chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
-  const data = MOCK_CHILDREN.filter(c => c.graduation_status);
-  let filtered = data;
-  if (type === 'promoted') filtered = data.filter(c => c.graduation_status === 'promoted' || c.graduation_status === 'promoted_auto');
-  else if (type === 'graduated') filtered = data.filter(c => c.graduation_status === 'graduated');
-  else if (type === 'hold') filtered = data.filter(c => c.graduation_status === 'on_hold');
-  renderCompletedTable(filtered);
+  applyCompletedSearch();
 }
 
 // ═══════════════ MODALS ═══════════════
@@ -714,6 +908,13 @@ function openStatusChangeModal() {
 function updateStatusChange(id, field, value) {
   if (!statusChanges[id]) statusChanges[id] = {};
   statusChanges[id][field] = value;
+  if (field === 'status') {
+    if (value !== 'on_hold') {
+      statusChanges[id].reason = '';
+      statusChanges[id].memo = '';
+    }
+    openStatusChangeModal();
+  }
 }
 
 function confirmStatusChange() {
@@ -739,6 +940,10 @@ function processGraduation() {
   closeModal('confirmModal');
   document.getElementById('progressOverlay').classList.add('show');
 
+  const now = new Date();
+  const processedAt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const processedBy = effectiveRole === 'teacher' ? '김교사' : '박원장';
+
   let total = selectedIds.size;
   let count = 0;
 
@@ -748,6 +953,8 @@ function processGraduation() {
 
     setTimeout(() => {
       child.graduation_status = change.status;
+      child.processed_by = processedBy;
+      child.processed_at = processedAt;
       if (change.status === 'on_hold') {
         child.hold_reason = change.reason;
         child.hold_memo = change.memo;
@@ -763,7 +970,6 @@ function processGraduation() {
         setTimeout(() => {
           document.getElementById('progressOverlay').classList.remove('show');
 
-          // Save to localStorage
           const graduated = Array.from(selectedIds).filter(id => statusChanges[id].status === 'graduated');
           if (graduated.length > 0) {
             let saved = JSON.parse(localStorage.getItem('graduation_confirmed') || '{"ids":[]}');
@@ -771,10 +977,8 @@ function processGraduation() {
             localStorage.setItem('graduation_confirmed', JSON.stringify(saved));
           }
 
-          // Check if has hold status
           const hasHold = Array.from(selectedIds).some(id => statusChanges[id].status === 'on_hold');
 
-          // Render and show completion
           renderKPI();
           renderProcessingTab();
           renderCompletedTab();
@@ -787,16 +991,57 @@ function processGraduation() {
             document.getElementById('filterChips').querySelector('.chip').click();
           }
 
-          selectedIds.clear();
           clearSelection();
-
-          // Show completion modal
-          const newYearHasClass = Math.random() > 0.5; // Mock: 반이 있는지 없는지
-          document.getElementById(newYearHasClass ? 'completeModalB' : 'completeModalA').classList.add('show');
+          showToast('진급/졸업 처리가 완료되었습니다.', 'success');
         }, 500);
       }
     }, count * 300);
   });
+}
+
+// ═══════════════ PAGINATION ═══════════════
+function goProcessingPage(p) {
+  processingPage = p;
+  renderProcessingTable(getFilteredProcessingData());
+  updateSelectionControls();
+}
+
+function goCompletedPage(p) {
+  completedPage = p;
+  renderCompletedTable(getFilteredCompletedData());
+}
+
+function renderPagination(containerId, total, currentPage, fnName) {
+  const el = document.getElementById(containerId);
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  if (totalPages <= 1) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+
+  const start = (currentPage - 1) * PAGE_SIZE + 1;
+  const end = Math.min(currentPage * PAGE_SIZE, total);
+
+  let pages = [];
+  if (totalPages <= 7) {
+    pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  } else {
+    pages = [1];
+    const lo = Math.max(2, currentPage - 1);
+    const hi = Math.min(totalPages - 1, currentPage + 1);
+    if (lo > 2) pages.push('…');
+    for (let p = lo; p <= hi; p++) pages.push(p);
+    if (hi < totalPages - 1) pages.push('…');
+    pages.push(totalPages);
+  }
+
+  el.innerHTML = `
+    <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="${fnName}(${currentPage - 1})">‹</button>
+    ${pages.map(p => p === '…'
+      ? `<span class="page-btn" style="border:none;cursor:default;color:var(--text-muted)">…</span>`
+      : `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="${fnName}(${p})">${p}</button>`
+    ).join('')}
+    <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="${fnName}(${currentPage + 1})">›</button>
+    <span class="page-info">${start}–${end} / ${total}건</span>
+  `;
 }
 
 function closeModal(id) {
