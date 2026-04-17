@@ -52,8 +52,15 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .kpi-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
 
 /* FILTER BAR */
-.action-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filter-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-group{display:flex;align-items:center;gap:6px;flex:1;}
+
+/* ACTION BAR */
+.action-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.action-left{display:flex;align-items:center;gap:8px;}
+.action-right{display:flex;align-items:center;gap:8px;}
+.total-count{font-size:14px;color:var(--text-secondary);}
+.total-count strong{color:var(--text-primary);font-weight:700;}
 .fsel-wrap{position:relative;}
 .fsel-wrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;}
 .fsel{height:34px;padding:0 28px 0 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);appearance:none;cursor:pointer;outline:none;transition:.18s;}
@@ -277,7 +284,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
   <div class="content">
     <div class="content-inner">
       <div class="kpi-row" id="kpiRow"></div>
-      <div class="action-bar" style="background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <div class="filter-bar">
         <div class="filter-group">
           <div class="fsel-wrap">
             <select class="fsel" id="filterYear">
@@ -300,9 +307,13 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
           <button class="btn-reset" onclick="resetFilter()">초기화</button>
         </div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:-8px;">
-        <span class="results-count" id="resultsCount" style="font-size:13px;color:var(--text-muted);"></span>
-        <button class="btn btn-primary btn-sm" id="addClassBtn" onclick="openAddClassModal()" style="display:none">＋ 반 추가</button>
+      <div class="action-bar">
+        <div class="action-left">
+          <span class="total-count">총 <strong id="resultsCount">0</strong>개 반</span>
+        </div>
+        <div class="action-right">
+          <button class="btn btn-primary btn-sm" id="addClassBtn" onclick="openAddClassModal()" style="display:none">＋ 반 추가</button>
+        </div>
       </div>
       <div class="class-grid" id="classGrid"></div>
     </div>
@@ -497,7 +508,7 @@ function applyFilter() {
     }
     return true;
   });
-  document.getElementById('resultsCount').textContent = `${filteredClasses.length}개 반`;
+  document.getElementById('resultsCount').textContent = filteredClasses.length;
   renderGrid();
 }
 
