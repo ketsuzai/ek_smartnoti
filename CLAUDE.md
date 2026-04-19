@@ -115,3 +115,4 @@
 | `17-MEMBER-APPROVAL.md` | 멤버/승인 — 교사+원아 통합 멤버 관리 |
 | `18-GRADUATION.md` | 진급/졸업 스펙 |
 | `19-ANNOUNCEMENT.md` | 공지사항 v2 전면 개선 스펙 — 칩 필터, 인디케이터, 드로어 재설계, 읽음현황, 임시보관함, 쓰기 모달 확장 |
+| `20-PAGINATION-SCROLL.md` | 페이지네이션(그룹형 1~10, «‹›») / 무한스크롤(IntersectionObserver) 설계 및 구현 현황 |
