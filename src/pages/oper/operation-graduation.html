@@ -84,8 +84,11 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .chip.active{background:var(--accent);color:white;border-color:var(--accent);}
 .filter-select{padding:6px 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;background:white;color:var(--text-primary);cursor:pointer;font-family:inherit;height:34px;}
 .filter-select:focus{outline:none;border-color:var(--accent);}
-.filter-search{padding:6px 12px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:inherit;height:34px;min-width:180px;background:white;color:var(--text-primary);}
-.filter-search:focus{outline:none;border-color:var(--accent);}
+.filter-search-wrap{display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;background:white;transition:.18s;}
+.filter-search-wrap:focus-within{border-color:var(--accent);}
+.filter-search{padding:0 10px;border:none;outline:none;font-size:13px;font-family:inherit;height:34px;min-width:160px;background:transparent;color:var(--text-primary);}
+.filter-search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:.18s;}
+.filter-search-btn:hover{background:#2f4dd4;}
 .filter-divider{width:1px;height:20px;background:var(--border-medium);}
 .btn{padding:8px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:0.18s;height:36px;display:flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--accent);color:white;}
@@ -248,14 +251,14 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <!-- FILTER BAR -->
       <div class="filter-bar">
         <div class="filter-row">
-          <select class="filter-select" id="processingStatusFilter" onchange="applyProcessingFilter()">
+          <select class="filter-select" id="processingStatusFilter">
             <option value="all">전체 상태</option>
             <option value="promoted">진급대상</option>
             <option value="graduated">졸업대상</option>
             <option value="hold">보류</option>
           </select>
           <div class="filter-divider"></div>
-          <select class="filter-select" id="processingAgeFilter" onchange="applyProcessingSearch()">
+          <select class="filter-select" id="processingAgeFilter">
             <option value="">전체 나이</option>
             <option value="1세">1세</option>
             <option value="2세">2세</option>
@@ -266,7 +269,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="7세">7세</option>
           </select>
           <div class="filter-divider"></div>
-          <select class="filter-select" id="processingClassFilter" onchange="applyProcessingSearch()">
+          <select class="filter-select" id="processingClassFilter">
             <option value="">전체 반</option>
             <option value="꽃잎반">꽃잎반</option>
             <option value="나무반">나무반</option>
@@ -275,7 +278,10 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="별반">별반</option>
           </select>
           <div class="filter-divider"></div>
-          <input type="text" class="filter-search" id="processingNameSearch" placeholder="원아 이름 검색" oninput="applyProcessingSearch()">
+          <div class="filter-search-wrap">
+            <input type="text" class="filter-search" id="processingNameSearch" placeholder="원아 이름 검색" onkeydown="if(event.key==='Enter') applyProcessingFilter()">
+            <button class="filter-search-btn" onclick="applyProcessingFilter()">검색</button>
+          </div>
         </div>
       </div>
 
@@ -327,13 +333,13 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <!-- FILTER BAR -->
       <div class="filter-bar">
         <div class="filter-row">
-          <select class="filter-select" id="completedStatusFilter" onchange="applyCompletedFilter()">
+          <select class="filter-select" id="completedStatusFilter">
             <option value="all">전체 상태</option>
             <option value="promoted">진급</option>
             <option value="graduated">졸업</option>
           </select>
           <div class="filter-divider"></div>
-          <select class="filter-select" id="completedAgeFilter" onchange="applyCompletedSearch()">
+          <select class="filter-select" id="completedAgeFilter">
             <option value="">전체 나이</option>
             <option value="1세">1세</option>
             <option value="2세">2세</option>
@@ -344,7 +350,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="7세">7세</option>
           </select>
           <div class="filter-divider"></div>
-          <select class="filter-select" id="completedClassFilter" onchange="applyCompletedSearch()">
+          <select class="filter-select" id="completedClassFilter">
             <option value="">전체 반</option>
             <option value="꽃잎반">꽃잎반</option>
             <option value="나무반">나무반</option>
@@ -353,7 +359,10 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="별반">별반</option>
           </select>
           <div class="filter-divider"></div>
-          <input type="text" class="filter-search" id="completedNameSearch" placeholder="원아 이름 검색" oninput="applyCompletedSearch()">
+          <div class="filter-search-wrap">
+            <input type="text" class="filter-search" id="completedNameSearch" placeholder="원아 이름 검색" onkeydown="if(event.key==='Enter') applyCompletedFilter()">
+            <button class="filter-search-btn" onclick="applyCompletedFilter()">검색</button>
+          </div>
         </div>
       </div>
 

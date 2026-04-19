@@ -110,6 +110,8 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .search-wrap{display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface);transition:.18s;}
 .search-wrap:focus-within{border-color:var(--accent);}
 .search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:140px;}
+.search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;cursor:pointer;transition:.18s;}
+.search-btn:hover{background:#2f4dd4;}
 .btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .btn-reset:hover{background:var(--border-light);}
 
@@ -360,21 +362,22 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
         <div class="filter-bar">
           <div class="filter-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <div class="fsel-wrap">
-              <select class="fsel" id="filterTeacherRole" onchange="applyTeacherFilter()">
+              <select class="fsel" id="filterTeacherRole">
                 <option value="">전체 역할</option>
                 <option value="teacher">교사</option>
                 <option value="org_admin">기관관리자</option>
               </select>
             </div>
             <div class="fsel-wrap">
-              <select class="fsel" id="filterTeacherStatus" onchange="applyTeacherFilter()">
+              <select class="fsel" id="filterTeacherStatus">
                 <option value="">전체 상태</option>
                 <option value="active">활성</option>
                 <option value="inactive">비활성</option>
               </select>
             </div>
             <div class="search-wrap">
-              <input class="search-inp" id="filterTeacherName" placeholder="교직원명 검색" oninput="applyTeacherFilter()">
+              <input class="search-inp" id="filterTeacherName" placeholder="교직원명 검색" onkeydown="if(event.key==='Enter') applyTeacherFilter()">
+              <button class="search-btn" onclick="applyTeacherFilter()">검색</button>
             </div>
             <button class="btn-reset" onclick="resetTeacherFilter()">초기화</button>
           </div>
@@ -425,12 +428,12 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
         <div class="filter-bar">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <div class="fsel-wrap" id="classFilterWrap">
-              <select class="fsel" id="filterChildClass" onchange="applyChildFilter()">
+              <select class="fsel" id="filterChildClass">
                 <option value="">전체 반</option>
               </select>
             </div>
             <div class="fsel-wrap">
-              <select class="fsel" id="filterChildStatus" onchange="applyChildFilter()">
+              <select class="fsel" id="filterChildStatus">
                 <option value="">전체 상태</option>
                 <option value="enrolled">재원중</option>
                 <option value="on_leave">휴원중</option>
@@ -440,14 +443,15 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
               </select>
             </div>
             <div class="fsel-wrap">
-              <select class="fsel" id="filterChildGender" onchange="applyChildFilter()">
+              <select class="fsel" id="filterChildGender">
                 <option value="">전체 성별</option>
                 <option value="남">남아</option>
                 <option value="여">여아</option>
               </select>
             </div>
             <div class="search-wrap">
-              <input class="search-inp" id="filterChildName" placeholder="원아명 검색" oninput="applyChildFilter()">
+              <input class="search-inp" id="filterChildName" placeholder="원아명 검색" onkeydown="if(event.key==='Enter') applyChildFilter()">
+              <button class="search-btn" onclick="applyChildFilter()">검색</button>
             </div>
             <button class="btn-reset" onclick="resetChildFilter()">초기화</button>
           </div>

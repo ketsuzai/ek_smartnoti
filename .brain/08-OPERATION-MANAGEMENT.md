@@ -1,6 +1,6 @@
 # 🧠 프로젝트 브레인: 운영관리 기능정의
 
-> **최종 업데이트**: 2026-04-06
+> **최종 업데이트**: 2026-04-19
 > **작업 범위**: 통합관리자 전용 — 운영관리 메뉴
 > **연관 브레인**: `07-ROLE-PERMISSION.md`
 
@@ -13,7 +13,7 @@
 - **컨텍스트 세션**: `sessionStorage.setItem('operationContext', JSON.stringify({orgId, orgName, orgType, contextRole, allClassAccess}))`
 - **상단바**: `🏫 OO어린이집 · 운영관리 모드  [기관 변경]  [컨텍스트 종료]`
 - **사이드바 테마**: `#0C2D48` (딥네이비), 액센트 `#0EA5E9`
-- **서브메뉴 완료**: 알림장 ✅ / 초대관리 ✅ / 기관정보 ✅ / 반관리 ✅ / 원아관리 ✅ / 공지사항 ✅(v2)
+- **서브메뉴 완료**: 알림장 ✅ / 초대관리 ✅ / 기관정보 ✅ / 반관리 ✅ / 원아관리 ✅ / 공지사항 ✅(v2) / 앨범 ✅ / 진급/졸업 ✅
 - **서브메뉴 미완**: 일정관리 / 상담관리
 - **기관선택팝업**: ✅ 개선 완료 (페이지네이션, 검색 버튼, 기관관리자/교사관리자 이중 진입)
 - **대시보드**: 교사 뷰 원아 출석현황 모달 구현 완료 (2026-03-24) → `14-OPERATION-DASHBOARD.md` 참조
@@ -136,13 +136,18 @@ const isTeacher = effectiveRole === 'teacher';
 - **기관 변경** 버튼: 기관 선택 팝업 재호출
 - **컨텍스트 종료** 버튼: sessionStorage 초기화 → 일반 대시보드로 이동
 
-### 3.2 사이드바 표시
+### 3.2 사이드바·헤더 표시
 - 운영관리 컨텍스트 진입 시 사이드바 구조 변경 (운영관리 서브메뉴로 전환)
-- **구현**: `src/pages/oper/operation-sidebar.js` 공통 컴포넌트가 담당
+- **사이드바 구현**: `src/pages/oper/operation-sidebar.js` 공통 컴포넌트가 담당
   - 각 `operation-*.html` 페이지에서 `<script src="operation-sidebar.js" defer></script>` + `<aside id="appSidebar"></aside>` 선언만으로 사이드바 자동 렌더링
   - `effectiveRole` (= `operationContext.contextRole` 우선, fallback `userRole`) 기반으로 배지·포털 라벨·컨텍스트 배너 자동 전환
   - 통합관리자 + `operationContext` 존재 시: `superContextBanner` 표시 (기관 변경 / 컨텍스트 종료 버튼)
   - 활성 메뉴는 현재 파일명 자동 감지 — per-page 코드 불필요
+- **헤더 구현**: `src/pages/oper/operation-header.js` 공통 컴포넌트가 담당 *(2026-04-19 신규)*
+  - 각 `operation-*.html` 페이지에서 `<script src="operation-header.js" defer></script>` + `<div id="topbarRight"></div>` 선언만으로 헤더 우측 자동 렌더링
+  - 날짜 · 글로벌 임시보관함(📂) · 알림(🔔) · 설정(⚙️) 버튼 렌더링
+  - 글로벌 임시보관함: 공지사항·알림장·앨범 3종 draft 통합 모달 (타입 배지별 색상 구분)
+  - per-page `renderTopbarRight()` 함수 완전 제거 → 모든 13개 oper 페이지 적용 완료
 
 ---
 
@@ -240,7 +245,7 @@ if (userRole === 'super' && opContext) {
 | — | ↳ 반 관리 | `operation-class.html` | ✅ 완료 (2026-03-23) |
 | — | ↳ 원아 관리 | `operation-child.html` | ✅ 완료 (2026-03-24) |
 | — | ↳ 공지사항 | `operation-announcement.html` | ✅ v2 완료 (2026-04-06) — 칩 필터·인디케이터·드로어 재설계·읽음현황·임시보관함·쓰기 모달 확장 → `19-ANNOUNCEMENT.md` 참조 |
-| — | ↳ 앨범 | `operation-album.html` | ✅ 완료 (2026-03-24) |
+| — | ↳ 앨범 | `operation-album.html` | ✅ 완료 (2026-03-24) — 상태 필터 칩 제거, 목업 데이터 표시 버그 수정 (2026-04-19) |
 | — | ↳ 대시보드 | `operation-dashboard.html` | 🔄 교사 뷰 구현 완료 (2026-03-24) |
 | — | ↳ 일정 관리 | `operation-schedule.html` | 🔲 미시작 |
 | — | ↳ 상담 관리 | `operation-consulting.html` | 🔲 미시작 |

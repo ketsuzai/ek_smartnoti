@@ -1,6 +1,6 @@
 # 🧠 프로젝트 브레인: 프로젝트 개요
 
-> **최종 업데이트**: 2026-04-16
+> **최종 업데이트**: 2026-04-19
 > **작성자**: AI 어시스턴트 (기획자 검토 필요)
 
 ---
@@ -104,28 +104,37 @@
 
 ## 4. 사이드바 네비게이션 구조
 
-### ⚙️ 구현 방식 (`operation-sidebar.js` 공통 컴포넌트)
+### ⚙️ 구현 방식 (공통 컴포넌트 2종)
 
-운영관리 섹션(`src/pages/oper/`)의 모든 페이지는 **공통 사이드바 컴포넌트**를 사용한다.
+운영관리 섹션(`src/pages/oper/`)의 모든 페이지는 **공통 사이드바·헤더 컴포넌트**를 사용한다.
 
-- **파일**: `src/pages/oper/operation-sidebar.js`
+#### `operation-sidebar.js`
 - **방식**: IIFE 패턴 — CSS를 `<style>` 태그로 주입하고 `<aside id="appSidebar">` 플레이스홀더에 HTML을 렌더링
+- **역할 분기**: `sessionStorage.userRole` (`super` / `org_admin` / `teacher`) 읽어 배지·포털 라벨·배경 자동 전환
+- **활성 메뉴**: `location.pathname.split('/').pop()`으로 현재 파일명 감지 → `active` 클래스 자동 적용
+- **전역 함수 노출**: `window.changeOrg()`, `window.exitContext()`, `window.logout()`
+
+#### `operation-header.js` *(2026-04-19 신규)*
+- **방식**: IIFE 패턴 — `<div id="topbarRight">` 플레이스홀더에 헤더 우측 영역 렌더링
+- **렌더링 요소**: `[YYYY.MM.DD]` 날짜 · `[📂 임시보관함(N)]` · `[🔔]` · `[⚙️]`
+- **글로벌 임시보관함 모달**: 공지사항·알림장·앨범 3종 draft를 타입 배지(파란/초록/보라)로 통합 표시
+- **전역 함수 노출**: `window.openGlobalDraftModal()`, `window.closeGlobalDraftModal()`
+- **Mock 데이터**: 공지사항 2건, 알림장 2건, 앨범 2건 (하드코딩)
+
 - **사용법**:
   ```html
   <head>
     <script src="operation-sidebar.js" defer></script>
+    <script src="operation-header.js" defer></script>
   </head>
   <body>
     <aside id="appSidebar"></aside>
     ...
+    <div class="topbar-right" id="topbarRight"></div>
   </body>
   ```
-- **역할 분기**: `sessionStorage.userRole` (`super` / `org_admin` / `teacher`) 읽어 배지·포털 라벨·배경 자동 전환
-- **활성 메뉴**: `location.pathname.split('/').pop()`으로 현재 파일명 감지 → `active` 클래스 자동 적용
-- **전역 함수 노출**: `window.changeOrg()`, `window.exitContext()`, `window.logout()`
-- **초대장 관리 링크**: `operation-invitation.html` (운영관리 섹션 내 링크)
 
-> 📌 향후 신규 `operation-*.html` 페이지는 per-page 사이드바 코드 없이 위 스크립트 태그만 추가하면 됨.
+> 📌 향후 신규 `operation-*.html` 페이지는 per-page 사이드바·헤더 코드 없이 위 스크립트 태그 2개만 추가하면 됨.
 
 ---
 
@@ -233,6 +242,7 @@
 ## 6. 공통 UI 패턴
 
 - **사이드바**: 240px 고정 — 통합관리자: 다크 테마(#1A1D2E) / 운영관리·기관·교사: 하늘색 테마(#0C2D48). 운영관리 섹션은 `operation-sidebar.js` 공통 컴포넌트로 관리
+- **헤더 우측(topbarRight)**: 날짜 · 글로벌 임시보관함 · 알림 · 설정. 운영관리 섹션은 `operation-header.js` 공통 컴포넌트로 관리 (per-page `renderTopbarRight()` 제거)
 - **상단바**: 60px 높이, 브레드크럼 + 알림/프로필
 - **카드 기반 레이아웃**: border-radius 12~16px, shadow 계층
 - **상태 뱃지 시스템**: 도트(●) + 배경색 + 텍스트 색상 조합
