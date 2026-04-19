@@ -63,13 +63,13 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .kpi-value{font-size:24px;font-weight:800;color:var(--text-primary);letter-spacing:-0.8px;line-height:1;}
 .kpi-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
 
-/* PRIMARY TABS */
-.primary-tabs{display:flex;gap:0;border-bottom:2px solid var(--border-light);margin-bottom:20px;}
-.primary-tab{padding:10px 20px;font-size:15px;font-weight:700;color:var(--text-secondary);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:0.18s;display:flex;align-items:center;gap:7px;}
-.primary-tab:hover{color:var(--accent-dark);}
-.primary-tab.active{color:var(--accent-dark);border-bottom-color:var(--accent);}
-.primary-tab .tab-badge{font-size:11px;font-weight:800;padding:1px 7px;border-radius:10px;background:var(--amber-bg);color:var(--amber-text);}
-.primary-tab.active .tab-badge{background:var(--accent-light);color:var(--accent-dark);}
+/* TABS (진급/졸업 기준 통일) */
+.tab-bar{display:flex;gap:2px;margin-bottom:20px;border-bottom:2px solid var(--border-light);}
+.tab{padding:12px 24px;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border:none;background:none;transition:0.18s;position:relative;border-bottom:2px solid transparent;margin-bottom:-2px;display:inline-flex;align-items:center;gap:6px;font-family:'Pretendard',sans-serif;}
+.tab:hover{color:var(--text-primary);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab .tab-badge{font-size:11px;font-weight:800;padding:1px 7px;border-radius:10px;background:var(--amber-bg);color:var(--amber-text);}
+.tab.active .tab-badge{background:var(--accent-light);color:var(--accent-dark);}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 
@@ -94,24 +94,24 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 .av-actions{display:flex;gap:6px;flex-shrink:0;}
 
 /* SUB TABS */
-.sub-tabs{display:flex;gap:0;border-bottom:1.5px solid var(--border-light);margin-bottom:16px;}
-.sub-tab{padding:8px 18px;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:0.18s;}
-.sub-tab:hover{color:var(--accent-dark);}
-.sub-tab.active{color:var(--accent-dark);border-bottom-color:var(--accent);}
+.sub-tab-bar{display:flex;gap:2px;margin-bottom:16px;border-bottom:2px solid var(--border-light);}
+.sub-tab{padding:10px 20px;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border:none;background:none;transition:0.18s;position:relative;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:'Pretendard',sans-serif;}
+.sub-tab:hover{color:var(--text-primary);}
+.sub-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 .sub-pane{display:none;}
 .sub-pane.active{display:block;}
 
-/* FILTER BAR */
-.filter-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:12px 16px;border:1px solid var(--border-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
-.fsel-wrap{position:relative;}
-.fsel-wrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text-muted);pointer-events:none;}
-.fsel{height:34px;padding:0 28px 0 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:var(--bg-surface);appearance:none;cursor:pointer;outline:none;transition:.18s;}
-.fsel:focus{border-color:var(--accent);}
-.search-wrap{display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface);transition:.18s;}
-.search-wrap:focus-within{border-color:var(--accent);}
-.search-inp{height:34px;padding:0 10px;border:none;outline:none;font-size:14px;font-family:'Pretendard',sans-serif;color:var(--text-primary);background:transparent;width:140px;}
-.search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;cursor:pointer;transition:.18s;}
-.search-btn:hover{background:#2f4dd4;}
+/* FILTER BAR (진급/졸업 기준 통일) */
+.filter-bar{background:var(--bg-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:14px 18px;border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;}
+.filter-select{padding:6px 10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;background:white;color:var(--text-primary);cursor:pointer;font-family:'Pretendard',sans-serif;height:34px;outline:none;}
+.filter-select:focus{border-color:var(--accent);}
+.filter-divider{width:1px;height:20px;background:var(--border-medium);flex-shrink:0;}
+.filter-search-wrap{display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;background:white;transition:.18s;}
+.filter-search-wrap:focus-within{border-color:var(--accent);}
+.filter-search{padding:0 10px;border:none;outline:none;font-size:13px;font-family:'Pretendard',sans-serif;height:34px;min-width:150px;background:transparent;color:var(--text-primary);}
+.filter-search-btn{height:34px;padding:0 12px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;cursor:pointer;transition:.18s;}
+.filter-search-btn:hover{background:#2f4dd4;}
 .btn-reset{height:34px;padding:0 12px;background:var(--bg-base);border:1.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:.18s;font-family:'Pretendard',sans-serif;}
 .btn-reset:hover{background:var(--border-light);}
 
@@ -325,22 +325,27 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     <!-- KPI -->
     <div class="kpi-grid" id="kpiGrid"></div>
 
-    <!-- PRIMARY TABS -->
-    <div class="primary-tabs">
-      <div class="primary-tab active" id="tabApproval" onclick="switchPrimaryTab('approval')">
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab active" id="tabApproval" onclick="switchPrimaryTab('approval')">
         🔔 가입승인 <span class="tab-badge" id="approvalBadge">0</span>
-      </div>
-      <div class="primary-tab" id="tabMembers" onclick="switchPrimaryTab('members')">
+      </button>
+      <button class="tab" id="tabMembers" onclick="switchPrimaryTab('members')">
         👥 멤버관리
-      </div>
+      </button>
     </div>
 
     <!-- ── 가입승인 탭 ── -->
     <div class="tab-pane active" id="paneApproval">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;font-size:13px;color:var(--text-secondary);">
+        <span>교직원 대기 <strong id="approvalCountTeacher" style="color:var(--text-primary);font-weight:700">0</strong>건</span>
+        <span style="width:1px;height:14px;background:var(--border-medium);display:inline-block;vertical-align:middle"></span>
+        <span>원아보호자 대기 <strong id="approvalCountParent" style="color:var(--text-primary);font-weight:700">0</strong>건</span>
+      </div>
       <div class="chip-group" id="approvalChips">
         <div class="chip active" data-type="all" onclick="filterApproval('all',this)">전체</div>
-        <div class="chip" data-type="teacher" onclick="filterApproval('teacher',this)">교직원</div>
-        <div class="chip" data-type="parent" onclick="filterApproval('parent',this)">원아 보호자</div>
+        <div class="chip" data-type="teacher" id="chipTeacherFilter" onclick="filterApproval('teacher',this)">교직원</div>
+        <div class="chip" data-type="parent" onclick="filterApproval('parent',this)">원아보호자</div>
       </div>
       <div class="approval-list" id="approvalList"></div>
       <div class="empty-state" id="approvalEmpty" style="display:none">
@@ -352,32 +357,30 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
     <!-- ── 멤버관리 탭 ── -->
     <div class="tab-pane" id="paneMembers">
-      <div class="sub-tabs">
-        <div class="sub-tab active" id="subtabTeacher" onclick="switchSubTab('teacher')">👩‍🏫 교직원</div>
-        <div class="sub-tab" id="subtabChild" onclick="switchSubTab('child')">👶 원아</div>
+      <div class="sub-tab-bar">
+        <button class="sub-tab active" id="subtabTeacher" onclick="switchSubTab('teacher')">👩‍🏫 교직원</button>
+        <button class="sub-tab" id="subtabChild" onclick="switchSubTab('child')">👶 원아</button>
       </div>
 
       <!-- 교직원 서브탭 -->
       <div class="sub-pane active" id="subPaneTeacher">
         <div class="filter-bar">
-          <div class="filter-group" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="fsel-wrap">
-              <select class="fsel" id="filterTeacherRole">
-                <option value="">전체 역할</option>
-                <option value="teacher">교사</option>
-                <option value="org_admin">기관관리자</option>
-              </select>
-            </div>
-            <div class="fsel-wrap">
-              <select class="fsel" id="filterTeacherStatus">
-                <option value="">전체 상태</option>
-                <option value="active">활성</option>
-                <option value="inactive">비활성</option>
-              </select>
-            </div>
-            <div class="search-wrap">
-              <input class="search-inp" id="filterTeacherName" placeholder="교직원명 검색" onkeydown="if(event.key==='Enter') applyTeacherFilter()">
-              <button class="search-btn" onclick="applyTeacherFilter()">검색</button>
+          <div class="filter-row">
+            <select class="filter-select" id="filterTeacherRole">
+              <option value="">전체 역할</option>
+              <option value="teacher">교사</option>
+              <option value="org_admin">기관관리자</option>
+            </select>
+            <div class="filter-divider"></div>
+            <select class="filter-select" id="filterTeacherStatus">
+              <option value="">전체 상태</option>
+              <option value="active">활성</option>
+              <option value="inactive">비활성</option>
+            </select>
+            <div class="filter-divider"></div>
+            <div class="filter-search-wrap">
+              <input class="filter-search" id="filterTeacherName" placeholder="교직원명 검색" onkeydown="if(event.key==='Enter') applyTeacherFilter()">
+              <button class="filter-search-btn" onclick="applyTeacherFilter()">검색</button>
             </div>
             <button class="btn-reset" onclick="resetTeacherFilter()">초기화</button>
           </div>
@@ -426,32 +429,29 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <!-- 원아 서브탭 -->
       <div class="sub-pane" id="subPaneChild">
         <div class="filter-bar">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="fsel-wrap" id="classFilterWrap">
-              <select class="fsel" id="filterChildClass">
-                <option value="">전체 반</option>
-              </select>
-            </div>
-            <div class="fsel-wrap">
-              <select class="fsel" id="filterChildStatus">
-                <option value="">전체 상태</option>
-                <option value="enrolled">재원중</option>
-                <option value="on_leave">휴원중</option>
-                <option value="graduated">졸업</option>
-                <option value="withdrawn">퇴소</option>
-                <option value="pending">등록대기</option>
-              </select>
-            </div>
-            <div class="fsel-wrap">
-              <select class="fsel" id="filterChildGender">
-                <option value="">전체 성별</option>
-                <option value="남">남아</option>
-                <option value="여">여아</option>
-              </select>
-            </div>
-            <div class="search-wrap">
-              <input class="search-inp" id="filterChildName" placeholder="원아명 검색" onkeydown="if(event.key==='Enter') applyChildFilter()">
-              <button class="search-btn" onclick="applyChildFilter()">검색</button>
+          <div class="filter-row">
+            <select class="filter-select" id="filterChildClass">
+              <option value="">전체 반</option>
+            </select>
+            <div class="filter-divider"></div>
+            <select class="filter-select" id="filterChildStatus">
+              <option value="">전체 상태</option>
+              <option value="enrolled">재원중</option>
+              <option value="on_leave">휴원중</option>
+              <option value="graduated">졸업</option>
+              <option value="withdrawn">퇴소</option>
+              <option value="pending">등록대기</option>
+            </select>
+            <div class="filter-divider"></div>
+            <select class="filter-select" id="filterChildGender">
+              <option value="">전체 성별</option>
+              <option value="남">남아</option>
+              <option value="여">여아</option>
+            </select>
+            <div class="filter-divider"></div>
+            <div class="filter-search-wrap">
+              <input class="filter-search" id="filterChildName" placeholder="원아명 검색" onkeydown="if(event.key==='Enter') applyChildFilter()">
+              <button class="filter-search-btn" onclick="applyChildFilter()">검색</button>
             </div>
             <button class="btn-reset" onclick="resetChildFilter()">초기화</button>
           </div>
@@ -761,9 +761,9 @@ let selectedParentsForReg = [];
 // ═══════════════ 초기화 ═══════════════
 function init() {
   if (effectiveRole === 'teacher') {
-    // 교사: 가입승인 탭 숨김
-    document.getElementById('tabApproval').style.display = 'none';
-    switchPrimaryTab('members');
+    // 교사: 교직원 신청 칩 숨김, 본인 담당 반의 학부모 승인만 처리 가능
+    const chipTeacher = document.getElementById('chipTeacherFilter');
+    if (chipTeacher) chipTeacher.style.display = 'none';
   }
   renderKPI();
   renderApprovalList();
@@ -816,7 +816,24 @@ function filterApproval(type, el) {
 }
 
 function renderApprovalList() {
-  const pending = MOCK_JOIN_REQUESTS.filter(r => r.status === 'pending');
+  let pending = MOCK_JOIN_REQUESTS.filter(r => r.status === 'pending');
+
+  // 교사: 본인 담당 반의 학부모 신청만 노출 (교직원 신청 불가)
+  if (effectiveRole === 'teacher') {
+    const myClassIds = (assignedClasses || []).map(c => c.id);
+    pending = pending.filter(r => r.type === 'parent' && myClassIds.includes(r.classId));
+  }
+
+  // 카운트 업데이트
+  const teacherCount = MOCK_JOIN_REQUESTS.filter(r => r.status === 'pending' && r.type === 'teacher').length;
+  const parentCount  = effectiveRole === 'teacher'
+    ? pending.length
+    : MOCK_JOIN_REQUESTS.filter(r => r.status === 'pending' && r.type === 'parent').length;
+  const ctEl = document.getElementById('approvalCountTeacher');
+  const cpEl = document.getElementById('approvalCountParent');
+  if (ctEl) ctEl.textContent = teacherCount;
+  if (cpEl) cpEl.textContent = parentCount;
+
   filteredApprovals = approvalFilterType === 'all' ? pending
     : pending.filter(r => r.type === approvalFilterType);
 

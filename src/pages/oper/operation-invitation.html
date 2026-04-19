@@ -139,36 +139,47 @@ body {
 .kpi-value { font-size:24px; font-weight:800; line-height:1; }
 .tab-bar {
   display:flex;
-  gap:4px;
-  width:fit-content;
-  background:var(--bg-surface);
-  border:1px solid var(--border-light);
-  border-radius:var(--r-lg);
-  padding:5px;
-  box-shadow:var(--shadow-sm);
-  margin-bottom:16px;
+  gap:2px;
+  margin-bottom:20px;
+  border-bottom:2px solid var(--border-light);
 }
 .tab-btn {
-  border:none;
-  background:transparent;
-  color:var(--text-secondary);
-  padding:9px 18px;
-  border-radius:10px;
+  padding:12px 24px;
   font-size:14px;
-  font-weight:700;
+  font-weight:600;
+  color:var(--text-secondary);
   cursor:pointer;
-  display:flex;
+  border:none;
+  background:none;
+  transition:0.18s;
+  position:relative;
+  border-bottom:2px solid transparent;
+  margin-bottom:-2px;
+  display:inline-flex;
   align-items:center;
   gap:6px;
+  font-family:'Pretendard',sans-serif;
 }
-.tab-btn.active { background:var(--accent); color:#fff; }
+.tab-btn:hover { color:var(--text-primary); }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
 .tab-btn.disabled { opacity:.45; cursor:not-allowed; }
-.tab-count { background:rgba(255,255,255,.24); padding:1px 7px; border-radius:999px; font-size:12px; }
-.tab-btn:not(.active) .tab-count { background:var(--border-light); color:var(--text-secondary); }
+.tab-count { background:var(--border-light); color:var(--text-secondary); padding:1px 7px; border-radius:999px; font-size:12px; }
+.tab-btn.active .tab-count { background:var(--accent-light); color:var(--accent-dark); }
 .tab-content { display:none; }
 .tab-content.show { display:block; }
 .toolbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
 .toolbar-right { margin-left:auto; display:flex; gap:8px; }
+/* FILTER BAR (진급/졸업 기준 통일) */
+.filter-bar { background:var(--bg-surface); border-radius:var(--r-xl); box-shadow:var(--shadow-sm); padding:14px 18px; border:1px solid var(--border-light); display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.filter-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; width:100%; }
+.filter-select { padding:6px 10px; border:1.5px solid var(--border-light); border-radius:var(--r-md); font-size:13px; background:white; color:var(--text-primary); cursor:pointer; font-family:'Pretendard',sans-serif; height:34px; outline:none; }
+.filter-select:focus { border-color:var(--accent); }
+.filter-divider { width:1px; height:20px; background:var(--border-medium); flex-shrink:0; }
+.filter-search-wrap { display:flex; align-items:center; border:1.5px solid var(--border-light); border-radius:var(--r-md); overflow:hidden; background:white; transition:.18s; }
+.filter-search-wrap:focus-within { border-color:var(--accent); }
+.filter-search { padding:0 10px; border:none; outline:none; font-size:13px; font-family:'Pretendard',sans-serif; height:34px; min-width:160px; background:transparent; color:var(--text-primary); }
+.filter-search-btn { height:34px; padding:0 12px; background:var(--accent); color:#fff; border:none; font-size:13px; font-weight:600; font-family:'Pretendard',sans-serif; cursor:pointer; transition:.18s; }
+.filter-search-btn:hover { background:#2f4dd4; }
 .search-wrap,
 .select-wrap {
   display:flex;
@@ -179,7 +190,6 @@ body {
   height:36px;
 }
 .search-inp,
-.filter-select,
 .form-input,
 .form-select {
   font-family:'Pretendard',sans-serif;
@@ -189,7 +199,6 @@ body {
   outline:none;
 }
 .search-inp { width:220px; padding:0 12px; background:transparent; }
-.filter-select,
 .form-select {
   appearance:none;
   background:transparent;
@@ -560,17 +569,18 @@ tbody tr:last-child td { border-bottom:none; }
       </div>
 
       <section class="tab-content show" id="tabParent">
-        <div class="toolbar">
-          <div class="select-wrap">
+        <div class="filter-bar">
+          <div class="filter-row">
             <select class="filter-select" id="classFilter" onchange="renderParentCards()">
               <option value="">전체 반</option>
             </select>
-          </div>
-          <div class="search-wrap">
-            <input class="search-inp" id="classSearch" placeholder="반 이름 검색" oninput="renderParentCards()">
-          </div>
-          <div class="toolbar-right">
-            <button class="btn btn-primary" onclick="openCreateParentLinkModal()">새 초대 링크 생성</button>
+            <div class="filter-divider"></div>
+            <div class="filter-search-wrap">
+              <input class="filter-search" id="classSearch" placeholder="반 이름 검색" oninput="renderParentCards()">
+            </div>
+            <div style="margin-left:auto">
+              <button class="btn btn-primary" onclick="openCreateParentLinkModal()">새 초대 링크 생성</button>
+            </div>
           </div>
         </div>
         <div class="parent-grid" id="parentGrid"></div>
@@ -583,16 +593,16 @@ tbody tr:last-child td { border-bottom:none; }
       <section class="tab-content" id="tabTeacher">
         <div class="permission-banner" id="teacherPermissionBanner" style="display:none">교직원 초대는 기관관리자만 사용할 수 있습니다.</div>
         <div id="teacherTabContent">
-          <div class="toolbar">
-            <div class="select-wrap">
+          <div class="filter-bar">
+            <div class="filter-row">
               <select class="filter-select" id="teacherStatusFilter" onchange="renderTeacherTable()">
                 <option value="">전체 상태</option>
                 <option value="active">초대 가능</option>
                 <option value="stopped">초대 중지</option>
               </select>
-            </div>
-            <div class="toolbar-right">
-              <button class="btn btn-primary" onclick="openTeacherCreateModal()">교직원 링크 생성</button>
+              <div style="margin-left:auto">
+                <button class="btn btn-primary" onclick="openTeacherCreateModal()">교직원 링크 생성</button>
+              </div>
             </div>
           </div>
           <div class="table-card">
@@ -620,23 +630,23 @@ tbody tr:last-child td { border-bottom:none; }
       </section>
 
       <section class="tab-content" id="tabHistory">
-        <div class="toolbar">
-          <div class="select-wrap">
+        <div class="filter-bar">
+          <div class="filter-row">
             <select class="filter-select" id="historyTypeFilter" onchange="renderHistoryTable()">
               <option value="">전체 유형</option>
               <option value="parent">학부모</option>
               <option value="teacher">교직원</option>
             </select>
-          </div>
-          <div class="select-wrap">
+            <div class="filter-divider"></div>
             <select class="filter-select" id="historyStatusFilter" onchange="renderHistoryTable()">
               <option value="">전체 상태</option>
               <option value="completed">완료</option>
               <option value="stopped">중지</option>
             </select>
-          </div>
-          <div class="search-wrap">
-            <input class="search-inp" id="historySearch" placeholder="이름 또는 반 검색" oninput="renderHistoryTable()">
+            <div class="filter-divider"></div>
+            <div class="filter-search-wrap">
+              <input class="filter-search" id="historySearch" placeholder="이름 또는 반 검색" oninput="renderHistoryTable()">
+            </div>
           </div>
         </div>
         <div class="table-card">
