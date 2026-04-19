@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:#0C2D48; --sidebar-hover:#1A4A6B; --sidebar-active:#1E5580;
@@ -213,9 +214,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span class="bc-sep">/</span>
       <span class="cur">진급/졸업</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topDate"></span>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </div>
 
   <!-- CONTENT -->
@@ -247,17 +246,17 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     <!-- PROCESSING TAB -->
     <div id="processingTab" class="tab-content">
       <!-- FILTER BAR -->
-      <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px;">
-        <!-- 칩 필터 행 -->
+      <div class="filter-bar">
         <div class="filter-row">
-          <span class="filter-label">상태</span>
-          <div id="filterChips" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
-        </div>
-        <!-- 검색 필터 행 -->
-        <div class="filter-row">
-          <span class="filter-label">나이</span>
+          <select class="filter-select" id="processingStatusFilter" onchange="applyProcessingFilter()">
+            <option value="all">전체 상태</option>
+            <option value="promoted">진급대상</option>
+            <option value="graduated">졸업대상</option>
+            <option value="hold">보류</option>
+          </select>
+          <div class="filter-divider"></div>
           <select class="filter-select" id="processingAgeFilter" onchange="applyProcessingSearch()">
-            <option value="">전체</option>
+            <option value="">전체 나이</option>
             <option value="1세">1세</option>
             <option value="2세">2세</option>
             <option value="3세">3세</option>
@@ -267,9 +266,8 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="7세">7세</option>
           </select>
           <div class="filter-divider"></div>
-          <span class="filter-label">반</span>
           <select class="filter-select" id="processingClassFilter" onchange="applyProcessingSearch()">
-            <option value="">전체</option>
+            <option value="">전체 반</option>
             <option value="꽃잎반">꽃잎반</option>
             <option value="나무반">나무반</option>
             <option value="송이반">송이반</option>
@@ -327,17 +325,16 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
     <!-- COMPLETED TAB -->
     <div id="completedTab" class="tab-content" style="display:none;">
       <!-- FILTER BAR -->
-      <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px;">
-        <!-- 칩 필터 행 -->
+      <div class="filter-bar">
         <div class="filter-row">
-          <span class="filter-label">상태</span>
-          <div id="completedFilterChips" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
-        </div>
-        <!-- 검색 필터 행 -->
-        <div class="filter-row">
-          <span class="filter-label">나이</span>
+          <select class="filter-select" id="completedStatusFilter" onchange="applyCompletedFilter()">
+            <option value="all">전체 상태</option>
+            <option value="promoted">진급</option>
+            <option value="graduated">졸업</option>
+          </select>
+          <div class="filter-divider"></div>
           <select class="filter-select" id="completedAgeFilter" onchange="applyCompletedSearch()">
-            <option value="">전체</option>
+            <option value="">전체 나이</option>
             <option value="1세">1세</option>
             <option value="2세">2세</option>
             <option value="3세">3세</option>
@@ -347,9 +344,8 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
             <option value="7세">7세</option>
           </select>
           <div class="filter-divider"></div>
-          <span class="filter-label">반</span>
           <select class="filter-select" id="completedClassFilter" onchange="applyCompletedSearch()">
-            <option value="">전체</option>
+            <option value="">전체 반</option>
             <option value="꽃잎반">꽃잎반</option>
             <option value="나무반">나무반</option>
             <option value="송이반">송이반</option>
@@ -560,7 +556,6 @@ function renderProcessingStatusCell(child) {
 
 // ═══════════════ INIT ═══════════════
 function init() {
-  document.getElementById('topDate').textContent = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'});
   renderKPI();
   renderProcessingTab();
   renderCompletedTab();
@@ -614,15 +609,6 @@ function avatarHtml(c) {
 
 // ═══════════════ PROCESSING TAB ═══════════════
 function renderProcessingTab() {
-  const base = MOCK_CHILDREN.filter(isProcessingTarget);
-  const waiting = base.filter(c => !c.graduation_status);
-  const hold = base.filter(c => c.graduation_status === 'on_hold');
-  document.getElementById('filterChips').innerHTML = `
-    <div class="chip ${currentProcessingFilter === 'all' ? 'active' : ''}" onclick="filterProcessing('all', this)">전체</div>
-    <div class="chip ${currentProcessingFilter === 'promoted' ? 'active' : ''}" onclick="filterProcessing('promoted', this)">진급대상(${waiting.filter(c=>c.graduation_suggestion==='promoted').length})</div>
-    <div class="chip ${currentProcessingFilter === 'graduated' ? 'active' : ''}" onclick="filterProcessing('graduated', this)">졸업대상(${waiting.filter(c=>c.graduation_suggestion==='graduated').length})</div>
-    <div class="chip ${currentProcessingFilter === 'hold' ? 'active' : ''}" onclick="filterProcessing('hold', this)">보류(${hold.length})</div>
-  `;
   const data = getFilteredProcessingData();
   document.getElementById('processingCount').textContent = data.length;
   renderProcessingTable(data);
@@ -700,12 +686,6 @@ function renderProcessingTable(data) {
 
 // ═══════════════ COMPLETED TAB ═══════════════
 function renderCompletedTab() {
-  const base = MOCK_CHILDREN.filter(isCompletedTarget);
-  document.getElementById('completedFilterChips').innerHTML = `
-    <div class="chip ${currentCompletedFilter === 'all' ? 'active' : ''}" onclick="filterCompleted('all', this)">전체</div>
-    <div class="chip ${currentCompletedFilter === 'promoted' ? 'active' : ''}" onclick="filterCompleted('promoted', this)">진급(${base.filter(c=>c.graduation_status==='promoted'||c.graduation_status==='promoted_auto').length})</div>
-    <div class="chip ${currentCompletedFilter === 'graduated' ? 'active' : ''}" onclick="filterCompleted('graduated', this)">졸업(${base.filter(c=>c.graduation_status==='graduated').length})</div>
-  `;
   const data = getFilteredCompletedData();
   document.getElementById('completedCount').textContent = data.length;
   renderCompletedTable(data);
@@ -926,19 +906,15 @@ function openCompletedResultChange(id) {
   openStatusChangeModal();
 }
 
-function filterProcessing(type, el) {
-  currentProcessingFilter = type;
+function applyProcessingFilter() {
+  currentProcessingFilter = document.getElementById('processingStatusFilter').value || 'all';
   processingPage = 1;
-  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
   applyProcessingSearch();
 }
 
-function filterCompleted(type, el) {
-  currentCompletedFilter = type;
+function applyCompletedFilter() {
+  currentCompletedFilter = document.getElementById('completedStatusFilter').value || 'all';
   completedPage = 1;
-  document.querySelectorAll('#completedFilterChips .chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
   applyCompletedSearch();
 }
 

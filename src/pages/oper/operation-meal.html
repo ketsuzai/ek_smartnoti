@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 <style>
 :root {
@@ -225,9 +226,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span class="bc-sep">›</span>
       <span class="cur">식단표</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topbarDate"></span>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </div>
 
   <!-- CONTENT — SPLIT LAYOUT -->
@@ -398,7 +397,6 @@ let panelPhotos = {};
 // INIT
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.addEventListener('DOMContentLoaded', () => {
-  updateTopbarDate();
   renderCalendar();
   selectDate(formatDate(TODAY));
 
@@ -419,11 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-function updateTopbarDate() {
-  const d = new Date(2026, 3, 7);
-  document.getElementById('topbarDate').textContent =
-    d.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
-}
 
 function formatDate(d) {
   const y = d.getFullYear();

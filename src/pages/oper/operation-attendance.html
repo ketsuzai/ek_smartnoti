@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 <style>
 :root {
@@ -451,10 +452,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
         <span class="bc-sep">›</span>
         <span class="cur">출석부</span>
       </div>
-      <div class="topbar-right">
-        <span class="topbar-date" id="headerDate"></span>
-        <button class="icon-btn" title="새로고침" onclick="renderAll()">↻</button>
-      </div>
+      <div class="topbar-right" id="topbarRight"></div>
     </div>
 
     <!-- CONTENT -->
@@ -784,16 +782,10 @@ let drawerDateStr = null;
 // 초기화
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 window.addEventListener('DOMContentLoaded', () => {
-  setHeaderDate();
   renderClassFilter();
   renderAll();
 });
 
-function setHeaderDate() {
-  const now = new Date('2026-04-09');
-  document.getElementById('headerDate').textContent =
-    now.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
-}
 
 // ━━━ 반 필터 렌더링 ━━━
 function renderClassFilter() {

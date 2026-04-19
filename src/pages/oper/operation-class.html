@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:#0C2D48;--sidebar-hover:#1A4A6B;--sidebar-active:#1E5580;--sidebar-text:#B8D9F0;
@@ -458,10 +459,6 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
    INIT
 ════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  const now = new Date();
-  document.getElementById('topbarRight').innerHTML = `
-    <span class="topbar-date">${now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'})}</span>
-    <button class="icon-btn" title="새로고침" onclick="applyFilter()">🔄</button>`;
   if (canManage) document.getElementById('addClassBtn').style.display = 'inline-flex';
   renderKPI();
   applyFilter();

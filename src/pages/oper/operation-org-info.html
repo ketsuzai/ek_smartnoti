@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:     #0C2D48;
@@ -182,9 +183,8 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span class="bc-sep">›</span>
       <span class="cur">기관정보 관리</span>
     </div>
-    <div class="topbar-right" id="topbarRight">
-      <!-- JS로 조회 전용 뱃지 + 날짜 + 아이콘 렌더링 -->
-    </div>
+    <span class="readonly-badge" id="readonlyBadge" style="display:none;">👁️ 조회 전용</span>
+    <div class="topbar-right" id="topbarRight"></div>
   </div>
 
   <!-- CONTENT -->
@@ -322,18 +322,6 @@ function toggleTeacherActive(id) {
   showToast(m.active ? `${m.name} 교직원을 활성화했습니다.` : `${m.name} 교직원을 비활성화했습니다.`, 'info');
 }
 
-// ━━━ TOPBAR ━━━
-function renderTopbar() {
-  const el = document.getElementById('topbarRight');
-  let html = '';
-  if (!canEdit) {
-    html += `<span class="readonly-badge">👁️ 조회 전용</span>`;
-  }
-  html += `<span class="topbar-date">${todayStr()}</span>`;
-  html += `<div class="icon-btn notif-dot" title="알림">🔔</div>`;
-  html += `<div class="icon-btn" title="설정">⚙️</div>`;
-  el.innerHTML = html;
-}
 
 // ━━━ SECTION 0: 프로필 헤더 ━━━
 function renderProfileCard() {
@@ -601,7 +589,7 @@ function renderPage() {
 
 // ━━━ INIT ━━━
 document.addEventListener('DOMContentLoaded', () => {
-  renderTopbar();
+  if (!canEdit) document.getElementById('readonlyBadge').style.display = 'inline-flex';
   renderPage();
 });
 </script>

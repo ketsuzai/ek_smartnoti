@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:#0C2D48;--sidebar-hover:#1A4A6B;--sidebar-active:#1E5580;--sidebar-text:#B8D9F0;
@@ -422,10 +423,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span>운영관리</span><span class="bc-sep">›</span>
       <span class="cur">공지사항</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topbarDate"></span>
-      <button class="icon-btn" title="새로고침" onclick="handleRefresh()">↻</button>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </div>
 
   <!-- CONTENT -->
@@ -1049,7 +1047,6 @@ let pastPreviewItem = null;
    INIT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 document.addEventListener('DOMContentLoaded', () => {
-  setTopbarDate();
   initRoleContext();
   renderKPI();
   applyFilter();
@@ -1066,12 +1063,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-function setTopbarDate() {
-  const d = new Date(2026,2,24);
-  document.getElementById('topbarDate').textContent =
-    d.toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'})
-     .replace(/\. /g,'-').replace('.','-').slice(0,-1);
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ROLE CONTEXT & CHIP FILTER

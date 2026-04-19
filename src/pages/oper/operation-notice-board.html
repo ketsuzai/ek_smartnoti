@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:     #0C2D48;
@@ -645,11 +646,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span id="breadcrumbOrg">운영관리</span><span class="bc-sep">›</span>
       <span class="cur">알림장</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topDate"></span>
-      <div class="icon-btn notif-dot" title="알림">🔔</div>
-      <div class="icon-btn" title="설정">⚙️</div>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </header>
 
   <!-- CONTENT -->
@@ -1324,7 +1321,6 @@ let currentTab = 'sent';
 // ━━━ 초기화 ━━━
 document.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
-  document.getElementById('topDate').textContent = now.toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit', weekday:'short' });
   document.getElementById('todayMeta').textContent = now.toLocaleDateString('ko-KR', { month:'long', day:'numeric', weekday:'long' }) + ' 기준';
   initClassFilter();
   renderTodayClassChips();

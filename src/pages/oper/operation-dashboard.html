@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 <script>
 if (new URLSearchParams(window.location.search).get('modal') === 'att') {
@@ -635,11 +636,7 @@ body { font-family: 'Pretendard', sans-serif; background: var(--bg-base); color:
       <span class="cur">대시보드</span>
     </div>
 
-    <div class="topbar-right">
-      <span class="topbar-date" id="topDate"></span>
-      <div class="icon-btn notif-dot" title="알림">🔔</div>
-      <div class="icon-btn" title="설정">⚙️</div>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </header>
 
   <!-- 콘텐츠 -->
@@ -1244,7 +1241,6 @@ const UPCOMING_SCHED = [
   // 날짜
   const now  = new Date();
   const dateStr = now.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
-  document.getElementById('topDate').textContent   = dateStr;
   document.getElementById('headerDate').textContent = dateStr;
   document.getElementById('heroDate').textContent   = dateStr;
   document.getElementById('heroOrgName').textContent = orgName;

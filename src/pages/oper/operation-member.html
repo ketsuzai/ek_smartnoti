@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:#0C2D48; --sidebar-hover:#1A4A6B; --sidebar-active:#1E5580;
@@ -305,11 +306,7 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
       <span id="breadcrumbOrg">운영관리</span><span class="bc-sep">›</span>
       <span class="cur">멤버/승인관리</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topDate"></span>
-      <div class="icon-btn notif-dot" title="알림">🔔</div>
-      <div class="icon-btn" title="설정">⚙️</div>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </header>
 
   <div class="content">
@@ -759,7 +756,6 @@ let selectedParentsForReg = [];
 
 // ═══════════════ 초기화 ═══════════════
 function init() {
-  document.getElementById('topDate').textContent = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'});
   if (effectiveRole === 'teacher') {
     // 교사: 가입승인 탭 숨김
     document.getElementById('tabApproval').style.display = 'none';

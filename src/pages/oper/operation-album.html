@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root{
   --sidebar-bg:#0C2D48;--sidebar-hover:#1A4A6B;--sidebar-active:#1E5580;--sidebar-text:#B8D9F0;
@@ -400,14 +401,6 @@ body{font-family:'Pretendard',sans-serif;background:var(--bg-base);color:var(--t
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
-        <div class="filter-row">
-          <span class="filter-label">상태</span>
-          <div class="chip-filter-row" id="statusChips">
-            <button class="filter-chip active" data-status="">전체</button>
-            <button class="filter-chip" data-status="published">발송완료</button>
-            <button class="filter-chip amber-chip" data-status="draft">임시저장 <span class="chip-count" id="draftChipCount">0</span></button>
-          </div>
-        </div>
         <div class="filter-row">
           <span class="filter-label">필터</span>
           <div class="fsel-wrap">
@@ -857,21 +850,11 @@ let rcptFocusedClassId = null;
 // 초기화
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  renderTopbarRight();
   initRoleContext();
-  initChipFilters();
   updateKPI();
   applyFilter();
 });
 
-function renderTopbarRight() {
-  const el = document.getElementById('topbarRight');
-  if (!el) return;
-  const d = new Date();
-  const fmt = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-  el.innerHTML = `<span class="topbar-date">${fmt}</span>
-    <button class="icon-btn" title="새로고침" onclick="updateKPI();applyFilter();showToast('info','새로고침되었습니다.')">🔄</button>`;
-}
 
 function initRoleContext() {
   if (!AL_IS_TEACHER) return;
@@ -885,16 +868,6 @@ function initRoleContext() {
   if (AL_ASSIGNED_IDS.length) sel.value = AL_ASSIGNED_IDS[0];
 }
 
-function initChipFilters() {
-  document.querySelectorAll('#statusChips .filter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#statusChips .filter-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeStatus = chip.dataset.status;
-      applyFilter();
-    });
-  });
-}
 
 function updateKPI() {
   const published = ALBUMS.filter(a => a.status === 'published');
@@ -906,7 +879,6 @@ function updateKPI() {
   document.getElementById('kpiMonth').textContent  = thisMonth.length;
   document.getElementById('kpiPhotos').textContent = totalPhotos.toLocaleString();
   document.getElementById('kpiDraft').textContent  = drafts.length;
-  document.getElementById('draftChipCount').textContent = drafts.length;
 }
 
 // ══════════════════════════════════════════
@@ -948,7 +920,6 @@ function resetFilter() {
   document.getElementById('filterPeriod').value = '';
   document.getElementById('searchInput').value  = '';
   activeStatus = '';
-  document.querySelectorAll('#statusChips .filter-chip').forEach((c,i) => c.classList.toggle('active',i===0));
   applyFilter();
 }
 

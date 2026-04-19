@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="operation-sidebar.js" defer></script>
+<script src="operation-header.js" defer></script>
 <style>
 :root {
   --sidebar-bg:#0C2D48;
@@ -516,11 +517,7 @@ tbody tr:last-child td { border-bottom:none; }
       <span>/</span>
       <span class="cur">초대 관리</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-date" id="topDate"></span>
-      <div class="icon-btn" title="알림">🔔</div>
-      <div class="icon-btn" title="설정">⚙️</div>
-    </div>
+    <div class="topbar-right" id="topbarRight"></div>
   </div>
 
   <div class="content">
@@ -786,7 +783,6 @@ let sendFlow = { targetType: '', targetId: '', className: '', link: '', channel:
 let pendingConfirmAction = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('topDate').textContent = new Date().toISOString().slice(0, 10);
   hydrateRoleFromSession();
   renderFilters();
   renderAll();
